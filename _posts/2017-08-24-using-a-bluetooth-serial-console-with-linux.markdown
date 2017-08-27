@@ -19,63 +19,44 @@ Recently I bought a [bluetooth RS232 serial convertor](https://www.aliexpress.co
 
 ## Pre-requisites
 
-
 The following packages are required:
-
-
-
-	
   * bluez
-
-	
   * bluez-utils
-
-	
   * byobu (optional)
-
 
 Bluez provides the bluetooth protocol stack (most likely shipped with the OS), bluez-utils provides the bluetoothctl utility and byobu is a wrapper around screen terminal emulator. You can also use 'screen' directly. Install these using your distributions recommended procedure.
 
-
 ## Steps
 
-
 1. Start daemon:
-
-
-
-    
+```shell
     Swanky:~$ systemctl start bluetooth
-
+```
 
 2. Discover using bluetoothctl:
-
-    
+```shell
     Swanky:~$ bluetoothctl
     [NEW] Controller <controller-mac-address> xkgt-Swanky [default]
     [bluetooth]# power on
     [bluetooth]# scan on
-
+```
 
 3. Once you can see your device, turn off the scan and pair
-
-    
+```shell
     [bluetooth]# scan off
     [bluetooth]# pair <device-mac-address>
-
+```
 
 4. Exit blutoothctl and create serial device:
-
-    
+```shell
     [bluetooth]# exit
     Swanky:~$ rfcomm bind 0 <device-mac-address>
-
+```
 
 5. You should now have /dev/rfcomm0. Connect to it using byobu-screen utility:
-
-    
+```shell
     Swanky:~$ byobu-screen /dev/rfcomm0
-
+```
 
 Enjoy your wireless console connection!
 
