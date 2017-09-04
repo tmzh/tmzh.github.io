@@ -27,13 +27,10 @@ As always, let us start with the requirement:
   2. The CA cert would be imported manually in to Trusted Root Authorities on the client machines.	
   3. The certificate should work on modern browsers. We will use latest versions of Chrome and Mozilla as benchmarks.
 
-#Steps:
+## Steps:
 	
   1. Generate private key & self-signed cert for the CA in a single statement:
-
-
-
-    
+ 
     root@EARWA:openssl req -new -x509 <span style="color:blue;">-sha256</span> -newkey rsa:2048 -nodes -keyout <span style="color:#ff0000;">ca.key</span> -days 1000 -out <span style="color:#808000;">ca.pem</span>
     root@EARWA:~/ca2# ls -ltr
     total 8
