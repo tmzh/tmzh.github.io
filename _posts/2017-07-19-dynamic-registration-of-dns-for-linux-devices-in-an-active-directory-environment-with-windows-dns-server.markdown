@@ -40,61 +40,30 @@ Looking at a capture from a Windows PC joined to domain, one can see the Windows
 ![2 - Windows DNS Update Capture.png](https://ephemeralelectrons.files.wordpress.com/2017/07/2-windows-dns-update-capture.png)
 
 Given this background, let us explore some of the options available to setup DDNS for Linux based clients. In this series of posts, I will explore 3 options:
-
-
-
-	
   1. Configure DHCP server to perform DNS registration on behalf of the clients
-
-	
   2. Join the Linux devices to AD domain and configure them to dynamically update
-
-	
   3. Setup a new sub-domain running a dedicated Linux BIND server and configure DNS forwarding on Microsoft DNS server.
 
 
 Our environment has the following setup:
-
-	
   1. Microsoft Active Directory environment with DNS server installed in Domain controller and a DHCP server running separately on a different host. All are running on Windows Server 2008 R2.
-
-	
   2. DNS is configured to accept only Secure updates.
-
-	
   3. Two Linux devices running Debian Stretch operating system. One of them will act as DNS server in one of the scenarios.
 
 
 ![4 - Lab Topology.png](https://ephemeralelectrons.files.wordpress.com/2017/07/4-lab-topology.png)
 
 The solutions we discuss should meet the following objectives:
-
-
-
-	
   1. Update DNS when the device gets an IP address
-
-	
   2. Perform periodic update to DNS server to protect against expiry
-
-	
   3. Fully automated with very little or no hand-coding on client devices, assume no automation tools like Puppet or Chef
-
-	
   4. Scalable to hundreds or thousands of devices
 
 
 Point 3 is important to me since I had to work out a solution at work where we are using hundreds of Raspberry Pi’s, all booting the same image cloned on to flash disks. So, editing config files on each of them is not an option (we will come to this later).
 
 
-
-
-
 * * *
-
-
-
-
 
 ## Configuring DHCP server to perform DNS registration on behalf of the clients
 
