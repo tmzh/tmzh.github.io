@@ -23,28 +23,15 @@ There are two ways to use openssl to mimic a CA. The first option is to use ‘o
 The other option is to use ‘openssl x509’ module which is what we will be focusing on. I chose this because I just needed a certificate pair for one-off use and didn't want to be bothered in setting up an elaborate CA configuration. The guide will be useful for someone with a similar objective.
 
 As always, let us start with the requirement:
-
-
-
-	
   1. Create a certificate chain with as little configuration and minimum number of hosts, which means no intermediate CA.
-
-	
-  2. The CA cert would be imported manually in to Trusted Root Authorities on the client machines.
-
-	
+  2. The CA cert would be imported manually in to Trusted Root Authorities on the client machines.	
   3. The certificate should work on modern browsers. We will use latest versions of Chrome and Mozilla as benchmarks.
 
-
-Steps:
-
+## Steps:
 	
   1. Generate private key & self-signed cert for the CA in a single statement:
-
-
-
-    
-    root@EARWA:openssl req -new -x509 <span style="color:#0000ff;">-sha256</span> -newkey rsa:2048 -nodes -keyout <span style="color:#ff0000;">ca.key</span> -days 1000 -out <span style="color:#808000;">ca.pem</span>
+ 
+    root@EARWA:openssl req -new -x509 <span style="color:blue;">-sha256</span> -newkey rsa:2048 -nodes -keyout <span style="color:#ff0000;">ca.key</span> -days 1000 -out <span style="color:#808000;">ca.pem</span>
     root@EARWA:~/ca2# ls -ltr
     total 8
     -rw-r--r-- 1 root root 1704 Jul 30 20:01 <span style="color:#ff0000;">ca.key</span>
