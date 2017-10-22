@@ -116,7 +116,7 @@ This [link](https://technet.microsoft.com/en-us/library/dd334715(v=ws.10).aspx) 
 
 As usual, let us go ahead to trigger an update.
 
-![15 - DHCP Request.png](/images/2017/07/15-dhcp-request.png)
+![15 - DHCP Request.png](/images/2017/07/2017-07-19-dynamic-registration-of-dns-for-linux-devices-in-an-active-directory-environment-with-windows-dns-server/15-dhcp-request.png)
 
 As expected, new A and PTR record gets created.
 
