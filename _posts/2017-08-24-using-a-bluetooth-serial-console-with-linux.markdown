@@ -3,7 +3,6 @@ author: thamizh85
 comments: true
 date: 2017-08-24 15:41:28+00:00
 layout: post
-link: https://ephemeralelectrons.wordpress.com/2017/08/24/using-a-bluetooth-serial-console-with-linux/
 slug: using-a-bluetooth-serial-console-with-linux
 title: Using a bluetooth serial console with linux
 wordpress_id: 182
@@ -47,10 +46,10 @@ Bluez provides the bluetooth protocol stack (most likely shipped with the OS), b
     [bluetooth]# pair <device-mac-address>
 ```
 
-4. Exit blutoothctl and create serial device:
+4. Exit blutoothctl and create serial device (Note that root privileges are required):
 ```shell
     [bluetooth]# exit
-    Swanky:~$ rfcomm bind 0 <device-mac-address>
+    Swanky:~$ sudo rfcomm bind 0 <device-mac-address>
 ```
 
 5. You should now have /dev/rfcomm0. Connect to it using byobu-screen utility:
@@ -59,5 +58,3 @@ Bluez provides the bluetooth protocol stack (most likely shipped with the OS), b
 ```
 
 Enjoy your wireless console connection!
-
-
