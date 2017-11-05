@@ -4,7 +4,7 @@ comments: true
 date: 2017-10-29 12:08:28+08:00
 layout: post
 slug: emulating-angryip-scanner-with-nmap-scripting-engine-a-lua-scripting-primer
-title: Emulating angryip scanner with nmap scripting engine - A lua scripting primer
+title: Emulating Angry IP Scanner with nmap scripting engine - A lua scripting primer
 categories:
 - Scripting
 tags:
