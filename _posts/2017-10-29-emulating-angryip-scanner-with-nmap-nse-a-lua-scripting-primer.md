@@ -93,7 +93,7 @@ end
 This returned value is processed by nmap scripting engine and printed in the output window. 
 
 ## Where to go next
-Since this is only a basic script, we have not customized the output format at all. The hostnames when available gets printed below each host-discovered. If you notice, the print action is executed within the ACTION function whose scope is limited to one host at a time. If we need our output to be consolidated in a tabular form, we can write a postrule function, store and retrieve our findings from nmap registry. Refer to my script (work in progress) to see one way of doing it.
+Since this is only a basic script, we have not customized the output format at all. The hostnames when available gets printed below each host-discovered. If you notice, the print action is executed within the ACTION function whose scope is limited to one host at a time. If we need our output to be consolidated in a tabular form, we can write a postrule function, store and retrieve our findings from nmap registry. Refer to my [script](https://raw.githubusercontent.com/thamizh85/Nmap-scripts/master/hostinfo-discover.nse) (work in progress) to see one way of doing it.
 
 I strongly recommend trying the tutorial at this [site](https://thesprawl.org/research/writing-nse-scripts-for-vulnerability-scanning/) for further study. It greatly helped me to get started with NMAP scripting and understanding the way a NSE script is structured.
 
