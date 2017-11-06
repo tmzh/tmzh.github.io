@@ -1,0 +1,568 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="3.5.2">Jekyll</generator><link href="http://localhost:4000/atom.xml" rel="self" type="application/atom+xml" /><link href="http://localhost:4000/" rel="alternate" type="text/html" /><updated>2017-11-06T23:57:22+08:00</updated><id>http://localhost:4000/</id><title type="html">Ephemeral Electrons</title><author><name>Tamizh</name></author><entry><title type="html">Emulating Angry IP Scanner with nmap scripting engine - A lua scripting primer</title><link href="http://localhost:4000/scripting/2017/10/29/emulating-angryip-scanner-with-nmap-scripting-engine-a-lua-scripting-primer/" rel="alternate" type="text/html" title="Emulating Angry IP Scanner with nmap scripting engine - A lua scripting primer" /><published>2017-10-29T12:08:28+08:00</published><updated>2017-10-29T12:08:28+08:00</updated><id>http://localhost:4000/scripting/2017/10/29/emulating-angryip-scanner-with-nmap-scripting-engine-a-lua-scripting-primer</id><content type="html" xml:base="http://localhost:4000/scripting/2017/10/29/emulating-angryip-scanner-with-nmap-scripting-engine-a-lua-scripting-primer/">&lt;h2 id=&quot;introduction&quot;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Often we have to discover the devices on a network. I use a very simple nmap command for performing a pingsweep.&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sudo nmap -sn &amp;lt;subnet or ip range&amp;gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;On my work PC which runs Windows, I wrap it around in a batch script and place it in the search PATH. On Linux it can be dropped in as an alias in bashrc.&lt;/p&gt;
+
+&lt;p&gt;It is handy, but not complete. I would like to have some extra information such as hostnames (collected by various means not just DNS reverse lookup), platform info etc., Such details are available in tools such as AngryIP scanner, but I don’t prefer to launch a GUI tool for single task and keep it running until the task is done.&lt;/p&gt;
+
+&lt;p&gt;So I wanted to see if a similar function can be implemented using nmap script. There are existing scripts in nmap which performs advanced discovery and reconnaissance, but I wanted something lightweight, one which is least intrusive and outputs results in the format I desire. So I decided to try my hand in writing a script in NSE (Nmap Scripting Engine). The Nmap Scripting Engine, like Wireshark, uses Lua language. Learning it would expand the scope of these tools from just being a capable tool to a powerful tool with limitless possibilities.&lt;/p&gt;
+
+&lt;p&gt;The endeavour turned out to be fairly simple, but not without its share of frustrations, most of which were related to wrapping my head around the way NSE (Nmap Scripting Engine) tosses the data around and lua data structures. But once you get the hang of it, it is really simple. So without much ado, let us get started.&lt;/p&gt;
+
+&lt;h2 id=&quot;nse-script-structure&quot;&gt;NSE Script structure&lt;/h2&gt;
+&lt;p&gt;A basic NSE script will have the following 3 sections:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Head section is for meta information about the script. We need not worry about it for primer purpose but it is a good habit to put documentation info here while packaging script for production.&lt;/li&gt;
+  &lt;li&gt;Rule section determines the scope of the script. It basically acts as a filter of nmap port-scan results that gets filtered to the Action section. The rule section has to be one of the following:
+    &lt;ul&gt;
+      &lt;li&gt;prerule()&lt;/li&gt;
+      &lt;li&gt;hostrule(host)&lt;/li&gt;
+      &lt;li&gt;portrule(host, port)&lt;/li&gt;
+      &lt;li&gt;postrule()&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Action section is mostly the brain of the script (although rule section can also contain some of the script logic). This section contains an Action section which reads data from the nmap scanning engine and carries out the script logic. The value returned by this function is also printed on the screen and captured by other nmap output methods. Note that this script is executed iteratively over either list of hosts or a list of (host, port) tuples.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;diving-in&quot;&gt;Diving In&lt;/h2&gt;
+&lt;p&gt;So let us go ahead and create a basic script. Our script will scan the target network and fetch the hostname from NETBIOS. Create a script file with .nse (I used host-discover.nse) extension as follows:&lt;/p&gt;
+
+&lt;div class=&quot;language-lua highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;netbios&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;netbios&quot;&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shortport&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;shortport&quot;&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;-- The Rule Section --&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;portrule&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shortport&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;portnumber&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;137&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;udp&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;-- The Action Section --&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;action&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nbt_status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;netbios_name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;netbios&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_server_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;netbios_name&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;Now run this script against your local network as below:&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;nmap --script host-discover.nse 10.1.1.0/24 -sU -p 137&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Take a minute to gape at the results- you have your very own NETBIOS scanner, all in just 7 lines of functional code. There are standalone &lt;a href=&quot;http://unixwiz.net/tools/nbtscan.html&quot;&gt;tools&lt;/a&gt; that exists just to perform this singular task and we did it using a generic swiss army knife tool such as nmap.&lt;/p&gt;
+
+&lt;p&gt;The magic that enables this are the excellent inbuilt scanning mechanisms of nmap and hot-pluggable libraries that carry out much of the grunt. By scripting in NSE, we can tap in to this massive capabilities of nmap and automate to our needs.&lt;/p&gt;
+
+&lt;h2 id=&quot;code-walkthrough&quot;&gt;Code Walkthrough&lt;/h2&gt;
+&lt;p&gt;For simplicity sake, I had skipped the HEAD section. Next thing you notice is the  Lua’s comment syntax. Comments starts with &lt;code class=&quot;highlighter-rouge&quot;&gt;--&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Next we import the libraries necessary for our script. In Lua, modules are included using &lt;code class=&quot;highlighter-rouge&quot;&gt;require&lt;/code&gt; function. And we assign the module to a local variable in order to access its namespace (i.e, call the methods that belong to the module).&lt;/p&gt;
+
+&lt;div class=&quot;language-lua highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;netbios&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;netbios&quot;&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shortport&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;shortport&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;The purpose of these libraries will be evident in the later section.&lt;/p&gt;
+
+&lt;p&gt;Next we move to the RULE section. Since our script is only interested with NETBIOS query, we have to pick only the hosts that are listening on port UDP/137.&lt;/p&gt;
+
+&lt;p&gt;But determining whether a host is listening on a port is not so trivial. We have to check it against few valid states (‘open’ or ‘filtered’). ‘shortport’ module abstracts this detail from us and allows us to simply filter port status. It is not necessary to use this  module if you can write your own conditions.&lt;/p&gt;
+
+&lt;div class=&quot;language-lua highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;-- The Rule Section --&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;portrule&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shortport&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;portnumber&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;137&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;udp&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;NOTE: The Rule section only filters port numbers passed on from the upper layer i.e, the original nmap scan. It doesn’t trigger a port scan on its own. That is why when we launch the script, we had to specify port number explicitly (&lt;code class=&quot;highlighter-rouge&quot;&gt;nmap -sU U:137 &amp;lt;host&amp;gt;&lt;/code&gt;). It is still possible to launch a port scan in this section, by calling nmap socket libraries but those are advanced scripting scenarios.&lt;/p&gt;
+
+&lt;p&gt;Next comes the ACTION section. Our action section here is a function that takes (host, port) as argument. It means the host object and port object are available to this function for evaluating logic. If we need other variables, they have to be declared outside this function.&lt;/p&gt;
+
+&lt;p&gt;Since for NETBIOS query we only need the host our action function will take only ‘host’ as argument. We call the get_server_name function of &lt;a href=&quot;https://nmap.org/nsedoc/lib/netbios.html#get_server_name&quot;&gt;netbios&lt;/a&gt; module. From the documentation we can see that this function returns two values, query status and query result which we capture under two local variables. For our simple task, we need not check the result status and go ahead to return the name variable directly. In Lua, if a variable doesn’t exist it returns nil which is acceptable for our scenario.&lt;/p&gt;
+&lt;div class=&quot;language-lua highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;-- The Action Section --&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;action&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;nbt_status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;netbios_name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;netbios&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;get_server_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;netbios_name&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;p&gt;This returned value is processed by nmap scripting engine and printed in the output window.&lt;/p&gt;
+
+&lt;h2 id=&quot;where-to-go-next&quot;&gt;Where to go next&lt;/h2&gt;
+&lt;p&gt;Since this is only a basic script, we have not customized the output format at all. The hostnames when available gets printed below each host-discovered. If you notice, the print action is executed within the ACTION function whose scope is limited to one host at a time. If we need our output to be consolidated in a tabular form, we can write a postrule function, store and retrieve our findings from nmap registry. Refer to my &lt;a href=&quot;https://raw.githubusercontent.com/thamizh85/Nmap-scripts/master/hostinfo-discover.nse&quot;&gt;script&lt;/a&gt; (work in progress) to see one way of doing it.&lt;/p&gt;
+
+&lt;p&gt;I strongly recommend trying the tutorial at this &lt;a href=&quot;https://thesprawl.org/research/writing-nse-scripts-for-vulnerability-scanning/&quot;&gt;site&lt;/a&gt; for further study. It greatly helped me to get started with NMAP scripting and understanding the way a NSE script is structured.&lt;/p&gt;
+
+&lt;p&gt;It won’t hurt to improve your understanding of LUA programming language as well. I found this 15 minute &lt;a href=&quot;http://tylerneylon.com/a/learn-lua/&quot;&gt;primer&lt;/a&gt; to be very useful.&lt;/p&gt;
+
+&lt;p&gt;Lastly the greatest resource for advanced nmap script writing is the existing script library. There are hundreds of scripts and libraries available, study and explore them to see different ways of tackling a challenge. Good luck scripting!&lt;/p&gt;</content><author><name>thamizh85</name></author><category term="lua" /><category term="nmap" /><category term="network-discovery" /><summary type="html">Introduction Often we have to discover the devices on a network. I use a very simple nmap command for performing a pingsweep.</summary></entry><entry><title type="html">Using a bluetooth serial console with linux</title><link href="http://localhost:4000/notes/2017/08/24/using-a-bluetooth-serial-console-with-linux/" rel="alternate" type="text/html" title="Using a bluetooth serial console with linux" /><published>2017-08-24T23:41:28+08:00</published><updated>2017-08-24T23:41:28+08:00</updated><id>http://localhost:4000/notes/2017/08/24/using-a-bluetooth-serial-console-with-linux</id><content type="html" xml:base="http://localhost:4000/notes/2017/08/24/using-a-bluetooth-serial-console-with-linux/">&lt;p&gt;Recently I bought a &lt;a href=&quot;https://www.aliexpress.com/store/product/FREE-SHIPPING-Bt578-rs232-wireless-male-female-general-serial-port-bluetooth-adapter-bluetooth-module/719457_1271204185.html&quot;&gt;bluetooth RS232 serial convertor&lt;/a&gt;. I wasn’t sure whether it would work with my Linux laptop. But it turned out to be quite simple to setup.&lt;/p&gt;
+
+&lt;h2 id=&quot;pre-requisites&quot;&gt;Pre-requisites&lt;/h2&gt;
+
+&lt;p&gt;The following packages are required:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;bluez&lt;/li&gt;
+  &lt;li&gt;bluez-utils&lt;/li&gt;
+  &lt;li&gt;byobu (optional)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Bluez provides the bluetooth protocol stack (most likely shipped with the OS), bluez-utils provides the bluetoothctl utility and byobu is a wrapper around screen terminal emulator. You can also use ‘screen’ directly. Install these using your distributions recommended procedure.&lt;/p&gt;
+
+&lt;h2 id=&quot;steps&quot;&gt;Steps&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Start daemon:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; Swanky:~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;systemctl start bluetooth
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Discover using bluetoothctl:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; Swanky:~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bluetoothctl
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;NEW] Controller &amp;lt;controller-mac-address&amp;gt; xkgt-Swanky &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;default]
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;bluetooth]# power on
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;bluetooth]# scan on
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Once you can see your device, turn off the scan and pair
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;bluetooth]# scan off
+ &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;bluetooth]# pair &amp;lt;device-mac-address&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Exit blutoothctl and create serial device (Note that root privileges are required):
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;bluetooth]# &lt;span class=&quot;nb&quot;&gt;exit
+ &lt;/span&gt;Swanky:~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sudo rfcomm &lt;span class=&quot;nb&quot;&gt;bind &lt;/span&gt;0 &amp;lt;device-mac-address&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;You should now have /dev/rfcomm0. Connect to it using byobu-screen utility:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; Swanky:~&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;byobu-screen /dev/rfcomm0
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Enjoy your wireless console connection!&lt;/p&gt;</content><author><name>thamizh85</name></author><category term="bluetooth" /><category term="Linux" /><summary type="html">Recently I bought a bluetooth RS232 serial convertor. I wasn’t sure whether it would work with my Linux laptop. But it turned out to be quite simple to setup.</summary></entry><entry><title type="html">Self-signed certificate chain using OpenSSL X509 module</title><link href="http://localhost:4000/notes/sysadmin/2017/08/20/self-signed-certificate-chain-using-openssl-x509-module/" rel="alternate" type="text/html" title="Self-signed certificate chain using OpenSSL X509 module" /><published>2017-08-20T17:55:20+08:00</published><updated>2017-08-20T17:55:20+08:00</updated><id>http://localhost:4000/notes/sysadmin/2017/08/20/self-signed-certificate-chain-using-openssl-x509-module</id><content type="html" xml:base="http://localhost:4000/notes/sysadmin/2017/08/20/self-signed-certificate-chain-using-openssl-x509-module/">&lt;p&gt;Generating a self-signed CA certificate or signing a web server certificate using openssl is very easy. But creating a certificate, which works without any warning on most modern browsers is a challenge. This challenge is compounded by ever-growing stringent requirements from the popular browsers (See footnote 1).&lt;/p&gt;
+
+&lt;p&gt;There are two ways to use openssl to mimic a CA. The first option is to use ‘openssl ca’ module, for which there are many guides in the internet. This module mimics a full-fledged CA and useful when you are setting up something for long term requiring features such as CRL and OCSP.&lt;/p&gt;
+
+&lt;p&gt;The other option is to use ‘openssl x509’ module which is what we will be focusing on. I chose this because I just needed a certificate pair for one-off use and didn’t want to be bothered in setting up an elaborate CA configuration. The guide will be useful for someone with a similar objective.&lt;/p&gt;
+
+&lt;p&gt;As always, let us start with the requirement:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Create a certificate chain with as little configuration and minimum number of hosts, which means no intermediate CA.&lt;/li&gt;
+  &lt;li&gt;The CA cert would be imported manually in to Trusted Root Authorities on the client machines.&lt;/li&gt;
+  &lt;li&gt;The certificate should work on modern browsers. We will use latest versions of Chrome and Mozilla as benchmarks.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;steps&quot;&gt;Steps:&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Generate private key &amp;amp; self-signed cert for the CA in a single statement:&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@EARWA:openssl req -new -x509 &amp;lt;span style=&quot;color:blue;&quot;&amp;gt;-sha256&amp;lt;/span&amp;gt; -newkey rsa:2048 -nodes -keyout &amp;lt;span style=&quot;color:#ff0000;&quot;&amp;gt;ca.key&amp;lt;/span&amp;gt; -days 1000 -out &amp;lt;span style=&quot;color:#808000;&quot;&amp;gt;ca.pem&amp;lt;/span&amp;gt;
+root@EARWA:~/ca2# ls -ltr
+total 8
+-rw-r--r-- 1 root root 1704 Jul 30 20:01 &amp;lt;span style=&quot;color:#ff0000;&quot;&amp;gt;ca.key&amp;lt;/span&amp;gt;
+-rw-r--r-- 1 root root 1261 Jul 30 20:01 &amp;lt;span style=&quot;color:#808000;&quot;&amp;gt;ca.pem&amp;lt;/span&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;blockquote&gt;Note: Always use SHA256 as highlighted above. SHA-1 has been deprecated since Jan 2017 (See footnote 2)&lt;/blockquote&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Preparing a config file for CSR: We need to generate a CSR (Certificate Signing Request). This process involves generating a private key and a PEM encoded CSR file. The contents of our Web cert are determined by the information we provide in the CSR.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Modern browsers expect a field called sAN(subjectAltName) (See footnote 3). This field should hold all possible URI’s from which our webserver may get accessed.&lt;/p&gt;
+
+&lt;p&gt;Since OpenSSL’s default interactive process of CSR generation doesn’t support this field, we need to specify it in a config file and generate the CSR. based on this file Create a config file for Web server request. The highlighted sections are the reason we are using a config file. Otherwise rest of the attributes can be passed interactively.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@EARWA:~/ca2# more &amp;lt;span style=&quot;color:#ff0000;&quot;&amp;gt;web.earwa.com.conf&amp;lt;/span&amp;gt;
+[ subject ]
+countryName             = Country Name (2 letter code)
+countryName_default     = HK
+
+organizationName            = Organization Name (eg, company)
+organizationName_default    = Scarlet Spires
+
+basicConstraints    = CA:FALSE
+keyUsage            = digitalSignature, keyEncipherment
+&amp;lt;span style=&quot;color:#0000ff;&quot;&amp;gt;subjectAltName      = @alternate_names&amp;lt;/span&amp;gt;
+nsComment           = &quot;OpenSSL Generated Certificate&quot;
+
+&amp;lt;span style=&quot;color:#0000ff;&quot;&amp;gt;[ alternate_names ]
+DNS.1       = web.earwa.com
+DNS.2       = www.web.earwa.com&amp;lt;/span&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Submit a request based on the config file&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl req -config &amp;lt;span style=&quot;color:#ff0000;&quot;&amp;gt;web.earwa.com.conf&amp;lt;/span&amp;gt; -new -sha256 -newkey rsa:2048 -nodes -keyout web.earwa.com.key -days 1000 -out web.earwa.com.csr
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Check the generated request file before signing. The highlighted section shows the portions we are interested to validate.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@EARWA:~/ca2# openssl req -in web.earwa.com.csr -text -noout
+
+Certificate Request:
+    Data:
+        Version: 0 (0x0)
+        Subject: C=HK, O=Scarlet Spires
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+                Modulus:
+                    00:c6:f9:32:79:11:20:ff:97:da:38:a0:61:b9:41:
+                    1f:51:c0:1f:a1:48:05:74:54:81:23:9b:22:24:8d:
+                    35:f2:25:83:15:f2:9b:30:a5:43:2d:4d:08:2f:c7:
+                    9e:42:1d:f7:66:68:07:8f:da:0b:f9:5c:51:97:b1:
+                    0e:dc:44:d1:a4:5c:a1:ef:35:43:84:52:99:34:9f:
+                    7d:41:54:9f:65:21:4c:1c:21:6f:9c:73:d5:f2:3d:
+                    3c:6d:da:fe:85:88:98:4d:02:42:52:ea:9c:61:fe:
+                    e7:bc:c2:d6:44:9d:9f:f6:3d:cb:32:c6:e4:8d:d1:
+                    74:47:80:87:ac:8d:8a:64:8a:4e:54:ce:54:4e:75:
+                    3a:85:af:f5:96:9b:5f:a0:a0:6d:27:06:1c:8d:0b:
+                    4b:c5:1e:15:ff:16:4a:87:1e:9b:cc:98:a9:c5:8f:
+                    4f:f1:19:28:cd:90:6c:85:ab:58:37:14:d6:58:cb:
+                    7d:ab:8b:34:62:2a:72:b4:17:96:0b:6f:84:31:54:
+                    55:aa:06:56:00:04:5e:2d:d1:14:fa:7f:2d:b3:44:
+                    d3:1d:95:c2:93:ec:4e:17:e8:30:fa:e7:f5:be:b1:
+                    5f:9a:59:59:ac:0d:b7:04:4a:19:35:a2:a5:44:64:
+                    d4:a0:93:f8:dc:9f:3a:20:7b:5c:d7:26:67:28:67:
+                    87:73
+                Exponent: 65537 (0x10001)
+        Attributes:
+&amp;lt;span style=&quot;color:#0000ff;&quot;&amp;gt;        Requested Extensions:
+            X509v3 Subject Key Identifier:
+                30:47:85:A6:4E:9C:E0:D4:F7:CC:9F:FF:FF:38:03:FC:E7:0E:87:00
+            X509v3 Basic Constraints:
+                CA:FALSE
+            X509v3 Key Usage:
+                Digital Signature, Key Encipherment
+            X509v3 Subject Alternative Name:
+                DNS:web.earwa.com, DNS:www.web.earwa.com
+            Netscape Comment:
+                OpenSSL Generated Certificate&amp;lt;/span&amp;gt;
+
+    Signature Algorithm: sha256WithRSAEncryption
+         aa:be:6d:d1:95:8a:1e:87:d8:72:7a:95:2e:01:18:f5:76:6e:
+         28:e9:f8:a7:f0:ff:f5:5c:b3:95:99:ad:84:fd:bb:c3:fe:71:
+         cc:a5:52:26:ce:2e:d0:d8:78:11:b9:33:98:f9:7c:42:e8:29:
+         7e:8e:86:6c:b4:84:93:04:65:8e:d1:05:fd:6e:c2:94:bd:b1:
+         c9:06:59:b7:8e:de:f4:42:9a:af:f8:96:c2:e9:85:2d:74:f6:
+         24:41:96:da:f9:79:a5:3b:c7:42:8b:49:39:b6:9f:2b:a3:de:
+         b1:9c:b3:66:f4:5b:7f:e7:b7:f4:c9:cb:60:cc:38:01:59:d1:
+         61:c3:05:51:2d:c1:f8:63:d5:c5:40:e6:4d:06:3b:1b:06:93:
+         ca:80:23:13:0d:79:7a:b3:2a:a3:8d:0f:a7:94:38:35:09:e4:
+         69:5a:93:d4:c3:c6:26:ce:71:1f:0b:f1:03:d2:ae:0a:9e:06:
+         04:1c:7d:4e:fd:07:d7:e8:bf:45:a0:c9:48:bb:38:a6:fb:09:
+         5f:f0:84:42:ee:d9:fe:71:2b:24:6c:04:49:cb:f5:eb:7a:81:
+         67:56:e8:9a:6f:fc:45:da:0a:2c:31:42:72:43:01:d0:e7:b9:
+         a7:25:77:9a:21:f5:70:33:b6:b0:e0:75:00:29:d5:ce:77:61:
+         f5:ec:00:a0
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;This is the portion that tripped me up for a while. Note that earlier I said that the info provided in CSR will be used for certificate generation. It is only partially true, the x509 module cannot copy the extensions info directly from CSR. We need to manually add extensions by using the options -extensions and -extfile. So let us create the V3 extension file first.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@EARWA:~/ca2# more &amp;lt;span style=&quot;color:#ff0000;&quot;&amp;gt;v3.ext&amp;lt;/span&amp;gt;
+[ &amp;lt;span style=&quot;color:#0000ff;&quot;&amp;gt;v3_req&amp;lt;/span&amp;gt; ]
+authorityKeyIdentifier=keyid,issuer
+basicConstraints=CA:FALSE
+keyUsage = digitalSignature, nonRepudiation, keyEncipherment, dataEncipherment
+subjectAltName      = @alternate_names
+
+
+[ alternate_names ]
+DNS.1       = web.earwa.com
+DNS.2       = www.web.earwa.com
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Sign the cert. The highlighted portions refers back to the extension file and the section mentioned above.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;openssl x509 -extensions &amp;lt;span style=&quot;color:#0000ff;&quot;&amp;gt;v3_req&amp;lt;/span&amp;gt; -extfile &amp;lt;span style=&quot;color:#ff0000;&quot;&amp;gt;v3.ext&amp;lt;/span&amp;gt; -req -sha256 -days 1000 -in web.earwa.com.csr -CA ca.pem -CAcreateserial -CAkey ca.key -out web.earwa.com.pem
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Verify the cert&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;root@EARWA:~/ca2# openssl x509 -in web.earwa.com.pem -text -noout
+
+Certificate:
+    Data:
+        Version: 3 (0x2)
+        Serial Number: 14178612693219512833 (0xc4c48d1f7b319201)
+    Signature Algorithm: sha256WithRSAEncryption
+        Issuer: C=HK, ST=Some-State, O=Scarlet Spires
+        Validity
+            Not Before: Jul 31 16:36:03 2017 GMT
+            Not After : Apr 26 16:36:03 2020 GMT
+        Subject: C=HK, O=Scarlet Spires
+        Subject Public Key Info:
+            Public Key Algorithm: rsaEncryption
+                Public-Key: (2048 bit)
+               Modulus:
+                    00:c6:f9:32:79:11:20:ff:97:da:38:a0:61:b9:41:
+                    1f:51:c0:1f:a1:48:05:74:54:81:23:9b:22:24:8d:
+                    35:f2:25:83:15:f2:9b:30:a5:43:2d:4d:08:2f:c7:
+                    9e:42:1d:f7:66:68:07:8f:da:0b:f9:5c:51:97:b1:
+                    0e:dc:44:d1:a4:5c:a1:ef:35:43:84:52:99:34:9f:
+                    7d:41:54:9f:65:21:4c:1c:21:6f:9c:73:d5:f2:3d:
+                    3c:6d:da:fe:85:88:98:4d:02:42:52:ea:9c:61:fe:
+                    e7:bc:c2:d6:44:9d:9f:f6:3d:cb:32:c6:e4:8d:d1:
+                    74:47:80:87:ac:8d:8a:64:8a:4e:54:ce:54:4e:75:
+                    3a:85:af:f5:96:9b:5f:a0:a0:6d:27:06:1c:8d:0b:
+                    4b:c5:1e:15:ff:16:4a:87:1e:9b:cc:98:a9:c5:8f:
+                    4f:f1:19:28:cd:90:6c:85:ab:58:37:14:d6:58:cb:
+                    7d:ab:8b:34:62:2a:72:b4:17:96:0b:6f:84:31:54:
+                    55:aa:06:56:00:04:5e:2d:d1:14:fa:7f:2d:b3:44:
+                    d3:1d:95:c2:93:ec:4e:17:e8:30:fa:e7:f5:be:b1:
+                    5f:9a:59:59:ac:0d:b7:04:4a:19:35:a2:a5:44:64:
+                    d4:a0:93:f8:dc:9f:3a:20:7b:5c:d7:26:67:28:67:
+                    87:73
+                Exponent: 65537 (0x10001)
+        &amp;lt;span style=&quot;color:#0000ff;&quot;&amp;gt;X509v3 extensions:&amp;lt;/span&amp;gt;
+            X509v3 Authority Key Identifier:
+                keyid:32:33:41:52:11:5A:AE:F9:89:4E:8E:EE:26:E3:D2:7D:CA:C9:BC:63
+
+            X509v3 Basic Constraints:
+                CA:FALSE
+            X509v3 Key Usage:
+               Digital Signature, Non Repudiation, Key Encipherment, Data Encipherment
+            X509v3 &amp;lt;span style=&quot;color:#0000ff;&quot;&amp;gt;Subject Alternative Name:
+                DNS:web.earwa.com, DNS:www.web.earwa.com&amp;lt;/span&amp;gt;
+    Signature Algorithm: &amp;lt;span style=&quot;color:#0000ff;&quot;&amp;gt;sha256WithRSAEncryption&amp;lt;/span&amp;gt;
+         59:d5:45:b3:ca:60:32:a8:37:85:3b:bf:6f:d1:b3:26:f6:4b:
+         f2:26:2c:68:6f:cb:5c:3b:a8:6f:a9:32:53:71:98:74:26:be:
+         4f:3e:a9:13:e6:ba:e4:3e:52:83:86:0d:9d:53:4a:1e:e8:a5:
+         94:36:bf:c2:17:62:b9:8e:87:8d:32:f1:34:1a:e3:81:6b:0b:
+         5a:b7:a8:55:c4:24:ca:b2:65:75:e2:4b:ac:c4:9b:9e:d1:94:
+         45:31:92:1d:6b:30:6c:29:03:fd:1e:49:8e:8e:d5:30:6f:68:
+         fc:01:82:f8:57:83:85:47:15:e9:78:96:39:86:94:cb:96:29:
+         5b:61:f0:d9:23:d1:25:ca:a0:ea:80:ce:42:bb:12:40:b9:64:
+         c6:a5:4f:99:dc:f3:26:74:49:bc:b2:70:49:d2:22:f2:75:07:
+         6e:8f:96:9b:e6:67:ad:21:01:23:57:46:ea:78:12:3b:c8:ba:
+         dc:ae:39:ee:d6:30:6d:58:ab:f0:fe:c1:68:fb:0a:68:09:fc:
+         93:28:84:27:2d:1d:c0:c2:06:53:1b:3b:ff:ec:d8:a1:90:1c:
+         c4:59:c0:c3:d5:f4:bb:d4:79:35:dd:7f:05:60:3f:a9:ba:b0:
+         5c:b3:66:13:03:4f:ac:31:0c:8a:e9:82:8d:36:c1:78:bf:d6:
+         5e:6d:f9:13
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;That is it! Now you have a web server cert which would be trusted by most browsers, provided you import the root CA public cert in to the browsers’ trust chain.&lt;/p&gt;
+
+&lt;h4 id=&quot;footnote-1&quot;&gt;Footnote #1&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://cabforum.org/baseline-requirements-documents/&quot;&gt;https://cabforum.org/baseline-requirements-documents/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;footnote-2&quot;&gt;Footnote #2&lt;/h4&gt;
+
+&lt;p&gt;SHA-1 disabled on Chrome 56 and FireFox (Jan 2017)&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.chromestatus.com/features/6601657605423104&quot;&gt;https://www.chromestatus.com/features/6601657605423104&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://sites.google.com/a/chromium.org/dev/Home/chromium-security/education/tls/sha-1&quot;&gt;https://sites.google.com/a/chromium.org/dev/Home/chromium-security/education/tls/sha-1&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://blog.mozilla.org/security/2017/02/23/the-end-of-sha-1-on-the-public-web/&quot;&gt;https://blog.mozilla.org/security/2017/02/23/the-end-of-sha-1-on-the-public-web/&lt;/a&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;footnote-3&quot;&gt;Footnote #3&lt;/h4&gt;
+
+&lt;p&gt;SAN mandatory&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.chromestatus.com/features/4981025180483584&quot;&gt;https://www.chromestatus.com/features/4981025180483584&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://bugzilla.mozilla.org/show_bug.cgi?id=1245280&quot;&gt;https://bugzilla.mozilla.org/show_bug.cgi?id=1245280&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://tools.ietf.org/html/rfc2818&quot;&gt;https://tools.ietf.org/html/rfc2818&lt;/a&gt;&lt;/p&gt;</content><author><name>thamizh85</name></author><category term="openssl" /><category term="pki" /><category term="web" /><summary type="html">Generating a self-signed CA certificate or signing a web server certificate using openssl is very easy. But creating a certificate, which works without any warning on most modern browsers is a challenge. This challenge is compounded by ever-growing stringent requirements from the popular browsers (See footnote 1).</summary></entry><entry><title type="html">Dynamic registration of DNS for Linux devices in an Active Directory environment with Windows DNS server</title><link href="http://localhost:4000/sysadmin/2017/07/19/dynamic-registration-of-dns-for-linux-devices-in-an-active-directory-environment-with-windows-dns-server/" rel="alternate" type="text/html" title="Dynamic registration of DNS for Linux devices in an Active Directory environment with Windows DNS server" /><published>2017-07-19T23:43:13+08:00</published><updated>2017-07-19T23:43:13+08:00</updated><id>http://localhost:4000/sysadmin/2017/07/19/dynamic-registration-of-dns-for-linux-devices-in-an-active-directory-environment-with-windows-dns-server</id><content type="html" xml:base="http://localhost:4000/sysadmin/2017/07/19/dynamic-registration-of-dns-for-linux-devices-in-an-active-directory-environment-with-windows-dns-server/">&lt;p&gt;While Linux has proliferated extensively in the server arena in the recent past, client networks are still dominated by Windows devices. This means, things that we take for granted in a client environment such as DDNS are not as matured as they are in Windows environment. One may ask whether the recent surge in Linux based clients such as IoT devices has changed this equation. But the nature of these devices is different from Windows based clients that they mostly rely on outbound connection to internet. Since they seldom require other hosts to initiate connection to them, their operation doesn’t rely much on Dynamic DNS.&lt;/p&gt;
+
+&lt;p&gt;So, what does it take to make a Linux client register dynamically in a Windows environment? At its basic, the entire process relies on Dynamic DNS as explained in &lt;a href=&quot;https://tools.ietf.org/html/rfc2136&quot;&gt;RFC2136&lt;/a&gt;. In a traditional windows environment with AD, this process is taken care by client OS. Every time a Windows PC gets an IP address from DHCP server, it would send a DNS Update (Opcode = 5) request to its registered DNS server. Performed manually, this is same as typing “ipconfig /registerdns” at an elevated command prompt. This behaviour can be modified by accessing DNS section of Advanced TCP/IP settings of a network adapter.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/1-dns-properties.png&quot; alt=&quot;1 - DNS Properties.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;When we ask a Linux client to do the same (later I will explain how it can be configured to ask), it won’t work unless the DNS server is configured to accept “Insecure updates” (Which is a major security risk if you need to ask).&lt;/p&gt;
+
+&lt;p&gt;Take a look at the capture of Linux client performing DNS update, you can see that the server comes back with a UPDATE REFUSED response.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/2-linux-dns-update-capture.png&quot; alt=&quot;2 - Linux DNS Update Capture.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This is because our DNS server is enabled with secure updates which means only authenticated clients can send update.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/3-dns-secure-updates-option.png&quot; alt=&quot;3 - DNS Secure Updates option.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The client is expected to send a transaction signature along with the update request. There are different types of signatures such as a TSIG resource or the SIG(0) or GSS-TSIG signatures. In Windows world however, only GSS-TSIG signatures as described in &lt;a href=&quot;https://tools.ietf.org/html/rfc3645&quot;&gt;RFC3645&lt;/a&gt; are understood and accepted.&lt;/p&gt;
+
+&lt;p&gt;Looking at a capture from a Windows PC joined to domain, one can see the Windows Device sending Update request with GSS-TSIG resource.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/2-windows-dns-update-capture.png&quot; alt=&quot;2 - Windows DNS Update Capture.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Given this background, let us explore some of the options available to setup DDNS for Linux based clients. In this series of posts, I will explore 3 options:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Configure DHCP server to perform DNS registration on behalf of the clients&lt;/li&gt;
+  &lt;li&gt;Join the Linux devices to AD domain and configure them to dynamically update&lt;/li&gt;
+  &lt;li&gt;Setup a new sub-domain running a dedicated Linux BIND server and configure DNS forwarding on Microsoft DNS server.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Our environment has the following setup:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Microsoft Active Directory environment with DNS server installed in Domain controller and a DHCP server running separately on a different host. All are running on Windows Server 2008 R2.&lt;/li&gt;
+  &lt;li&gt;DNS is configured to accept only Secure updates.&lt;/li&gt;
+  &lt;li&gt;Two Linux devices running Debian Stretch operating system. One of them will act as DNS server in one of the scenarios.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/4-lab-topology.png&quot; alt=&quot;4 - Lab Topology.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The solutions we discuss should meet the following objectives:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;Update DNS when the device gets an IP address&lt;/li&gt;
+  &lt;li&gt;Perform periodic update to DNS server to protect against expiry&lt;/li&gt;
+  &lt;li&gt;Fully automated with very little or no hand-coding on client devices, assume no automation tools like Puppet or Chef&lt;/li&gt;
+  &lt;li&gt;Scalable to hundreds or thousands of devices&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Point 3 is important to me since I had to work out a solution at work where we are using hundreds of Raspberry Pi’s, all booting the same image cloned on to flash disks. So, editing config files on each of them is not an option (we will come to this later).&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;h2 id=&quot;configuring-dhcp-server-to-perform-dns-registration-on-behalf-of-the-clients&quot;&gt;Configuring DHCP server to perform DNS registration on behalf of the clients&lt;/h2&gt;
+
+&lt;p&gt;This is the simplest and most reliable solution of the available options. This method makes use of DHCP option 81 as defined in &lt;a href=&quot;https://tools.ietf.org/html/rfc4702&quot;&gt;RFC4702&lt;/a&gt;, which is used to convey a client’s FQDN to a DHCP server as part of DHCP process.&lt;/p&gt;
+
+&lt;blockquote&gt;An aside: RFC doesn’t mandate whether a DHCP server should register client’s DNS or not. It is left to site-specific policies, which may differ per the security context of the site.&lt;/blockquote&gt;
+
+&lt;p&gt;The default setting in a Microsoft DHCP server scope is as follows (Right click on scope name -&amp;gt; Properties to reach here):&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/5-default-scope-properties.png&quot; alt=&quot;5 - Default scope properties.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Understandably, this only updates to DNS server if requested by the client. What happens if we select the option to “Always dynamically update DNS A and PTR records”? Is that what we want?&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/6-always-dynamically-update1.png&quot; alt=&quot;6 - Always dynamically update.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;If you trigger a DHCP request from the client, you will notice that this doesn’t work.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/7-no-dns-update.png&quot; alt=&quot;7 - No DNS Update.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This setting merely controls whether a DHCP server should update ‘A’ record or not.  The label “Always dynamically update DNS A and PTR records” is misleading since it applies only for the clients that request a DNS update. By default, a client is responsible for updating the A record and DHCP server is responsible for updating the PTR record. Selecting the second option forces DHCP server to update A record as well. But the prerequisite is that the client should request for DNS update.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/8-dns-update-options.png&quot; alt=&quot;8 - DNS Update options.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The two options above correspond to the two cases discussed in &lt;a href=&quot;https://tools.ietf.org/html/rfc4702&quot;&gt;RFC4702&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/9-rfc-4702.png&quot; alt=&quot;9 - RFC 4702.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;For our Linux clients, the option we need is the last check box. Let us turn this on and trigger a DHCP request from our client.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/10-dynamically-update-for-linux-clients.png&quot; alt=&quot;10 - Dynamically update for Linux clients.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;When we check the DNS server, we can see that the A record successfully is created.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/11-successful-registration.png&quot; alt=&quot;11 - Successful Registration.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On the capture, we can see secure DNS update message being sent from the DHCP server (Note that the DNS clients always tries insecure updates first and gets rejected by the server).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/12-successful-registration-packets.png&quot; alt=&quot;12 - Successful Registration Packets.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;For a home environment, this is almost enough. But for production environments, with multiple DHCP servers, this is not enough. The problem is that, in such setup the DHCP server becomes the owner of the A and PTR records (see below). It is fine as long as the DHCP server is alive to create and remove records. But when it goes down, its peer DHCP server won’t be able to do anything about those records.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/13-a-record-owner.png&quot; alt=&quot;13 - A record owner.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This &lt;a href=&quot;https://technet.microsoft.com/en-us/library/dd334715(v=ws.10).aspx&quot;&gt;link&lt;/a&gt; explains the issue in more detail. Let us follow the advice, create a dedicated user account for updating DNS and delete the old record with DHCP server as owner. Do not grant any extra privilege to this account. Just adding to DNSUpdateProxy group should be sufficient (Right click on IPv4 -&amp;gt; Properties -&amp;gt; Advanced).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/14-dynamic-update-credentials.png&quot; alt=&quot;14 - Dynamic update credentials.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As usual, let us go ahead to trigger an update.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/2017-07-19-dynamic-registration-of-dns-for-linux-devices-in-an-active-directory-environment-with-windows-dns-server/15-dhcp-request.png&quot; alt=&quot;15 - DHCP Request.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As expected, new A and PTR record gets created.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/16-successful-registration.png&quot; alt=&quot;16 - Successful Registration.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;If we check the ownership, we can find that the record is owned by DNSProxyUpdate group.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/16-dynamic-update-credentials1.png&quot; alt=&quot;16 - Dynamic update credentials.png&quot; /&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;Finally, let us discuss the option called “Name Protection” at the bottom of the dialog box.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/17-name-protection.png&quot; alt=&quot;17 - Name Protection.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This forces DHCP server to manage the entire lifecycle of your client’s A and PTR records. If you are going to let your DHCP server manage client’s A record, I don’t see any reason to keep this disabled. It will also protect you from “&lt;a href=&quot;https://technet.microsoft.com/en-us/library/dd759188(v=ws.11).aspx&quot;&gt;Name Squatting&lt;/a&gt;” by offline clients. &lt;a href=&quot;https://tools.ietf.org/html/rfc4701&quot;&gt;RFC4701 &lt;/a&gt;describes the problem as:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/18-rfc4701.png&quot; alt=&quot;18 - RFC4701.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Let us see what it means to turn on this option. First, we keep it disabled and bring two clients online with same hostname, one after other. All is well when the first client comes online and gets an IP address 192.168.179.50.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/19-dhcp-request.png&quot; alt=&quot;19 - DHCP Request.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;DNS also gets updated accordingly.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/20-dns-update.png&quot; alt=&quot;20 - DNS Update.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Let us bring another Linux client online and change the hostname to same as this host. Then perform a DHCP request from this host.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/21-hostname-change.png&quot; alt=&quot;21 - Hostname change.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/22-dhcp-request.png&quot; alt=&quot;22 - DHCP Request.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;DHCP server assigns IP address 192.168.179.51 and sends an update to DNS server. Note that the DHCP server makes no fuss about two hosts sharing the same hostname. For all it knows, it could be the same host with multiple interfaces.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/23-dhcp-update.png&quot; alt=&quot;23 - DHCP Update.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;On the DNS sever side, we see that it accepts this update without any hesitation. The only problem is that this overwrites the existing record, while the client is still online. So, anyone trying to talk the first node ends up talking to the second node.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/24-dns-overwritten.png&quot; alt=&quot;24 - DNS overwritten.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Clearly, DHCP server is not a reliable source of identity. RFC4703 briefly mentions the inability of DHCP server to provide any sort of assurance.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/25-rfc4703.png&quot; alt=&quot;25 - RFC4703.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Let us see what happens when we enable “Name Protection”.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/26-enable-name-protection.png&quot; alt=&quot;26 - Enable Name Protection.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As soon as we enable this option, first thing we notice is that all other options are greyed out. This is because, with Name Protection enabled, it is always the responsibility of DHCP server to perform both A record and PTR record updates.&lt;/p&gt;
+
+&lt;p&gt;Let us wipe the slate clean, by releasing IP address from both the clients and deleting the existing DNS &amp;amp; DHCP records.&lt;/p&gt;
+
+&lt;p&gt;Now when you bring the first Linux client online, you can see that the DHCP server performs a new type of record registration called DHCID.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/27-successful-dhcid-capture.png&quot; alt=&quot;27 - Successful DHCID Capture.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;A new record type DHCID appears in the DNS server.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/28-successful-dhcid-registered.png&quot; alt=&quot;28 - Successful DHCID registered.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Let us bring up the impostor and request DHCP address. It gets an IP address of 192.168.179.51.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/29-dns-impersonation.png&quot; alt=&quot;29 - DNS Impersonation.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As usual, DHCP server is very generous about having two hosts sharing the same hostname.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/30-duplicate-dhcp-update.png&quot; alt=&quot;30 - Duplicate DHCP Update.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;But no new DNS entry is created.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/31-name-protection-success.png&quot; alt=&quot;31 - Name protection success.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Looking at the capture, we can see that the DNS registration fails with a response that RRset does not exist.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/32-dns-update-refused-capture.png&quot; alt=&quot;32 - DNS Update refused capture.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This message means that DHCID value calculated from the new update packet doesn’t match with any DHCID RR’s stored in the server. This behaviour is described in &lt;a href=&quot;https://tools.ietf.org/html/rfc4701&quot;&gt;RFC4701&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://ephemeralelectrons.files.wordpress.com/2017/07/33-rfc4701.png&quot; alt=&quot;33 - RFC4701.png&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;This is as much as we need to know about configuring a Microsoft DHCP server to perform Dynamic DNS for Linux clients. In the upcoming posts, let us explore the other two options.&lt;/p&gt;</content><author><name>thamizh85</name></author><category term="DHCP" /><category term="DNS" /><category term="Dynamic DNS" /><category term="Linux" /><summary type="html">While Linux has proliferated extensively in the server arena in the recent past, client networks are still dominated by Windows devices. This means, things that we take for granted in a client environment such as DDNS are not as matured as they are in Windows environment. One may ask whether the recent surge in Linux based clients such as IoT devices has changed this equation. But the nature of these devices is different from Windows based clients that they mostly rely on outbound connection to internet. Since they seldom require other hosts to initiate connection to them, their operation doesn’t rely much on Dynamic DNS.</summary></entry></feed>

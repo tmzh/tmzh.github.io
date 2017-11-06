@@ -1,0 +1,49 @@
+<p>Recently I bought a <a href="https://www.aliexpress.com/store/product/FREE-SHIPPING-Bt578-rs232-wireless-male-female-general-serial-port-bluetooth-adapter-bluetooth-module/719457_1271204185.html">bluetooth RS232 serial convertor</a>. I wasn’t sure whether it would work with my Linux laptop. But it turned out to be quite simple to setup.</p>
+
+<h2 id="pre-requisites">Pre-requisites</h2>
+
+<p>The following packages are required:</p>
+<ul>
+  <li>bluez</li>
+  <li>bluez-utils</li>
+  <li>byobu (optional)</li>
+</ul>
+
+<p>Bluez provides the bluetooth protocol stack (most likely shipped with the OS), bluez-utils provides the bluetoothctl utility and byobu is a wrapper around screen terminal emulator. You can also use ‘screen’ directly. Install these using your distributions recommended procedure.</p>
+
+<h2 id="steps">Steps</h2>
+
+<ol>
+  <li>Start daemon:
+    <div class="language-shell highlighter-rouge"><pre class="highlight"><code> Swanky:~<span class="nv">$ </span>systemctl start bluetooth
+</code></pre>
+    </div>
+  </li>
+  <li>Discover using bluetoothctl:
+    <div class="language-shell highlighter-rouge"><pre class="highlight"><code> Swanky:~<span class="nv">$ </span>bluetoothctl
+ <span class="o">[</span>NEW] Controller &lt;controller-mac-address&gt; xkgt-Swanky <span class="o">[</span>default]
+ <span class="o">[</span>bluetooth]# power on
+ <span class="o">[</span>bluetooth]# scan on
+</code></pre>
+    </div>
+  </li>
+  <li>Once you can see your device, turn off the scan and pair
+    <div class="language-shell highlighter-rouge"><pre class="highlight"><code> <span class="o">[</span>bluetooth]# scan off
+ <span class="o">[</span>bluetooth]# pair &lt;device-mac-address&gt;
+</code></pre>
+    </div>
+  </li>
+  <li>Exit blutoothctl and create serial device (Note that root privileges are required):
+    <div class="language-shell highlighter-rouge"><pre class="highlight"><code> <span class="o">[</span>bluetooth]# <span class="nb">exit
+ </span>Swanky:~<span class="nv">$ </span>sudo rfcomm <span class="nb">bind </span>0 &lt;device-mac-address&gt;
+</code></pre>
+    </div>
+  </li>
+  <li>You should now have /dev/rfcomm0. Connect to it using byobu-screen utility:
+    <div class="language-shell highlighter-rouge"><pre class="highlight"><code> Swanky:~<span class="nv">$ </span>byobu-screen /dev/rfcomm0
+</code></pre>
+    </div>
+  </li>
+</ol>
+
+<p>Enjoy your wireless console connection!</p>
