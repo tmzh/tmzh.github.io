@@ -79,7 +79,7 @@ But determining whether a host is listening on a port is not so trivial. We have
 -- The Rule Section --
 portrule = shortport.portnumber({137}, "udp")
 ```
->NOTE: The Rule section only filters port numbers passed on from the upper layer i.e, the original nmap scan. It doesn't trigger a port scan on its own. That is why when we launch the script, we had to specify port number explicitly (`nmap -sU U:137 <host>`). It is still possible to launch a port scan in this section, by calling nmap socket libraries but those are advanced scripting scenarios.
+>NOTE: The Rule section only filters port numbers passed on from the upper layer i.e, the original nmap scan. It doesn't trigger a port scan on its own. That is why when we launch the script, we had to specify port number explicitly (`nmap -sU -p U:137 <host>`). It is still possible to launch a port scan in this section, by calling nmap socket libraries but those are advanced scripting scenarios.
 
 ### ACTION Section
 Next comes the ACTION section. Our action section here is a function that takes (host, port) as argument. It means the host object and port object are available to this function for evaluating logic. If we need other variables, they have to be declared outside this function.
