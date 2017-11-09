@@ -17,7 +17,7 @@ Often we have to discover the devices on a network. I use a very simple nmap com
 
 `sudo nmap -sn <subnet or ip range>`
 
-On my work PC which runs Windows, I wrap it around in a batch script and place it in the search PATH. On Linux it can be dropped in as an alias in bashrc.
+On my Windows PC, I wrap it around in a batch script and place it in the search PATH. On Linux, it can be dropped in as an alias in bashrc.
 
 It is handy, but not complete. I would like to have some extra information such as hostnames (collected by various means not just DNS reverse lookup), platform info etc., Such details are available in tools such as AngryIP scanner, but I don't prefer to launch a GUI tool for single task and keep it running until the task is done. 
 
