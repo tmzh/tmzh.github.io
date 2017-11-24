@@ -1,3 +1,4 @@
+---
 author: thamizh85
 comments: true
 date: 2017-11-24 08:01:28+08:00
@@ -12,7 +13,7 @@ tags:
 - numpy
 - probability
 - modelling
-
+---
 ## Background
 Recently we had a cabling issue in our core infrastructure which caused around 3 to 12% packet loss across few IP streams. One of my colleagues made an interesting observation that when he tried to ping with large packet size (5000 bytes) the packet loss rose up to 40%. In his opinion, that meant some applications were experiencing up to 40% packet loss. I seldom do large packet ping tests unless I am troubleshooting MTU issues, so to me this observation was interesting. 
 
