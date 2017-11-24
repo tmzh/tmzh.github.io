@@ -44,7 +44,7 @@ So when we ping with 5000 bytes, 4 packets are sent. And ICMP protocol considers
 But is this what is happening in the ping test result? We can calculate the probability of datagram loss using probability theory but let us defer to it later on and do a numerical simulation first using Monte Carlo simulation.
 
 ## Monte Carlo Simulation
-[Monte carlo simulation](https://www.wikiwand.com/en/Monte_Carlo_method) is a rather fancy title for a simple simulation using random event generator, but it is quite handy and widely used. Usually Monte Carlo simulation is useful for simulating  events that are truly random in nature. In a chaotic backbone network, that handles traffic stream of different kinds, we can assume the frame loss to happen approximately in a random fashion. 
+[Monte carlo simulation](https://www.wikiwand.com/en/Monte_Carlo_method) is a rather fancy title for a simple simulation using random event generator, but it is quite handy and widely used. Usually Monte Carlo simulation is useful for simulating events that are truly random in nature. In a chaotic backbone network, that handles traffic stream of different kinds, we can assume the frame loss to happen approximately in a random fashion. 
 
 Let us write a short program to simulate random packet loss.  
 
@@ -83,7 +83,7 @@ print("The probability of a group failure is {:.2f}%".format(failCount/len(grpEv
 There you see! Even a 3% ethernet frame loss translates to 12% packet loss for jumbo ping test. This is same as what we observed. Does the math agree? 
 
 ## Using Probability Theory
-If `p` is the probability of a single frame loss, `(1-p)` is the probability of a successful transfer. And a datagram is successfull only if all of its frames are successful. So an ICMP datagram which is 4 frame long, will have `(1-p)**4` probability of succesfull delivery. To calculate the failure rate, just take its inverse.  
+If `p` is the probability of a single frame loss, `(1-p)` is the probability of a successful transfer. And a datagram is successful only if all of its frames are successful. So an ICMP datagram which is 4 frame long, will have `(1-p)**4` probability of succesful delivery. To calculate the failure rate, just take its inverse.  
 
 ```python
 1- (1-p)**4
@@ -95,4 +95,5 @@ As expected the simulation is slightly off from the calculated probability. But 
 ## Conclusion
 The exactness of our calculation hinges on the assumption of random nature of packet loss. While it happened to be close to true in my case, it need not be all the time. The link may be loaded in a bursty manner and since our ping streams are evenly spaced over time, their chances of failure may not be truly random. 
 
-Nevertheless one should appreciate the difference between a datagram loss and ethernet loss while interpreting results. Understanding the MTU of the network path helps is also paramount. 
+
+Nevertheless, we should be wary of the difference between a datagram loss and ethernet loss while interpreting results. Consider the MTU of the network path while testing with different packet sizes
