@@ -4,7 +4,7 @@ comments: true
 date: 2017-11-24 08:01:28+08:00
 layout: post
 slug: jumbo-ping-fallacy-using-monte-carlo-simulation-to-model-ping-loss-behavior
-title: Jumbo Ping Fallacy: Using Monte-Carlo Simulation to model ping loss behavior
+title: Jumbo Ping Fallacy- Using Monte-Carlo Simulation to model ping loss behavior
 categories:
 - Scripting
 tags:
