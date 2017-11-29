@@ -17,7 +17,7 @@ tags:
 ## Background
 Recently we had a cabling issue in our core infrastructure which caused around 3 to 12% packet loss across few IP streams. One of my colleagues made an interesting observation that when he tried to ping with large packet size (5000 bytes) the packet loss rose up to 40%. In his opinion, that meant some applications were experiencing up to 40% packet loss. I seldom do large packet ping tests unless I am troubleshooting MTU issues, so to me this observation was interesting. 
 
-At the outset, it may look like an aggravated issue, that some applications relying on large packet sizes experience high packet loss. But once you realize that the ping test results represent ICMP datagram loss and not ethernet frame loss, you will realize that both tests results are the same, but in different units. Interpretting them as two separate test cases is fallacious. Let us explore why.
+At the outset, it may look like an aggravated problem that some applications relying on large packet sizes experience high packet loss. But you know that your path MTU doesn't support jumbo frames end-to-end. Once you reason that the ping test results only represent ICMP datagram loss and not ethernet frame loss, you will realize that both tests results represent the same network performane but in different units. Interpreting them as two separate test cases is fallacious. Let us explore why.
 
 ## Normal ping vs Large ping
 In windows a normal ping packet size is 32 bytes and in most environments, the default MTU is 1500 bytes. So a single frame is sufficient to transmit a ping packet. Things get weirder when we ping with large packets. In windows, you can specify the ping packet size using -l option. Note that this size doesn't include the packet header (20 bytes for IP header + 8 bytes for ICMP header). Which means with a 1500 MTU size, we can send only up to 1472 bytes in a single frame. Any length above this must be fragmented.
@@ -81,7 +81,7 @@ print("The probability of a group failure is {:.2f}%".format(failCount/len(grpEv
     The probability of a group failure is 11.78%
     
 
-There you see! Even a 3% ethernet frame loss translates to 12% packet loss for jumbo ping test. This is same as what we observed. Does the math agree? 
+There you see! Even a 3% ethernet frame loss translates to 12% packet loss for jumbo ping test. This is same as what we observed. Now this is just a simulation with random input. But does the math agree? 
 
 ## Using Probability Theory
 If `p` is the probability of a single frame loss, `(1-p)` is the probability of a successful transfer. And a datagram is successful only if all of its frames are successful. So an ICMP datagram which is 4 frame long, will have `(1-p)**4` probability of succesful delivery. To calculate the failure rate, just take its inverse.  
@@ -98,4 +98,4 @@ The exactness of our calculation hinges on the assumption of random nature of pa
 
 Nevertheless, we should be wary of the difference between a datagram loss and ethernet loss while interpreting results. Consider the MTU of the network path while testing with different packet sizes.
 
-###### Jupyter notebook version of this post can be viewed at https://goo.gl/DYxpCo
+###### Jupyter notebook version of this post can be viewed [here](https://goo.gl/DYxpCo)
