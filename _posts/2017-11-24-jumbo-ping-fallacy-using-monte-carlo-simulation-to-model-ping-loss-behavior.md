@@ -96,5 +96,6 @@ As expected the simulation is slightly off from the calculated probability. But 
 ## Conclusion
 The exactness of our calculation hinges on the assumption of random nature of packet loss. While it happened to be close to true in my case, it need not be all the time. The link may be loaded in a bursty manner and since our ping streams are evenly spaced over time, their chances of failure may not be truly random. 
 
+Nevertheless, we should be wary of the difference between a datagram loss and ethernet loss while interpreting results. Consider the MTU of the network path while testing with different packet sizes.
 
-Nevertheless, we should be wary of the difference between a datagram loss and ethernet loss while interpreting results. Consider the MTU of the network path while testing with different packet sizes
+###### Jupyter notebook version of this post can be viewed at https://goo.gl/DYxpCo
