@@ -1,0 +1,961 @@
+
+<!doctype html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next muse use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="google9355da1d9e940142.html" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/assets/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/assets/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/assets/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="or-tools,python,puzzle,operations research,constraint programming," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Ephemeral Electrons" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Introduction Constraint programming (CP) is a subset of Operations Research (OR) where our task is to identify all feasible solutions to a given problem that satisfies a set of constraints. This is different from an optimization problem, where an objective function is defined and we arrive at solutions that either maximizes or minimizes an objective function.">
+<meta name="keywords" content="or-tools, python, puzzle, operations research, constraint programming">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Solving an ancient Chinese math puzzle with Constraint Programming using Google's OR-Tools">
+<meta property="og:url" content="http://localhost:4000/modelling/2017/12/09/2017-12-09-solving-an-ancient-chinese-math-puzzle-with-constraint-programming-using-googles-or-tools/">
+<meta property="og:site_name" content="Ephemeral Electrons">
+<meta property="og:description" content="Introduction Constraint programming (CP) is a subset of Operations Research (OR) where our task is to identify all feasible solutions to a given problem that satisfies a set of constraints. This is different from an optimization problem, where an objective function is defined and we arrive at solutions that either maximizes or minimizes an objective function.">
+<meta property="og:locale" content="en">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Solving an ancient Chinese math puzzle with Constraint Programming using Google's OR-Tools">
+<meta name="twitter:description" content="Introduction Constraint programming (CP) is a subset of Operations Research (OR) where our task is to identify all feasible solutions to a given problem that satisfies a set of constraints. This is different from an optimization problem, where an objective function is defined and we arrive at solutions that either maximizes or minimizes an objective function.">
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Muse',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://localhost:4000/"/>
+
+
+
+
+
+  <title>Solving an ancient Chinese math puzzle with Constraint Programming using Google's OR-Tools</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-108447382-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ephemeral Electrons</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">A thought, a code, an ephemeral dance of electrons</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            Sitemap
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+<div id="posts" class="posts-expand">
+  
+  
+
+  
+
+  
+  
+  
+
+  <article class="post post-type- " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/modelling/2017/12/09/2017-12-09-solving-an-ancient-chinese-math-puzzle-with-constraint-programming-using-googles-or-tools/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tamizh">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/assets/images/confused-monkey.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ephemeral Electrons">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+          
+          
+            Solving an ancient Chinese math puzzle with Constraint Programming using Google's OR-Tools
+          
+        </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-12-09T12:00:00+08:00">
+                2017-12-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/category/#/Modelling" itemprop="url" rel="index">
+                    <span itemprop="name">Modelling</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+            
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="introduction">Introduction</h2>
+<p><a href="https://www.wikiwand.com/en/Constraint_programming">Constraint programming (CP)</a> is a subset of Operations Research (OR) where our task is to identify all feasible solutions to a given problem that satisfies a set of constraints. This is different from an optimization problem, where an objective function is defined and we arrive at solutions that either maximizes or minimizes an objective function.</p>
+
+<p>CP is mostly well suited for solving logic puzzles, since most logic puzzles are based on constraints and enumerating feasible solutions. But apart from recreational maths, CP also has a lot of practical applications in Scheduling, Resource allocation, Manufacturing etc.,</p>
+
+<p>Recently I came across <a href="https://developers.google.com/optimization/">or-tools</a> from Google github repo. It is a suite of libraries for solving Operations Research problems. I wanted to give it a try by solving a simple logic puzzle. The puzzle I chose is called <a href="https://www.wikiwand.com/en/Hundred_Fowls_Problem">Hundred Fowls Problem</a>. Let us see how it goes.</p>
+
+<h2 id="hundred-fowls-problem">Hundred Fowls problem</h2>
+<p>This puzzle found in the sixth-century work of mathematician Chang Chiu-chen called the “hundred fowls” problem asks:</p>
+
+<blockquote>
+  <p>If a rooster is worth five coins, a hen three coins, and three chickens together are worth one coin, how many roosters, hens, and chicks totalling 100 can be bought for 100 coins?</p>
+</blockquote>
+
+<p>This translates to solving a set of 2 algebraic equations with 3 variables. In real numbers, there are infinite solutions to this puzzle since we are short by one non-equivalent equation to bind values to 3 variables. However, buying non-integer number of fowls can get tricky, so we can safely assume that we are dealing with 3 integer valued variables here. This reduces the solution space to a finite count, but still there are more than one feasible solution. This is a perfect candidate for constraint programming since we need to identify all feasible solutions and not maximize/minimize an objective function.</p>
+
+<h3 id="components-of-an-or-model">Components of an OR model</h3>
+<p>A model for an optimization problem can be thought to have 3 components:</p>
+<ul>
+  <li>Decision variables</li>
+  <li>Constraints</li>
+  <li>Objectives</li>
+</ul>
+
+<p>Decision variables are the answer an OR problem tries to solve. In our case, it is the valid number of fowls of each type that we can buy. Constraints are the limits imposed on the problem. Here we have total cost and total bird count imposed as limits. An objective is the goal of an OR problem such as maximize profit or minimize project time etc., Most often in Constraint Programming, we don’t need to work with objectives and we don’t have one for our problem as well.</p>
+
+<h3 id="setting-up-the-code">Setting up the code</h3>
+<p>Let us first import the necessary modules and create a Solver and define our parameters.</p>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">ortools.constraint_solver</span> <span class="kn">import</span> <span class="n">pywrapcp</span>
+
+<span class="n">solver</span> <span class="o">=</span> <span class="n">pywrapcp</span><span class="o">.</span><span class="n">Solver</span><span class="p">(</span><span class="s">"hundred_fowls"</span><span class="p">)</span>
+
+<span class="n">ROOSTER_COST</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">HEN_COST</span>     <span class="o">=</span> <span class="mi">3</span>
+<span class="n">THREE_CHICK_COST</span>   <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">total_cost</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">total_fowls</span> <span class="o">=</span> <span class="mi">100</span>
+</code></pre>
+</div>
+
+<h4 id="decision-variables">Decision Variables</h4>
+<p>Let us first try to define the limits our decision variables can take i.e., the maximum number of roosters, hens or chicks that we need to consider. One can enumerate each fowl type up to the total count (100) but this increases the search domain unnecessarily. For e.g, we cannot buy more than 20 roosters since we would exceed 100 coins nor can we buy 300 chicks for 100 coins. So, we try to establish the upper limit for each of our decision variables as below:</p>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">floor</span>
+
+<span class="n">max_rooster</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">total_fowls</span><span class="p">,</span> <span class="n">floor</span><span class="p">(</span><span class="n">total_cost</span><span class="o">/</span><span class="n">ROOSTER_COST</span><span class="p">))</span>
+<span class="n">max_hen</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">total_fowls</span><span class="p">,</span> <span class="n">floor</span><span class="p">(</span><span class="n">total_cost</span><span class="o">/</span><span class="n">HEN_COST</span><span class="p">))</span>
+<span class="n">max_chick_set</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">total_fowls</span><span class="p">,</span> <span class="n">floor</span><span class="p">(</span><span class="n">total_cost</span><span class="o">/</span><span class="n">THREE_CHICK_COST</span><span class="p">))</span> <span class="c"># a set of 3 chickens </span>
+</code></pre>
+</div>
+<p>Notice that for chick count, we are grouping them in sets of three. This is because the unit cost of a chick is a fraction (1/3) and the solver doesn’t allow us to multiply float numbers with IntVar object (which we will come to know later). This is perfectly acceptable for our scenario since chick count always needs to be a multiple of 3 or else the total cost will never be an integer (100 in this case). Besides, this also reduces the search space for chick count by a factor of 3, eliminating obvious non-solutions.</p>
+
+<p>We now have to spec out our decision variables. OR-Tools supports different types of decision variables such as Integers, Intervals etc., In our current challenge the decision variable is an integer so we assign it by using IntVar method. The first two values gives the lower and upper bounds for the variables. The last value is an arbitrary string handle for output representation. I am not sure under which scenarios the last variable will come to use, but likely it is an object name required for the underlying C++ code. The python module we use for or-tools is actually a wrapper for the core C++ code.</p>
+
+<p>For our problem the decision variables can be defined as below:</p>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># since the puzzle requires us to buy atleast one fowl </span>
+<span class="c"># of each type we will start enumerating from one</span>
+<span class="n">rooster_count</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">IntVar</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_rooster</span><span class="p">,</span> <span class="s">"Rooster"</span><span class="p">)</span>
+<span class="n">hen_count</span>     <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">IntVar</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_hen</span><span class="p">,</span> <span class="s">"Hen"</span><span class="p">)</span>
+<span class="n">chick_set_count</span>    <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">IntVar</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">max_chick_set</span><span class="p">,</span> <span class="s">"Chick"</span><span class="p">)</span>
+</code></pre>
+</div>
+<h4 id="constraints">Constraints</h4>
+<p>Next we add the constraints for our model. It is done using the “Add” method of Solver object.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">solver</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">rooster_count</span> <span class="o">+</span> 
+           <span class="n">hen_count</span> <span class="o">+</span> 
+           <span class="n">chick_set_count</span><span class="o">*</span><span class="mi">3</span> <span class="o">==</span> <span class="n">total_fowls</span><span class="p">)</span>
+
+<span class="n">solver</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">rooster_count</span><span class="o">*</span><span class="n">ROOSTER_COST</span> <span class="o">+</span> 
+           <span class="n">hen_count</span><span class="o">*</span><span class="n">HEN_COST</span> <span class="o">+</span> 
+           <span class="n">chick_set_count</span><span class="o">*</span><span class="n">THREE_CHICK_COST</span> <span class="o">==</span> <span class="n">total_cost</span><span class="p">)</span>
+</code></pre>
+</div>
+<h4 id="navigating-the-search-space">Navigating the search space</h4>
+<p>Next we create a decision builder which specifies how to iterate through all possible values for our problems. It is done using the Phase method. The first arguemnt is an array of our decision variables. Second argument is how we choose the next value to try for our decision variable. Last argument is how we start assigning value to our variable (from minimum or maximum). We will go with the defauls although for larger problems, we could use some sort of heuristics to search only interesting portions of a search space. You can refer to <a href="http://www.lia.disi.unibo.it/Staff/MicheleLombardi/or-tools-doc/reference_manual/or-tools/src/constraint_solver/classoperations__research_1_1Solver.html#8bda7ed6e7e533cca4c44eba6efffc8b">or-tools documentation</a> for other search strategies.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">db</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">Phase</span><span class="p">([</span><span class="n">rooster_count</span><span class="p">,</span> <span class="n">hen_count</span><span class="p">,</span> <span class="n">chick_set_count</span><span class="p">],</span> 
+                  <span class="n">solver</span><span class="o">.</span><span class="n">CHOOSE_FIRST_UNBOUND</span><span class="p">,</span> 
+                  <span class="n">solver</span><span class="o">.</span><span class="n">ASSIGN_MIN_VALUE</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<h3 id="solving-the-model">Solving the model</h3>
+<p>Finally we solve our model and iterate through our solutions.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">solver</span><span class="o">.</span><span class="n">Solve</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
+<span class="n">count</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="k">while</span> <span class="n">solver</span><span class="o">.</span><span class="n">NextSolution</span><span class="p">():</span>
+    <span class="n">count</span> <span class="o">+=</span> <span class="mi">1</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">"{0} Roosters, {1} Hen and {2} Chicks"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">rooster_count</span><span class="p">,</span> <span class="n">hen_count</span><span class="p">,</span> <span class="n">chick_set_count</span><span class="o">.</span><span class="n">Value</span><span class="p">()</span><span class="o">*</span><span class="mi">3</span><span class="p">))</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Number of unique solutions found - {0}"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">count</span><span class="p">))</span>
+</code></pre>
+</div>
+<p>This produces 3 solutions to the puzzle.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code>Rooster(4) Roosters, Hen(18) Hen and 78 Chicks
+Rooster(8) Roosters, Hen(11) Hen and 81 Chicks
+Rooster(12) Roosters, Hen(4) Hen and 84 Chicks
+Number of unique solutions found - 3
+</code></pre>
+</div>
+
+<h2 id="further-reading">Further Reading</h2>
+
+<p>or-tools manual on <a href="https://acrogenesis.com/or-tools/documentation/user_manual/manual/introduction/what_is_cp.html">Constraint Programming</a> is quite comprehensive. As always, best way to learn is to study existing code and implementations. In this regards, the <a href="https://github.com/google/or-tools/tree/master/examples">example scripts</a> from or-tools public repo is quite indispensable for learning. There is a good amount of example scripts for some of the most popular OR challenges.</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            
+            <a href="/tag/#/or-tools" rel="tag"># or-tools</a>
+          
+            
+            <a href="/tag/#/python" rel="tag"># python</a>
+          
+            
+            <a href="/tag/#/puzzle" rel="tag"># puzzle</a>
+          
+            
+            <a href="/tag/#/operations%20research" rel="tag"># operations research</a>
+          
+            
+            <a href="/tag/#/constraint%20programming" rel="tag"># constraint programming</a>
+          
+        </div>
+      
+
+      
+      
+      
+      
+      
+
+      
+      
+        <div class="post-nav" id="post-nav-id">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/modelling/2017/11/24/jumbo-ping-fallacy-using-monte-carlo-simulation-to-model-ping-loss-behavior/" rel="prev" title="Jumbo Ping Fallacy- Using Monte-Carlo Simulation to model ping loss behavior">
+                Jumbo Ping Fallacy- Using Monte-Carlo Simulation to model ping loss behavior <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+      
+
+      
+    </footer>
+  </article>
+
+  <div class="post-spread">
+    
+  </div>
+</div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        
+        
+        
+
+
+
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/assets/images/confused-monkey.jpg"
+               alt="Tamizh" />
+          <p class="site-author-name" itemprop="name">Tamizh</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/">
+                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+        
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+
+
+
+
+            
+              <div class="post-toc-content">
+    <ol class=nav>
+      <li class="nav-item nav-level-2"> <a class="nav-link" href="#introduction"> <span class="nav-number">1</span> <span class="nav-text">Introduction</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#hundred-fowls-problem"> <span class="nav-number">2</span> <span class="nav-text">Hundred Fowls problem</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#components-of-an-or-model"> <span class="nav-number">2.1</span> <span class="nav-text">Components of an OR model</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#setting-up-the-code"> <span class="nav-number">2.2</span> <span class="nav-text">Setting up the code</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-4"> <a class="nav-link" href="#decision-variables"> <span class="nav-number">2.2.1</span> <span class="nav-text">Decision Variables</span> </a> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li> <li class="nav-item nav-level-4"> <a class="nav-link" href="#constraints"> <span class="nav-number">2.2.2</span> <span class="nav-text">Constraints</span> </a> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li> <li class="nav-item nav-level-4"> <a class="nav-link" href="#navigating-the-search-space"> <span class="nav-number">2.2.3</span> <span class="nav-text">Navigating the search space</span> </a> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#solving-the-model"> <span class="nav-number">2.3</span> <span class="nav-text">Solving the model</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#further-reading"> <span class="nav-number">3</span> <span class="nav-text">Further Reading</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child">
+    </ol>
+  </div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-hand-spock-o"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tamizh</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://jekyllrb.com">Jekyll</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/simpleyyt/jekyll-theme-next">
+    NexT.Muse
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+   
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/assets/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/assets/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  <script type="text/javascript" src="/assets/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/assets/js/src/post-details.js?v=5.1.1"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/assets/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+    
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
+
