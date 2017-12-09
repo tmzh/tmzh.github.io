@@ -212,7 +212,7 @@ font:
 # Social Links
 # Key is the link label showing to end users.
 # Value is the target link (E.g. GitHub: https://github.com/iissnan)
-#social:
+social:
   LinkedIn : https://www.linkedin.com/in/thamizh/
   GitHub : https://github.com/thamizh85
   Twitter : https://twitter.com/t4m1zh
