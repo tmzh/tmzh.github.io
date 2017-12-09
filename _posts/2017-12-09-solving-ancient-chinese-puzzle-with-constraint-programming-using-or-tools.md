@@ -15,16 +15,16 @@ tags:
 - constraint programming
 ---
 ## Introduction
-Constraint programming (CP) is a subset of Operations Research (OR) where our task is to identify all feasible solutions to a given problem that satisfies a set of constraints. This is different from an optimization problem, where an objective function is defined and we arrive at solutions that either maximizes or minimizes an objective function. 
+[Constraint programming (CP)](https://www.wikiwand.com/en/Constraint_programming) is a subset of Operations Research (OR) where our task is to identify all feasible solutions to a given problem that satisfies a set of constraints. This is different from an optimization problem, where an objective function is defined and we arrive at solutions that either maximizes or minimizes an objective function. 
 
 CP is mostly well suited for solving logic puzzles, since most logic puzzles are based on constraints and enumerating feasible solutions. But apart from recreational maths, CP also has a lot of practical applications in Scheduling, Resource allocation, Manufacturing etc.,
 
-Recently I came across [or-tools](https://developers.google.com/optimization/) from Google github repo. It is a suite of libraries for solving Operations Research problems. I wanted to try solving a simple logic puzzle to explore this tool. I chose a simple math puzzle called [Hundred Fowls Problem](https://www.wikiwand.com/en/Hundred_Fowls_Problem) for this exercise. Let us see how it goes. 
+Recently I came across [or-tools](https://developers.google.com/optimization/) from Google github repo. It is a suite of libraries for solving Operations Research problems. I wanted to give it a try by solving a simple logic puzzle. The puzzle I chose is called [Hundred Fowls Problem](https://www.wikiwand.com/en/Hundred_Fowls_Problem). Let us see how it goes. 
 
 ## Hundred Fowls problem
 This puzzle found in the sixth-century work of mathematician Chang Chiu-chen called the "hundred fowls" problem asks:
 
->If a rooster is worth five coins, a hen three coins, and three chickens together are worth one coin, how many roosters, hens, and chickens totallting 100 can be bought for 100 coins?
+>If a rooster is worth five coins, a hen three coins, and three chickens together are worth one coin, how many roosters, hens, and chicks totalling 100 can be bought for 100 coins?
 
 This translates to solving a set of 2 algebraic equations with 3 variables. In real numbers, there are infinite solutions to this puzzle since we are short by one non-equivalent equation to bind values to 3 variables. However, buying non-integer number of fowls can get tricky, so we can safely assume that we are dealing with 3 integer valued variables here. This reduces the solution space to a finite count, but still there are more than one feasible solution. This is a perfect candidate for constraint programming since we need to identify all feasible solutions and not maximize/minimize an objective function.
 
@@ -60,7 +60,7 @@ max_rooster = min(total_fowls, floor(total_cost/ROOSTER_COST))
 max_hen = min(total_fowls, floor(total_cost/HEN_COST))
 max_chick_set = min(total_fowls, floor(total_cost/THREE_CHICK_COST)) # a set of 3 chickens 
 ```
-Notice that for chick count, we are grouping them in sets of three. This is because the unit cost of a chick is a fraction (1/3) and the solver doesn't allow us to multiply float numbers with IntVar object. This is perfectly acceptable for our scenario since chick count always needs to be a multiple of 3 or else the total cost will never be an integer (100 in this case). Besides, this also reduces the search space for chick count by a factor of 3, eliminating obvious non-solutions.
+Notice that for chick count, we are grouping them in sets of three. This is because the unit cost of a chick is a fraction (1/3) and the solver doesn't allow us to multiply float numbers with IntVar object (which we will come to know later). This is perfectly acceptable for our scenario since chick count always needs to be a multiple of 3 or else the total cost will never be an integer (100 in this case). Besides, this also reduces the search space for chick count by a factor of 3, eliminating obvious non-solutions.
 
 We now have to spec out our decision variables. OR-Tools supports different types of decision variables such as Integers, Intervals etc., In our current challenge the decision variable is an integer so we assign it by using IntVar method. The first two values gives the lower and upper bounds for the variables. The last value is an arbitrary string handle for output representation. I am not sure under which scenarios the last variable will come to use, but likely it is an object name required for the underlying C++ code. The python module we use for or-tools is actually a wrapper for the core C++ code.
 
@@ -68,9 +68,9 @@ For our problem the decision variables can be defined as below:
 ```python
 # since the puzzle requires us to buy atleast one fowl 
 # of each type we will start enumerating from one
-rooster_count = solver.IntVar(0, max_rooster, "Rooster")
-hen_count     = solver.IntVar(0, max_hen, "Hen")
-chick_set_count    = solver.IntVar(0, max_chick_set, "Chick")
+rooster_count = solver.IntVar(1, max_rooster, "Rooster")
+hen_count     = solver.IntVar(1, max_hen, "Hen")
+chick_set_count    = solver.IntVar(1, max_chick_set, "Chick")
 ```
 #### Constraints
 Next we add the constraints for our model. It is done using the "Add" method of Solver object.
@@ -93,7 +93,7 @@ db = solver.Phase([rooster_count, hen_count, chick_set_count],
                   solver.ASSIGN_MIN_VALUE)
 ```
 
-#### Solving the model
+### Solving the model
 Finally we solve our model and iterate through our solutions.
 
 ```python
