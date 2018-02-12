@@ -29,6 +29,7 @@ As always, let us start with the requirement:
 ## Steps:
 	
   1. Generate private key & self-signed cert for the CA in a single statement:
+  
     ```bash 
     root@EARWA:openssl req -new -x509 -sha256 -newkey rsa:2048 -nodes -keyout ca.key -days 1000 -out ca.pem
     root@EARWA:~/ca2# ls -ltr
