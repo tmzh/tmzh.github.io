@@ -113,17 +113,17 @@
 
 
 
-<meta name="description" content="Introduction Often we have to discover the devices on a network. I use a very simple nmap command for performing a pingsweep.">
+<meta name="description" content="Introduction Often we have to discover the devices on a network. I use a very simple nmap command for performing a pingsweep. sudo nmap -sn &amp;lt;subnet or ip range&amp;gt; On my Windows PC, I wrap it around in a batch script and place it in the search PATH. On Linux, it can be dropped in as an alias in bashrc. It is handy, but not complete. I would like to have some extra information such as hostnames (collected by various means not just DNS reverse lookup), platform info etc., Such details are available in tools such as AngryIP scanner, but I don’t prefer to launch a GUI tool for single task and keep it running until the task is done. So let us try to implement a similar function using nmap script. There are existing scripts in nmap which performs advanced discovery and reconnaissance, but we want something lightweight, more generic and customizable to support more protocols. Nmap scripts run on top of Nmap Scripting Engine which runs on Lua. Learning it would expand the scope of these tools from just being a capable tool to a powerful tool with limitless possibilities. Although this was my first attempt at Lua scripting, the endeavour turned out to be fairly simple. True it was not without its share of frustrations, most of which were related to wrapping my head around the way NSE (Nmap Scripting Engine) tosses the data around and lua data structures. But once you get the hang of it, it is really simple. So without much ado, let us get started. NSE Script structure A basic NSE script will have the following 3 sections: The Head section is for meta information about the script. We need not worry about it for primer purpose but it is a good habit to put documentation info here while packaging the script for production. This section also feeds in to the NSE Documentation module (NSEDoc) which provides a consistent way to represent the meta information about our script. The RULE section determines the scope of the script. It basically acts as a filter of nmap port-scan results that gets filtered to the Action section. The rule section should contain one of the following functions: prerule() hostrule(host) portrule(host, port) postrule() The Action section is mostly the brain of the script (although rule section can also contain some of the script logic). This section contains an Action section which reads data from the nmap scanning engine and carries out the script logic. The value returned by this function is also printed on the screen and captured by other nmap output methods. Note that this script is executed iteratively over either list of hosts or a list of (host, port) tuples. The ACTION section is indicated by the presence of a function named action. Diving In So let us go ahead and create a basic script. Our script will scan the target network and fetch the hostname from NETBIOS. Create a script file with .nse (I used host-discover.nse) extension as follows: local netbios = require &quot;netbios&quot; local shortport = require &quot;shortport&quot; -- The Rule Section -- portrule = shortport.portnumber({137}, &quot;udp&quot;) -- The Action Section -- action = function(host,port) local nbt_status, netbios_name = netbios.get_server_name(host) return netbios_name end Now run this script against your local network as below: nmap --script host-discover.nse 10.1.1.0/24 -sU -p 137 Now take a minute or two to let this sink in… we just created our very own NETBIOS scanner, all in just 7 lines of functional code. There are dedicated standalone tools that performs this singular task and we managed to do it using nmap. With just a little more effort, we can add more bells and whistles to this. The magic that enables this are the excellent inbuilt scanning mechanisms of nmap and hot-pluggable libraries that carry out much of the grunt. By scripting in NSE, we can tap in to this massive capabilities of nmap and automate to our needs. Let us now see how this script works. Code Walkthrough In this script there is no HEAD section. So we start by importing the libraries needed for our script. In Lua, modules are included using require function. And we assign the module to a local variable in order to access its namespace (i.e, call the methods that belong to the module). local netbios = require &quot;netbios&quot; local shortport = require &quot;shortport&quot; The purpose of these libraries will be evident in the later section. RULE section Next we move to the RULE section. Notice that in Lua, comments are prepended by -- sequence. As mentioned earlier, RULE section acts as filter to identify hosts or ports relevant to our script. Since our script is only interested with NETBIOS query, we have to pick only the hosts that are listening on port UDP/137. Since this is a common check, nmap includes a ‘shortport’ module that provides shorthand functions to check port states. shortport.portnumber is one such function which will return true only for those ports and protocols listed in its arguements. Refer to online documentation for exact syntax of this function. -- The Rule Section -- portrule = shortport.portnumber({137}, &quot;udp&quot;) NOTE: The Rule section only filters port numbers passed on from the upper layer i.e, the original nmap scan. It doesn’t trigger a port scan on its own. That is why when we launch the script, we had to specify port number explicitly (nmap -sU -p U:137 &amp;lt;host&amp;gt;). It is still possible to launch a port scan in this section, by calling nmap socket libraries but those are advanced scripting scenarios. ACTION Section Next comes the ACTION section. Our action section here is a function that takes (host, port) as argument. It means the host object and port object are available to this function for evaluating logic. If we need other variables, they have to be declared outside this function. Since for NETBIOS query we only need the host our action function will take only ‘host’ as argument. We call the get_server_name function of netbios module. From the documentation we can see that this function returns two values, query status and query result which we capture under two local variables. For our simple task, we need not check the result status and go ahead to return the name variable directly. In Lua, if a variable doesn’t exist it returns nil which is acceptable for our scenario. -- The Action Section -- action = function(host,port) local nbt_status, netbios_name = netbios.get_server_name(host) return netbios_name end This returned value is processed by nmap scripting engine and printed in the output window. NOTE: In Lua functions are assigned to a variable like how we assign a string or integer value to a variable. In this case, code block defining the ACTION logic is assigned to a variable called action. Lua functions are of the format foo = function ( args ) body end. It can be defined in a single line. To call the function, call the variable with argument such as foo(&apos;bar&apos;) Where to go next Since this is only a basic script, we have not customized the output format at all. The hostnames when available gets printed below each host-discovered. If you notice, the print action is executed within the ACTION function whose scope is limited to one host at a time. If we need our output to be consolidated in a tabular form, we can write a postrule function, store and retrieve our findings from nmap registry. Refer to my script (work in progress) to see one way of doing it. I strongly recommend to try this walkthrough as well. It greatly helped me to get started with NMAP scripting and understanding the way a NSE script is structured. It won’t hurt to improve your understanding of Lua programming language as well. I found this 15 minute primer to be very useful. Lastly the best resource for advanced nmap script writing is the existing script library. There are hundreds of scripts and libraries available, study and explore them to see different ways of tackling a challenge. Good luck scripting!">
 <meta name="keywords" content="lua, nmap, network-discovery">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Emulating Angry IP Scanner with nmap scripting engine - A lua scripting primer">
 <meta property="og:url" content="http://localhost:4000/scripting/2017/10/29/emulating-angryip-scanner-with-nmap-scripting-engine-a-lua-scripting-primer/">
 <meta property="og:site_name" content="Ephemeral Electrons">
-<meta property="og:description" content="Introduction Often we have to discover the devices on a network. I use a very simple nmap command for performing a pingsweep.">
+<meta property="og:description" content="Introduction Often we have to discover the devices on a network. I use a very simple nmap command for performing a pingsweep. sudo nmap -sn &amp;lt;subnet or ip range&amp;gt; On my Windows PC, I wrap it around in a batch script and place it in the search PATH. On Linux, it can be dropped in as an alias in bashrc. It is handy, but not complete. I would like to have some extra information such as hostnames (collected by various means not just DNS reverse lookup), platform info etc., Such details are available in tools such as AngryIP scanner, but I don’t prefer to launch a GUI tool for single task and keep it running until the task is done. So let us try to implement a similar function using nmap script. There are existing scripts in nmap which performs advanced discovery and reconnaissance, but we want something lightweight, more generic and customizable to support more protocols. Nmap scripts run on top of Nmap Scripting Engine which runs on Lua. Learning it would expand the scope of these tools from just being a capable tool to a powerful tool with limitless possibilities. Although this was my first attempt at Lua scripting, the endeavour turned out to be fairly simple. True it was not without its share of frustrations, most of which were related to wrapping my head around the way NSE (Nmap Scripting Engine) tosses the data around and lua data structures. But once you get the hang of it, it is really simple. So without much ado, let us get started. NSE Script structure A basic NSE script will have the following 3 sections: The Head section is for meta information about the script. We need not worry about it for primer purpose but it is a good habit to put documentation info here while packaging the script for production. This section also feeds in to the NSE Documentation module (NSEDoc) which provides a consistent way to represent the meta information about our script. The RULE section determines the scope of the script. It basically acts as a filter of nmap port-scan results that gets filtered to the Action section. The rule section should contain one of the following functions: prerule() hostrule(host) portrule(host, port) postrule() The Action section is mostly the brain of the script (although rule section can also contain some of the script logic). This section contains an Action section which reads data from the nmap scanning engine and carries out the script logic. The value returned by this function is also printed on the screen and captured by other nmap output methods. Note that this script is executed iteratively over either list of hosts or a list of (host, port) tuples. The ACTION section is indicated by the presence of a function named action. Diving In So let us go ahead and create a basic script. Our script will scan the target network and fetch the hostname from NETBIOS. Create a script file with .nse (I used host-discover.nse) extension as follows: local netbios = require &quot;netbios&quot; local shortport = require &quot;shortport&quot; -- The Rule Section -- portrule = shortport.portnumber({137}, &quot;udp&quot;) -- The Action Section -- action = function(host,port) local nbt_status, netbios_name = netbios.get_server_name(host) return netbios_name end Now run this script against your local network as below: nmap --script host-discover.nse 10.1.1.0/24 -sU -p 137 Now take a minute or two to let this sink in… we just created our very own NETBIOS scanner, all in just 7 lines of functional code. There are dedicated standalone tools that performs this singular task and we managed to do it using nmap. With just a little more effort, we can add more bells and whistles to this. The magic that enables this are the excellent inbuilt scanning mechanisms of nmap and hot-pluggable libraries that carry out much of the grunt. By scripting in NSE, we can tap in to this massive capabilities of nmap and automate to our needs. Let us now see how this script works. Code Walkthrough In this script there is no HEAD section. So we start by importing the libraries needed for our script. In Lua, modules are included using require function. And we assign the module to a local variable in order to access its namespace (i.e, call the methods that belong to the module). local netbios = require &quot;netbios&quot; local shortport = require &quot;shortport&quot; The purpose of these libraries will be evident in the later section. RULE section Next we move to the RULE section. Notice that in Lua, comments are prepended by -- sequence. As mentioned earlier, RULE section acts as filter to identify hosts or ports relevant to our script. Since our script is only interested with NETBIOS query, we have to pick only the hosts that are listening on port UDP/137. Since this is a common check, nmap includes a ‘shortport’ module that provides shorthand functions to check port states. shortport.portnumber is one such function which will return true only for those ports and protocols listed in its arguements. Refer to online documentation for exact syntax of this function. -- The Rule Section -- portrule = shortport.portnumber({137}, &quot;udp&quot;) NOTE: The Rule section only filters port numbers passed on from the upper layer i.e, the original nmap scan. It doesn’t trigger a port scan on its own. That is why when we launch the script, we had to specify port number explicitly (nmap -sU -p U:137 &amp;lt;host&amp;gt;). It is still possible to launch a port scan in this section, by calling nmap socket libraries but those are advanced scripting scenarios. ACTION Section Next comes the ACTION section. Our action section here is a function that takes (host, port) as argument. It means the host object and port object are available to this function for evaluating logic. If we need other variables, they have to be declared outside this function. Since for NETBIOS query we only need the host our action function will take only ‘host’ as argument. We call the get_server_name function of netbios module. From the documentation we can see that this function returns two values, query status and query result which we capture under two local variables. For our simple task, we need not check the result status and go ahead to return the name variable directly. In Lua, if a variable doesn’t exist it returns nil which is acceptable for our scenario. -- The Action Section -- action = function(host,port) local nbt_status, netbios_name = netbios.get_server_name(host) return netbios_name end This returned value is processed by nmap scripting engine and printed in the output window. NOTE: In Lua functions are assigned to a variable like how we assign a string or integer value to a variable. In this case, code block defining the ACTION logic is assigned to a variable called action. Lua functions are of the format foo = function ( args ) body end. It can be defined in a single line. To call the function, call the variable with argument such as foo(&apos;bar&apos;) Where to go next Since this is only a basic script, we have not customized the output format at all. The hostnames when available gets printed below each host-discovered. If you notice, the print action is executed within the ACTION function whose scope is limited to one host at a time. If we need our output to be consolidated in a tabular form, we can write a postrule function, store and retrieve our findings from nmap registry. Refer to my script (work in progress) to see one way of doing it. I strongly recommend to try this walkthrough as well. It greatly helped me to get started with NMAP scripting and understanding the way a NSE script is structured. It won’t hurt to improve your understanding of Lua programming language as well. I found this 15 minute primer to be very useful. Lastly the best resource for advanced nmap script writing is the existing script library. There are hundreds of scripts and libraries available, study and explore them to see different ways of tackling a challenge. Good luck scripting!">
 <meta property="og:locale" content="en">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Emulating Angry IP Scanner with nmap scripting engine - A lua scripting primer">
-<meta name="twitter:description" content="Introduction Often we have to discover the devices on a network. I use a very simple nmap command for performing a pingsweep.">
+<meta name="twitter:description" content="Introduction Often we have to discover the devices on a network. I use a very simple nmap command for performing a pingsweep. sudo nmap -sn &amp;lt;subnet or ip range&amp;gt; On my Windows PC, I wrap it around in a batch script and place it in the search PATH. On Linux, it can be dropped in as an alias in bashrc. It is handy, but not complete. I would like to have some extra information such as hostnames (collected by various means not just DNS reverse lookup), platform info etc., Such details are available in tools such as AngryIP scanner, but I don’t prefer to launch a GUI tool for single task and keep it running until the task is done. So let us try to implement a similar function using nmap script. There are existing scripts in nmap which performs advanced discovery and reconnaissance, but we want something lightweight, more generic and customizable to support more protocols. Nmap scripts run on top of Nmap Scripting Engine which runs on Lua. Learning it would expand the scope of these tools from just being a capable tool to a powerful tool with limitless possibilities. Although this was my first attempt at Lua scripting, the endeavour turned out to be fairly simple. True it was not without its share of frustrations, most of which were related to wrapping my head around the way NSE (Nmap Scripting Engine) tosses the data around and lua data structures. But once you get the hang of it, it is really simple. So without much ado, let us get started. NSE Script structure A basic NSE script will have the following 3 sections: The Head section is for meta information about the script. We need not worry about it for primer purpose but it is a good habit to put documentation info here while packaging the script for production. This section also feeds in to the NSE Documentation module (NSEDoc) which provides a consistent way to represent the meta information about our script. The RULE section determines the scope of the script. It basically acts as a filter of nmap port-scan results that gets filtered to the Action section. The rule section should contain one of the following functions: prerule() hostrule(host) portrule(host, port) postrule() The Action section is mostly the brain of the script (although rule section can also contain some of the script logic). This section contains an Action section which reads data from the nmap scanning engine and carries out the script logic. The value returned by this function is also printed on the screen and captured by other nmap output methods. Note that this script is executed iteratively over either list of hosts or a list of (host, port) tuples. The ACTION section is indicated by the presence of a function named action. Diving In So let us go ahead and create a basic script. Our script will scan the target network and fetch the hostname from NETBIOS. Create a script file with .nse (I used host-discover.nse) extension as follows: local netbios = require &quot;netbios&quot; local shortport = require &quot;shortport&quot; -- The Rule Section -- portrule = shortport.portnumber({137}, &quot;udp&quot;) -- The Action Section -- action = function(host,port) local nbt_status, netbios_name = netbios.get_server_name(host) return netbios_name end Now run this script against your local network as below: nmap --script host-discover.nse 10.1.1.0/24 -sU -p 137 Now take a minute or two to let this sink in… we just created our very own NETBIOS scanner, all in just 7 lines of functional code. There are dedicated standalone tools that performs this singular task and we managed to do it using nmap. With just a little more effort, we can add more bells and whistles to this. The magic that enables this are the excellent inbuilt scanning mechanisms of nmap and hot-pluggable libraries that carry out much of the grunt. By scripting in NSE, we can tap in to this massive capabilities of nmap and automate to our needs. Let us now see how this script works. Code Walkthrough In this script there is no HEAD section. So we start by importing the libraries needed for our script. In Lua, modules are included using require function. And we assign the module to a local variable in order to access its namespace (i.e, call the methods that belong to the module). local netbios = require &quot;netbios&quot; local shortport = require &quot;shortport&quot; The purpose of these libraries will be evident in the later section. RULE section Next we move to the RULE section. Notice that in Lua, comments are prepended by -- sequence. As mentioned earlier, RULE section acts as filter to identify hosts or ports relevant to our script. Since our script is only interested with NETBIOS query, we have to pick only the hosts that are listening on port UDP/137. Since this is a common check, nmap includes a ‘shortport’ module that provides shorthand functions to check port states. shortport.portnumber is one such function which will return true only for those ports and protocols listed in its arguements. Refer to online documentation for exact syntax of this function. -- The Rule Section -- portrule = shortport.portnumber({137}, &quot;udp&quot;) NOTE: The Rule section only filters port numbers passed on from the upper layer i.e, the original nmap scan. It doesn’t trigger a port scan on its own. That is why when we launch the script, we had to specify port number explicitly (nmap -sU -p U:137 &amp;lt;host&amp;gt;). It is still possible to launch a port scan in this section, by calling nmap socket libraries but those are advanced scripting scenarios. ACTION Section Next comes the ACTION section. Our action section here is a function that takes (host, port) as argument. It means the host object and port object are available to this function for evaluating logic. If we need other variables, they have to be declared outside this function. Since for NETBIOS query we only need the host our action function will take only ‘host’ as argument. We call the get_server_name function of netbios module. From the documentation we can see that this function returns two values, query status and query result which we capture under two local variables. For our simple task, we need not check the result status and go ahead to return the name variable directly. In Lua, if a variable doesn’t exist it returns nil which is acceptable for our scenario. -- The Action Section -- action = function(host,port) local nbt_status, netbios_name = netbios.get_server_name(host) return netbios_name end This returned value is processed by nmap scripting engine and printed in the output window. NOTE: In Lua functions are assigned to a variable like how we assign a string or integer value to a variable. In this case, code block defining the ACTION logic is assigned to a variable called action. Lua functions are of the format foo = function ( args ) body end. It can be defined in a single line. To call the function, call the variable with argument such as foo(&apos;bar&apos;) Where to go next Since this is only a basic script, we have not customized the output format at all. The hostnames when available gets printed below each host-discovered. If you notice, the print action is executed within the ACTION function whose scope is limited to one host at a time. If we need our output to be consolidated in a tabular form, we can write a postrule function, store and retrieve our findings from nmap registry. Refer to my script (work in progress) to see one way of doing it. I strongly recommend to try this walkthrough as well. It greatly helped me to get started with NMAP scripting and understanding the way a NSE script is structured. It won’t hurt to improve your understanding of Lua programming language as well. I found this 15 minute primer to be very useful. Lastly the best resource for advanced nmap script writing is the existing script library. There are hundreds of scripts and libraries available, study and explore them to see different ways of tackling a challenge. Good luck scripting!">
 
 
 <script type="text/javascript" id="hexo.configurations">
@@ -240,6 +240,30 @@
         
         
         
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        
+        
         <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
             
@@ -258,6 +282,18 @@
               <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             Tags
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            Sitemap
           </a>
         </li>
       
@@ -296,7 +332,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Tamizh">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="assets/images/avatar.gif">
+      <meta itemprop="image" content="/assets/images/confused-monkey.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -390,19 +426,19 @@
 
 <p><code class="highlighter-rouge">sudo nmap -sn &lt;subnet or ip range&gt;</code></p>
 
-<p>On my work PC which runs Windows, I wrap it around in a batch script and place it in the search PATH. On Linux it can be dropped in as an alias in bashrc.</p>
+<p>On my Windows PC, I wrap it around in a batch script and place it in the search PATH. On Linux, it can be dropped in as an alias in bashrc.</p>
 
 <p>It is handy, but not complete. I would like to have some extra information such as hostnames (collected by various means not just DNS reverse lookup), platform info etc., Such details are available in tools such as AngryIP scanner, but I don’t prefer to launch a GUI tool for single task and keep it running until the task is done.</p>
 
-<p>So I wanted to see if a similar function can be implemented using nmap script. There are existing scripts in nmap which performs advanced discovery and reconnaissance, but I wanted something lightweight, one which is least intrusive and outputs results in the format I desire. So I decided to try my hand in writing a script in NSE (Nmap Scripting Engine). The Nmap Scripting Engine, like Wireshark, uses Lua language. Learning it would expand the scope of these tools from just being a capable tool to a powerful tool with limitless possibilities.</p>
+<p>So let us try to implement a similar function using nmap script. There are existing scripts in nmap which performs advanced discovery and reconnaissance, but we want something lightweight, more generic and customizable to support more protocols. Nmap scripts run on top of Nmap Scripting Engine which runs on Lua. Learning it would expand the scope of these tools from just being a capable tool to a powerful tool with limitless possibilities.</p>
 
-<p>The endeavour turned out to be fairly simple, but not without its share of frustrations, most of which were related to wrapping my head around the way NSE (Nmap Scripting Engine) tosses the data around and lua data structures. But once you get the hang of it, it is really simple. So without much ado, let us get started.</p>
+<p>Although this was my first attempt at Lua scripting, the endeavour turned out to be fairly simple. True it was not without its share of frustrations, most of which were related to wrapping my head around the way NSE (Nmap Scripting Engine) tosses the data around and lua data structures. But once you get the hang of it, it is really simple. So without much ado, let us get started.</p>
 
 <h2 id="nse-script-structure">NSE Script structure</h2>
 <p>A basic NSE script will have the following 3 sections:</p>
 <ul>
-  <li>Head section is for meta information about the script. We need not worry about it for primer purpose but it is a good habit to put documentation info here while packaging script for production.</li>
-  <li>Rule section determines the scope of the script. It basically acts as a filter of nmap port-scan results that gets filtered to the Action section. The rule section has to be one of the following:
+  <li>The Head section is for meta information about the script. We need not worry about it for primer purpose but it is a good habit to put documentation info here while packaging the script for production. This section also feeds in to the NSE Documentation module (<a href="https://nmap.org/book/nsedoc.html">NSEDoc</a>) which provides a consistent way to represent the meta information about our script.</li>
+  <li>The RULE section determines the scope of the script. It basically acts as a filter of nmap port-scan results that gets filtered to the Action section. The rule section should contain one of the following functions:
     <ul>
       <li>prerule()</li>
       <li>hostrule(host)</li>
@@ -410,7 +446,7 @@
       <li>postrule()</li>
     </ul>
   </li>
-  <li>Action section is mostly the brain of the script (although rule section can also contain some of the script logic). This section contains an Action section which reads data from the nmap scanning engine and carries out the script logic. The value returned by this function is also printed on the screen and captured by other nmap output methods. Note that this script is executed iteratively over either list of hosts or a list of (host, port) tuples.</li>
+  <li>The Action section is mostly the brain of the script (although rule section can also contain some of the script logic). This section contains an Action section which reads data from the nmap scanning engine and carries out the script logic. The value returned by this function is also printed on the screen and captured by other nmap output methods. Note that this script is executed iteratively over either list of hosts or a list of (host, port) tuples. The ACTION section is indicated by the presence of a function named <code class="highlighter-rouge">action</code>.</li>
 </ul>
 
 <h2 id="diving-in">Diving In</h2>
@@ -433,14 +469,12 @@
 
 <p><code class="highlighter-rouge">nmap --script host-discover.nse 10.1.1.0/24 -sU -p 137</code></p>
 
-<p>Take a minute to gape at the results- you have your very own NETBIOS scanner, all in just 7 lines of functional code. There are standalone <a href="http://unixwiz.net/tools/nbtscan.html">tools</a> that exists just to perform this singular task and we did it using a generic swiss army knife tool such as nmap.</p>
+<p>Now take a minute or two to let this sink in… we just created our very own NETBIOS scanner, all in just 7 lines of functional code. There are dedicated standalone <a href="http://unixwiz.net/tools/nbtscan.html">tools</a> that performs this singular task and we managed to do it using nmap. With just a little more effort, we can add more bells and whistles to this.</p>
 
-<p>The magic that enables this are the excellent inbuilt scanning mechanisms of nmap and hot-pluggable libraries that carry out much of the grunt. By scripting in NSE, we can tap in to this massive capabilities of nmap and automate to our needs.</p>
+<p>The magic that enables this are the excellent inbuilt scanning mechanisms of nmap and hot-pluggable libraries that carry out much of the grunt. By scripting in NSE, we can tap in to this massive capabilities of nmap and automate to our needs. Let us now see how this script works.</p>
 
 <h2 id="code-walkthrough">Code Walkthrough</h2>
-<p>For simplicity sake, I had skipped the HEAD section. Next thing you notice is the  Lua’s comment syntax. Comments starts with <code class="highlighter-rouge">--</code></p>
-
-<p>Next we import the libraries necessary for our script. In Lua, modules are included using <code class="highlighter-rouge">require</code> function. And we assign the module to a local variable in order to access its namespace (i.e, call the methods that belong to the module).</p>
+<p>In this script there is no HEAD section. So we start by importing the libraries needed for our script. In Lua, modules are included using <code class="highlighter-rouge">require</code> function. And we assign the module to a local variable in order to access its namespace (i.e, call the methods that belong to the module).</p>
 
 <div class="language-lua highlighter-rouge"><pre class="highlight"><code><span class="kd">local</span> <span class="n">netbios</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">"netbios"</span>
 <span class="kd">local</span> <span class="n">shortport</span> <span class="o">=</span> <span class="nb">require</span> <span class="s2">"shortport"</span>
@@ -448,19 +482,26 @@
 </div>
 <p>The purpose of these libraries will be evident in the later section.</p>
 
-<p>Next we move to the RULE section. Since our script is only interested with NETBIOS query, we have to pick only the hosts that are listening on port UDP/137.</p>
+<h3 id="rule-section">RULE section</h3>
+<p>Next we move to the RULE section. Notice that in Lua, comments are prepended by <code class="highlighter-rouge">--</code> sequence.</p>
 
-<p>But determining whether a host is listening on a port is not so trivial. We have to check it against few valid states (‘open’ or ‘filtered’). ‘shortport’ module abstracts this detail from us and allows us to simply filter port status. It is not necessary to use this  module if you can write your own conditions.</p>
+<p>As mentioned earlier, RULE section acts as filter to identify hosts or ports relevant to our script. Since our script is only interested with NETBIOS query, we have to pick only the hosts that are listening on port UDP/137.</p>
+
+<p>Since this is a common check, nmap includes a ‘shortport’ module that provides shorthand functions to check port states. <code class="highlighter-rouge">shortport.portnumber</code> is one such function which will return true only for those ports and protocols listed in its arguements. Refer to online <a href="https://nmap.org/nsedoc/lib/shortport.html">documentation</a> for exact syntax of this function.</p>
 
 <div class="language-lua highlighter-rouge"><pre class="highlight"><code><span class="c1">-- The Rule Section --</span>
 <span class="n">portrule</span> <span class="o">=</span> <span class="n">shortport</span><span class="p">.</span><span class="n">portnumber</span><span class="p">({</span><span class="mi">137</span><span class="p">},</span> <span class="s2">"udp"</span><span class="p">)</span>
 </code></pre>
 </div>
-<p>NOTE: The Rule section only filters port numbers passed on from the upper layer i.e, the original nmap scan. It doesn’t trigger a port scan on its own. That is why when we launch the script, we had to specify port number explicitly (<code class="highlighter-rouge">nmap -sU U:137 &lt;host&gt;</code>). It is still possible to launch a port scan in this section, by calling nmap socket libraries but those are advanced scripting scenarios.</p>
+<blockquote>
+  <p>NOTE: The Rule section only filters port numbers passed on from the upper layer i.e, the original nmap scan. It doesn’t trigger a port scan on its own. That is why when we launch the script, we had to specify port number explicitly (<code class="highlighter-rouge">nmap -sU -p U:137 &lt;host&gt;</code>). It is still possible to launch a port scan in this section, by calling nmap socket libraries but those are advanced scripting scenarios.</p>
+</blockquote>
 
+<h3 id="action-section">ACTION Section</h3>
 <p>Next comes the ACTION section. Our action section here is a function that takes (host, port) as argument. It means the host object and port object are available to this function for evaluating logic. If we need other variables, they have to be declared outside this function.</p>
 
 <p>Since for NETBIOS query we only need the host our action function will take only ‘host’ as argument. We call the get_server_name function of <a href="https://nmap.org/nsedoc/lib/netbios.html#get_server_name">netbios</a> module. From the documentation we can see that this function returns two values, query status and query result which we capture under two local variables. For our simple task, we need not check the result status and go ahead to return the name variable directly. In Lua, if a variable doesn’t exist it returns nil which is acceptable for our scenario.</p>
+
 <div class="language-lua highlighter-rouge"><pre class="highlight"><code><span class="c1">-- The Action Section --</span>
 <span class="n">action</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="n">host</span><span class="p">,</span><span class="n">port</span><span class="p">)</span>
     <span class="kd">local</span> <span class="n">nbt_status</span><span class="p">,</span> <span class="n">netbios_name</span> <span class="o">=</span> <span class="n">netbios</span><span class="p">.</span><span class="n">get_server_name</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
@@ -469,15 +510,19 @@
 </code></pre>
 </div>
 <p>This returned value is processed by nmap scripting engine and printed in the output window.</p>
+<blockquote>
+  <p>NOTE: In Lua functions are assigned to a variable like how we assign a string or integer value to a variable. In this case, code block defining the ACTION logic is assigned to a variable called action. 
+Lua functions are of the format <code class="highlighter-rouge">foo = function ( args ) body end</code>. It can be defined in a single line. To call the function, call the variable with argument such as <code class="highlighter-rouge">foo('bar')</code></p>
+</blockquote>
 
 <h2 id="where-to-go-next">Where to go next</h2>
 <p>Since this is only a basic script, we have not customized the output format at all. The hostnames when available gets printed below each host-discovered. If you notice, the print action is executed within the ACTION function whose scope is limited to one host at a time. If we need our output to be consolidated in a tabular form, we can write a postrule function, store and retrieve our findings from nmap registry. Refer to my <a href="https://raw.githubusercontent.com/thamizh85/Nmap-scripts/master/hostinfo-discover.nse">script</a> (work in progress) to see one way of doing it.</p>
 
-<p>I strongly recommend trying the tutorial at this <a href="https://thesprawl.org/research/writing-nse-scripts-for-vulnerability-scanning/">site</a> for further study. It greatly helped me to get started with NMAP scripting and understanding the way a NSE script is structured.</p>
+<p>I strongly recommend to try this <a href="https://thesprawl.org/research/writing-nse-scripts-for-vulnerability-scanning/">walkthrough</a> as well. It greatly helped me to get started with NMAP scripting and understanding the way a NSE script is structured.</p>
 
-<p>It won’t hurt to improve your understanding of LUA programming language as well. I found this 15 minute <a href="http://tylerneylon.com/a/learn-lua/">primer</a> to be very useful.</p>
+<p>It won’t hurt to improve your understanding of Lua programming language as well. I found this 15 minute <a href="http://tylerneylon.com/a/learn-lua/">primer</a> to be very useful.</p>
 
-<p>Lastly the greatest resource for advanced nmap script writing is the existing script library. There are hundreds of scripts and libraries available, study and explore them to see different ways of tackling a challenge. Good luck scripting!</p>
+<p>Lastly the best resource for advanced nmap script writing is the existing script library. There are hundreds of scripts and libraries available, study and explore them to see different ways of tackling a challenge. Good luck scripting!</p>
 
       
     </div>
@@ -529,6 +574,10 @@
       
         <div class="post-nav" id="post-nav-id">
           <div class="post-nav-next post-nav-item">
+            
+              <a href="/modelling/2017/11/24/jumbo-ping-fallacy-using-monte-carlo-simulation-to-model-ping-loss-behavior/" rel="next" title="Jumbo Ping Fallacy- Using Monte-Carlo Simulation to model ping loss behavior">
+                <i class="fa fa-chevron-left"></i> Jumbo Ping Fallacy- Using Monte-Carlo Simulation to model ping loss behavior
+              </a>
             
           </div>
 
@@ -604,7 +653,7 @@
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/assets/images/avatar.gif"
+               src="/assets/images/confused-monkey.jpg"
                alt="Tamizh" />
           <p class="site-author-name" itemprop="name">Tamizh</p>
            
@@ -616,7 +665,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>
@@ -627,7 +676,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">categories</span>
               </a>
             </div>
@@ -638,7 +687,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
@@ -658,6 +707,41 @@
         
 
         <div class="links-of-author motion-element">
+          
+            
+              
+              
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/thamizh/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+              
+              
+              <span class="links-of-author-item">
+                <a href="https://github.com/thamizh85" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              
+              
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/t4m1zh" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
           
         </div>
 
@@ -689,7 +773,7 @@
             
               <div class="post-toc-content">
     <ol class=nav>
-      <li class="nav-item nav-level-2"> <a class="nav-link" href="#introduction"> <span class="nav-number">1</span> <span class="nav-text">Introduction</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#nse-script-structure"> <span class="nav-number">2</span> <span class="nav-text">NSE Script structure</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#diving-in"> <span class="nav-number">3</span> <span class="nav-text">Diving In</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#code-walkthrough"> <span class="nav-number">4</span> <span class="nav-text">Code Walkthrough</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#where-to-go-next"> <span class="nav-number">5</span> <span class="nav-text">Where to go next</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child">
+      <li class="nav-item nav-level-2"> <a class="nav-link" href="#introduction"> <span class="nav-number">1</span> <span class="nav-text">Introduction</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#nse-script-structure"> <span class="nav-number">2</span> <span class="nav-text">NSE Script structure</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#diving-in"> <span class="nav-number">3</span> <span class="nav-text">Diving In</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#code-walkthrough"> <span class="nav-number">4</span> <span class="nav-text">Code Walkthrough</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#rule-section"> <span class="nav-number">4.1</span> <span class="nav-text">RULE section</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#action-section"> <span class="nav-number">4.2</span> <span class="nav-text">ACTION Section</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#where-to-go-next"> <span class="nav-number">5</span> <span class="nav-text">Where to go next</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child">
     </ol>
   </div>
             
@@ -714,7 +798,7 @@
   
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-hand-spock-o"></i>
   </span>

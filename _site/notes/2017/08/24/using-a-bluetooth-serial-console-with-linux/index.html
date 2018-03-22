@@ -113,17 +113,17 @@
 
 
 
-<meta name="description" content="Recently I bought a bluetooth RS232 serial convertor. I wasn’t sure whether it would work with my Linux laptop. But it turned out to be quite simple to setup.">
+<meta name="description" content="Recently I bought a bluetooth RS232 serial convertor. I wasn’t sure whether it would work with my Linux laptop. But it turned out to be quite simple to setup. Pre-requisites The following packages are required: bluez bluez-utils byobu (optional) Bluez provides the bluetooth protocol stack (most likely shipped with the OS), bluez-utils provides the bluetoothctl utility and byobu is a wrapper around screen terminal emulator. You can also use ‘screen’ directly. Install these using your distributions recommended procedure. Steps Start daemon: Swanky:~$ systemctl start bluetooth Discover using bluetoothctl: Swanky:~$ bluetoothctl [NEW] Controller &amp;lt;controller-mac-address&amp;gt; xkgt-Swanky [default] [bluetooth]# power on [bluetooth]# scan on Once you can see your device, turn off the scan and pair [bluetooth]# scan off [bluetooth]# pair &amp;lt;device-mac-address&amp;gt; Exit blutoothctl and create serial device (Note that root privileges are required): [bluetooth]# exit Swanky:~$ sudo rfcomm bind 0 &amp;lt;device-mac-address&amp;gt; You should now have /dev/rfcomm0. Connect to it using byobu-screen utility: Swanky:~$ byobu-screen /dev/rfcomm0 Enjoy your wireless console connection!">
 <meta name="keywords" content="bluetooth, Linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Using a bluetooth serial console with linux">
 <meta property="og:url" content="http://localhost:4000/notes/2017/08/24/using-a-bluetooth-serial-console-with-linux/">
 <meta property="og:site_name" content="Ephemeral Electrons">
-<meta property="og:description" content="Recently I bought a bluetooth RS232 serial convertor. I wasn’t sure whether it would work with my Linux laptop. But it turned out to be quite simple to setup.">
+<meta property="og:description" content="Recently I bought a bluetooth RS232 serial convertor. I wasn’t sure whether it would work with my Linux laptop. But it turned out to be quite simple to setup. Pre-requisites The following packages are required: bluez bluez-utils byobu (optional) Bluez provides the bluetooth protocol stack (most likely shipped with the OS), bluez-utils provides the bluetoothctl utility and byobu is a wrapper around screen terminal emulator. You can also use ‘screen’ directly. Install these using your distributions recommended procedure. Steps Start daemon: Swanky:~$ systemctl start bluetooth Discover using bluetoothctl: Swanky:~$ bluetoothctl [NEW] Controller &amp;lt;controller-mac-address&amp;gt; xkgt-Swanky [default] [bluetooth]# power on [bluetooth]# scan on Once you can see your device, turn off the scan and pair [bluetooth]# scan off [bluetooth]# pair &amp;lt;device-mac-address&amp;gt; Exit blutoothctl and create serial device (Note that root privileges are required): [bluetooth]# exit Swanky:~$ sudo rfcomm bind 0 &amp;lt;device-mac-address&amp;gt; You should now have /dev/rfcomm0. Connect to it using byobu-screen utility: Swanky:~$ byobu-screen /dev/rfcomm0 Enjoy your wireless console connection!">
 <meta property="og:locale" content="en">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Using a bluetooth serial console with linux">
-<meta name="twitter:description" content="Recently I bought a bluetooth RS232 serial convertor. I wasn’t sure whether it would work with my Linux laptop. But it turned out to be quite simple to setup.">
+<meta name="twitter:description" content="Recently I bought a bluetooth RS232 serial convertor. I wasn’t sure whether it would work with my Linux laptop. But it turned out to be quite simple to setup. Pre-requisites The following packages are required: bluez bluez-utils byobu (optional) Bluez provides the bluetooth protocol stack (most likely shipped with the OS), bluez-utils provides the bluetoothctl utility and byobu is a wrapper around screen terminal emulator. You can also use ‘screen’ directly. Install these using your distributions recommended procedure. Steps Start daemon: Swanky:~$ systemctl start bluetooth Discover using bluetoothctl: Swanky:~$ bluetoothctl [NEW] Controller &amp;lt;controller-mac-address&amp;gt; xkgt-Swanky [default] [bluetooth]# power on [bluetooth]# scan on Once you can see your device, turn off the scan and pair [bluetooth]# scan off [bluetooth]# pair &amp;lt;device-mac-address&amp;gt; Exit blutoothctl and create serial device (Note that root privileges are required): [bluetooth]# exit Swanky:~$ sudo rfcomm bind 0 &amp;lt;device-mac-address&amp;gt; You should now have /dev/rfcomm0. Connect to it using byobu-screen utility: Swanky:~$ byobu-screen /dev/rfcomm0 Enjoy your wireless console connection!">
 
 
 <script type="text/javascript" id="hexo.configurations">
@@ -240,6 +240,30 @@
         
         
         
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        
+        
         <li class="menu-item menu-item-archives">
           <a href="/archives/" rel="section">
             
@@ -258,6 +282,18 @@
               <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
             
             Tags
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            Sitemap
           </a>
         </li>
       
@@ -296,7 +332,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Tamizh">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="assets/images/avatar.gif">
+      <meta itemprop="image" content="/assets/images/confused-monkey.jpg">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -561,7 +597,7 @@
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/assets/images/avatar.gif"
+               src="/assets/images/confused-monkey.jpg"
                alt="Tamizh" />
           <p class="site-author-name" itemprop="name">Tamizh</p>
            
@@ -573,7 +609,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">4</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>
@@ -584,7 +620,7 @@
             
             <div class="site-state-item site-state-categories">
               <a href="/categories/">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">categories</span>
               </a>
             </div>
@@ -595,7 +631,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
@@ -615,6 +651,41 @@
         
 
         <div class="links-of-author motion-element">
+          
+            
+              
+              
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/thamizh/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+              
+              
+              <span class="links-of-author-item">
+                <a href="https://github.com/thamizh85" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              
+              
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/t4m1zh" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
           
         </div>
 
@@ -671,7 +742,7 @@
   
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-hand-spock-o"></i>
   </span>
