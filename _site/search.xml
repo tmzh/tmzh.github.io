@@ -2,6 +2,192 @@
 <search>
   
     <entry>
+      <title><![CDATA[Predicting the playing role of a cricketer using Machine Learning]]></title>
+      <url>/machine%20learning/2018/04/23/2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1/</url>
+      <content type="html"><![CDATA[<p>In this project, we will apply Machine Learning techniques to predict whether a particular cricket player is a batsman or bowler based on his career stats. First we will use Deep Neural Networks (DNN) model and later compare the results with a simpler classifier algorithm such as Random Forest Classifier.</p>
+
+<p>For the sake of consistency, we will consider only test players. Apart from being a puritan choice, the playing role of a player may differ from format to format and so we can’t expect a consistent prediction. The cricinfo player bio page has this <code class="highlighter-rouge">playing role</code> information, but that covers only around 20% of the test players. For vast majority of players we only have numerical stats but no description whether the player is a batsman or a bowler.</p>
+
+<p>This is a perfect problem for ML to assist. We have a decent amount of training data (600+ players) and good amount of features (statistics) to base our prediction on. It would also be interesting to observe which features are relevant to our consideration of a player as batsman or bowler.</p>
+
+<p>This is by no means a comprehensive tutorial for ML. The goal of this post is to serve as gentle introduction and wet the appetite for newcomers. So in the process, I would cover the following areas:</p>
+
+<ol>
+  <li>Data collection</li>
+  <li>Data cleaning</li>
+  <li>Data visualization</li>
+  <li>Machine Learning</li>
+</ol>
+
+<h2 id="data-collection">Data Collection</h2>
+<p>Most ML examples work with pre-processed data but in reality data is seldom available prepackaged. For this problem, we will have to scrape the data off cricinfo website. We will use Scrapy for getting this info off cricinfo website.</p>
+
+<p>The Scrapy tool is well-documented and has some nice tutorials to get started. However I will attempt my own brief introduction.</p>
+
+<p>To start we create a project as follows:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>scrapy startproject &lt;project_name&gt;
+</code></pre>
+</div>
+
+<p>This will create the necessary folder structure. It will also create some boilerplate code which we can customize to our will later on.</p>
+
+<blockquote>
+  <p>The default folder structure creates a parent folder and child folder with the same name. Do not get confused. All Scrapy commands are executed in the parent folder (where )</p>
+</blockquote>
+
+<p>Ultimately our objective is to perform a web scraping using <code class="highlighter-rouge">scrapy crawl</code> command which looks like the one below:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>cd &lt;project_name&gt;
+Scrapy crawl &lt;spider_name&gt; -o &lt;file_name&gt;.csv
+</code></pre>
+</div>
+
+<p>In this command, the <code class="highlighter-rouge">spider_name</code> is the name attribute of a spider class. This spider class file should be located under the spiders directory (<project_name>/<project_name>/spiders/*.py). The `file_name` is the output file name, csv being our chosen export format. Let us see the steps involved in reaching to this stage.</project_name></project_name></p>
+
+<h3 id="spider-class">Spider class</h3>
+<p>Start with the skeleton code required for scraping. Here is the skeleton spider class file we will use:</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">Scrapy</span>
+
+<span class="k">class</span> <span class="nc">CricinfoSpider</span><span class="p">(</span><span class="n">Scrapy</span><span class="o">.</span><span class="n">Spider</span><span class="p">):</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="s">"players"</span>
+
+    <span class="n">start_urls</span> <span class="o">=</span> <span class="p">[</span> <span class="c"># list of starting urls</span>
+        <span class="p">]</span>
+
+    <span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+        <span class="c"># do some fancy web scraping</span>
+        <span class="k">pass</span>
+</code></pre>
+</div>
+
+<blockquote>
+  <p>The file name of this python class is arbitrary</p>
+</blockquote>
+
+<blockquote>
+  <p>The spiders directory can contain multiple python file each implementing its own spider logic. The spider name attribute should be unique across all these files.</p>
+</blockquote>
+
+<p>A Spider class should contain the following:</p>
+<ol>
+  <li>name attribute to be called from the Scrapy command line</li>
+  <li>start_urls is a list holding the URLS which act as the starting pages of our scraping.</li>
+  <li>parse function which performs the grunt of scraping the data. The parse function can also recursively call itself to scrape more pages or it can also have a callback function which can be further customized.</li>
+</ol>
+
+<p>The starting page for our scraping should be the one containing links to all player profile pages. In cricinfo, there is no such global directory. However there is a page for players who represented a country. The URL is like this</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>http://www.espncricinfo.com/ci/content/player/caps.html?country=1;class=1
+</code></pre>
+</div>
+
+<p>Notice the <a href="http://www.ronstauffer.com/blog/understanding-a-url/">parameters</a> in the URL which we can manipulate to enumerate all test playing nations. The class parameter represents the game type- for test matches it is 1. Since the list of test playing nations is only a handful, I manually determined that the country code for test playing nations are 1 to 10 and 25 (25 is for Bangladesh, the latest addition to test playing nations). Armed with this info, we can define our start_urls as follows:</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">start_urls</span> <span class="o">=</span> <span class="p">[</span><span class="s">'http://www.espncricinfo.com/ci/content/player/caps.html?country={0};class=1'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">x</span><span class="p">))</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">10</span><span class="p">))</span><span class="o">+</span><span class="p">[</span><span class="mi">25</span><span class="p">]]</span>
+</code></pre>
+</div>
+
+<p>During a scraping process, Scrapy will issue a GET request to each one of these start_urls. If we get a valid HTTP 200 response, the response body will be passed on to parse function.</p>
+
+<h3 id="parse-function">Parse function:</h3>
+<p>The parse function receives the response object and extracts useful info from it. Our starting page doesn’t have the data that we need but contains the links to the player stats page which is what we want. So we will extract the links to player stats page and define another parse function to extract the statistics.</p>
+
+<p>To extract the links, we will use CSS selectors. Looking at the source code of the page, we can see that all links to player stats has a class name of <code class="highlighter-rouge">ColumnistSmry</code>. But that is not enough to uniquely identify player links since match links also has the same class name. We can further filter by matching the target URL which is expected to contain the string “player”. So our CSS selector for extracting relevant URLs would be:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>response.css('a.ColumnistSmry[href*="player"]::attr(href)') 
+</code></pre>
+</div>
+
+<p>Once we extract the link, Scrapy provides a handy <code class="highlighter-rouge">response.follow</code> function which navigates to the extracted link and can execute a callback function. This callback function will handle all our stats extraction since it will work directly with the player stats page. At this point, rest of the code is just a matter of studying the source code and extracting features using css selectors.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">parse</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">response</span><span class="p">):</span>
+    <span class="c">#follow player links</span>
+    <span class="k">for</span> <span class="n">href</span> <span class="ow">in</span> <span class="n">response</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="s">'a.ColumnistSmry[href*="player"]::attr(href)'</span><span class="p">):</span>
+        <span class="k">yield</span> <span class="n">response</span><span class="o">.</span><span class="n">follow</span><span class="p">(</span><span class="n">href</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_player</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">parse_player</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">response</span><span class="p">):</span>
+    <span class="n">player</span> <span class="o">=</span> <span class="n">PlayerItem</span><span class="p">()</span>
+    <span class="n">d</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">info</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="s">".ciPlayerinformationtxt"</span><span class="p">)</span>
+    <span class="n">tables</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="s">'.engineTable'</span><span class="p">)</span>
+
+    <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="s">'span::text'</span><span class="p">)</span><span class="o">.</span><span class="n">extract</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">info</span><span class="p">]</span>
+    <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="s">'b::text'</span><span class="p">)</span><span class="o">.</span><span class="n">extract</span><span class="p">()</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">info</span><span class="p">]</span>
+
+    <span class="n">batting</span> <span class="o">=</span> <span class="n">tables</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">batting_keys</span> <span class="o">=</span> <span class="n">batting</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="s">'th::text'</span><span class="p">)</span><span class="o">.</span><span class="n">extract</span><span class="p">()</span>
+    <span class="n">batting_values</span> <span class="o">=</span> <span class="n">batting</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="s">'tr.data1'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="s">'td::text'</span><span class="p">)</span><span class="o">.</span><span class="n">extract</span><span class="p">()[</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">batting_keys</span><span class="p">):]</span>
+
+    <span class="n">bowling</span> <span class="o">=</span> <span class="n">tables</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">bowling_keys</span> <span class="o">=</span> <span class="n">bowling</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="s">'th::text'</span><span class="p">)</span><span class="o">.</span><span class="n">extract</span><span class="p">()</span>
+    <span class="n">bowling_values</span> <span class="o">=</span> <span class="n">bowling</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="s">'tr.data1'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">css</span><span class="p">(</span><span class="s">'td::text'</span><span class="p">)</span><span class="o">.</span><span class="n">extract</span><span class="p">()[</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">bowling_keys</span><span class="p">):]</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="s">'Bio_'</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">title_clean</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">player</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">batting_keys</span><span class="p">,</span> <span class="n">batting_values</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="s">'Bat_'</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">title_clean</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">player</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">bowling_keys</span><span class="p">,</span> <span class="n">bowling_values</span><span class="p">):</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="s">'Bowl_'</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">title_clean</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">player</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">clean</span><span class="p">(</span><span class="n">item</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">player</span>
+</code></pre>
+</div>
+
+<blockquote>
+  <p>If you find it difficult to define appropriate CSS selector for any element, you can always use inspector tool from Developer tools in Chrome or firefox. You can right click on the interesting code block and copy CSS selector or Xpath (Xpath is also supported in Scrapy)</p>
+</blockquote>
+
+<h3 id="items-class">Items Class:</h3>
+<p>In the parse function, you can note that I am updating the parsed information in to a class called <code class="highlighter-rouge">PlayerItem()</code>. It is an instance of Scrapy.Item class and its attributes are defined in items.py file. Here is a brief snippet of my <code class="highlighter-rouge">items.py</code> file.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">Scrapy</span> <span class="kn">import</span> <span class="n">Item</span><span class="p">,</span> <span class="n">Field</span>
+
+<span class="k">class</span> <span class="nc">PlayerItem</span><span class="p">(</span><span class="n">Item</span><span class="p">):</span>
+    <span class="c"># define the fields for your item here like:</span>
+    <span class="n">Bio_Full_name</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+    <span class="n">Bio_Born</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+    <span class="n">Bio_Current_age</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+    <span class="n">Bio_Major_teams</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+    <span class="n">Bio_Playing_role</span> <span class="o">=</span> <span class="n">Field</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>You don’t have to always use a Item class. One can simply yield the values from parse function and it will output to CSV just fine. However without an Item class, the fields of the CSV file is determined by the fields in the first record processed. Any new field that may appear in subsequent scraped records will be silently dropped. For that reason, it is preferrable to define the structure of our parsed data ahead using an Item class.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+<p>Finally we can save the result of our hardwork to a precocious CSV file and guard it (Just kidding… If you lose or corrupt the file, just delete it and scrape again! ).</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>scrapy crawl players -o players.csv
+</code></pre>
+</div>
+
+<p>In the next post we will look at pre-processing this data for our machine learning work. To learn more about Scrapy, do head to its official site. The documentation is excellent and once you grasp hold of the structure, rest falls in to place quite easily.</p>
+]]></content>
+      <categories>
+        
+          <category> Machine Learning </category>
+        
+      </categories>
+      <tags>
+        
+          <tag> python </tag>
+        
+          <tag> Scrapy </tag>
+        
+          <tag> web-scraping </tag>
+        
+      </tags>
+      <tags></tags>
+    </entry>
+  
+    <entry>
       <title><![CDATA[Introduction to OpenStack Networking for Network Engineers]]></title>
       <url>/networking/2018/03/22/2018-03-22-introduction-to-openstack-networking-for-network-engineers/</url>
       <content type="html"><![CDATA[<h2 id="introduction">Introduction</h2>
