@@ -4,7 +4,7 @@ comments: true
 date: 2018-04-23 12:00:00+08:00
 layout: post
 slug: 2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1
-title: Predicting the playing role of a cricketer using Machine Learning
+title: Predicting the playing role of a cricketer using Machine Learning (Part 1)
 categories:
 - Machine Learning
 tags:
