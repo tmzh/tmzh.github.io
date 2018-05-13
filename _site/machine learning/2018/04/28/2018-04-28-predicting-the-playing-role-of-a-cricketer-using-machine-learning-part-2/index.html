@@ -1,0 +1,2073 @@
+
+<!doctype html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html class="theme-next pisces use-motion" lang="en">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+  <meta name="google-site-verification" content="google9355da1d9e940142.html" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/assets/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Roboto:300,300italic,400,400italic,700,700italic|Lato:300,300italic,400,400italic,700,700italic|Oswald:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/assets/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/assets/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="pandas,keras,machine learning,visualization," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Ephemeral Electrons" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/assets/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="In the previous post we saw how to scrape raw data from a content rich webpage. In this post, we will explore how to process that raw data and use Machine Learning tools to predict the playing role of a cricket player just based on his career statistics.">
+<meta name="keywords" content="pandas, keras, machine learning, visualization">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Predicting the playing role of a cricketer using Machine Learning (Part 2)">
+<meta property="og:url" content="http://localhost:4000/machine%20learning/2018/04/28/2018-04-28-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/">
+<meta property="og:site_name" content="Ephemeral Electrons">
+<meta property="og:description" content="In the previous post we saw how to scrape raw data from a content rich webpage. In this post, we will explore how to process that raw data and use Machine Learning tools to predict the playing role of a cricket player just based on his career statistics.">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/bat-inns-vs-bat-runs.png">
+<meta property="og:image" content="/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/bat-inns-vs-bat-runs-sc.png">
+<meta property="og:image" content="/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/bat-inns-vs-bat-runs-kde-before.png">
+<meta property="og:image" content="/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/bat-inns-vs-bat-runs-kde-after.png">
+<meta property="og:image" content="/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/overfitting.png">
+<meta property="og:image" content="/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/confusion-matrix.png">
+<meta property="og:image" content="/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/bat-runs-bowl-wkts-roles.png">
+<meta property="og:image" content="/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/bat-runs-roles-violin-plot.png">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Predicting the playing role of a cricketer using Machine Learning (Part 2)">
+<meta name="twitter:description" content="In the previous post we saw how to scrape raw data from a content rich webpage. In this post, we will explore how to process that raw data and use Machine Learning tools to predict the playing role of a cricket player just based on his career statistics.">
+<meta name="twitter:image" content="/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/bat-inns-vs-bat-runs.png">
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://localhost:4000/"/>
+
+
+
+
+
+  <title>Predicting the playing role of a cricketer using Machine Learning (Part 2)</title>
+  
+
+
+
+
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-108447382-1', 'auto');
+  ga('send', 'pageview');
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+
+  
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"> <div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Ephemeral Electrons</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">A thought, a code, an ephemeral dance of electrons</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            Home
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            Categories
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            Tags
+          </a>
+        </li>
+      
+        
+        
+        
+        <li class="menu-item menu-item-sitemap">
+          <a href="/sitemap.xml" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br />
+            
+            Sitemap
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+<div id="posts" class="posts-expand">
+  
+  
+
+  
+
+  
+  
+  
+
+  <article class="post post-type- " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="http://localhost:4000/machine%20learning/2018/04/28/2018-04-28-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Tamizh">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/assets/images/confused-monkey.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Ephemeral Electrons">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+          
+          
+            Predicting the playing role of a cricketer using Machine Learning (Part 2)
+          
+        </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-04-28T12:00:00+08:00">
+                2018-04-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">In</span>
+              
+              
+                
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/category/#/Machine%20Learning" itemprop="url" rel="index">
+                    <span itemprop="name">Machine Learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+            
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>In the previous <a href="https://thamizh85.github.io/machine%20learning/2018/04/23/2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1/">post</a> we saw how to scrape raw data from a content rich webpage. In this post, we will explore how to process that raw data and use Machine Learning tools to predict the playing role of a cricket player just based on his career statistics.</p>
+
+<p>Here are the tools that we will use for this exercise. For interactive data analysis and number crunching:</p>
+<ol>
+  <li>Jupyter</li>
+  <li>Pandas</li>
+  <li>Numpy</li>
+</ol>
+
+<p>For visualizing data:</p>
+<ol>
+  <li>Seaborn</li>
+  <li>matplotlib</li>
+</ol>
+
+<p>For running Machine Learning models:</p>
+<ol>
+  <li>Tensorflow</li>
+  <li>Keras</li>
+  <li>Scikit-learn</li>
+</ol>
+
+<h2 id="importing-data">Importing data</h2>
+<p>First let us load the necessary modules:</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="kn">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
+</code></pre>
+</div>
+
+<p>Import the CSV file which we scraped as a pandas data frame and inspect its contents.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s">'data/players.csv'</span><span class="p">)</span>
+<span class="n">data</span><span class="o">.</span><span class="n">dtypes</span>
+</code></pre>
+</div>
+
+<table>
+  <tbody>
+    <tr>
+      <td>Bat_100</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bat_4s</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bat_50</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bat_6s</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bat_Ave</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bat_BF</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bat_Ct</td>
+      <td>int64</td>
+    </tr>
+    <tr>
+      <td>Bat_HS</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bat_Inns</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bat_Mat</td>
+      <td>int64</td>
+    </tr>
+    <tr>
+      <td>Bat_NO</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bat_Runs</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bat_SR</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bat_St</td>
+      <td>int64</td>
+    </tr>
+    <tr>
+      <td>Bio_Also_known_as</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bio_Batting_style</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bio_Born</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bio_Bowling_style</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bio_Current_age</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bio_Died</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bio_Education</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bio_Fielding_position</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bio_Full_name</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bio_Height</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bio_In_a_nutshell</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bio_Major_teams</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bio_Nickname</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bio_Other</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bio_Playing_role</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bio_Relation</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bowl_10</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bowl_4w</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bowl_5w</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bowl_Ave</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bowl_BBI</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bowl_BBM</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bowl_Balls</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bowl_Econ</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bowl_Inns</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bowl_Mat</td>
+      <td>int64</td>
+    </tr>
+    <tr>
+      <td>Bowl_Runs</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bowl_SR</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>Bowl_Wkts</td>
+      <td>object</td>
+    </tr>
+    <tr>
+      <td>dtype: object</td>
+      <td> </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>We can see that most of the fields are decoded as <code class="highlighter-rouge">object</code> data type which is a generic pandas datatype. It gets assigned if our data consists of mixed types such as characters and numerals. There are some obvious numerical fields which are getting detected as string. But before we recast all of them as string, we need to preprocess some of them to extract numeric value out of them.</p>
+
+<p>For example, let us inspect <code class="highlighter-rouge">Bowl_BBI</code> and <code class="highlighter-rouge">Bowl_BBM</code> which stands for best bowling figures in an innings and a match respectively.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">data</span><span class="p">[[</span><span class="s">'Bowl_BBI'</span><span class="p">,</span><span class="s">'Bowl_BBM'</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Bowl_BBI</th>
+      <th>Bowl_BBM</th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>3/31</td>
+      <td>3/31</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>2/35</td>
+      <td>2/42</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+    <tr>
+      <td>8</td>
+      <td>6/85</td>
+      <td>8/58</td>
+    </tr>
+    <tr>
+      <td>9</td>
+      <td>-</td>
+      <td>-</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Either fields can be made sense as a combination of two independent variables- Best Bowling Wickets &amp; Best Bowling Runs. Similarly when we cast the field <code class="highlighter-rouge">Bat_HS</code> as integer, the notout values will be lost since they are suffixed with an asterisk which makes them a string data type. Let us go ahead to fix these potential issues.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># Best bowling innings wickets</span>
+<span class="n">bbi_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'Bowl_BBI'</span><span class="p">]</span><span class="o">.</span><span class="nb">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">'-'</span><span class="p">,</span><span class="s">''</span><span class="p">)</span><span class="o">.</span><span class="nb">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">'/'</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+                      <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s">'Bowl_BBIW'</span><span class="p">,</span><span class="s">'Bowl_BBIR'</span><span class="p">])</span>
+<span class="n">bbm_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'Bowl_BBM'</span><span class="p">]</span><span class="o">.</span><span class="nb">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">'-'</span><span class="p">,</span><span class="s">''</span><span class="p">)</span><span class="o">.</span><span class="nb">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s">'/'</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">(),</span>
+                      <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s">'Bowl_BBMW'</span><span class="p">,</span><span class="s">'Bowl_BBMR'</span><span class="p">])</span>
+
+<span class="n">data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">bbi_df</span><span class="p">,</span><span class="n">bbm_df</span><span class="p">])</span>
+
+<span class="c"># Identify numeric columns</span>
+<span class="n">numeric_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s">'Bat_100'</span><span class="p">,</span><span class="s">'Bat_4s'</span><span class="p">,</span><span class="s">'Bat_50'</span><span class="p">,</span><span class="s">'Bat_6s'</span><span class="p">,</span><span class="s">'Bat_Ave'</span><span class="p">,</span><span class="s">'Bat_BF'</span><span class="p">,</span>
+                <span class="s">'Bat_Ct'</span><span class="p">,</span><span class="s">'Bat_HS'</span><span class="p">,</span><span class="s">'Bat_Inns'</span><span class="p">,</span><span class="s">'Bat_Mat'</span><span class="p">,</span><span class="s">'Bat_NO'</span><span class="p">,</span><span class="s">'Bat_Runs'</span><span class="p">,</span>
+                <span class="s">'Bat_SR'</span><span class="p">,</span><span class="s">'Bat_St'</span><span class="p">,</span><span class="s">'Bowl_10'</span><span class="p">,</span><span class="s">'Bowl_4w'</span><span class="p">,</span><span class="s">'Bowl_5w'</span><span class="p">,</span><span class="s">'Bowl_Ave'</span><span class="p">,</span>
+                <span class="s">'Bowl_Balls'</span><span class="p">,</span><span class="s">'Bowl_Econ'</span><span class="p">,</span><span class="s">'Bowl_Inns'</span><span class="p">,</span><span class="s">'Bowl_Mat'</span><span class="p">,</span><span class="s">'Bowl_Runs'</span><span class="p">,</span>
+                <span class="s">'Bowl_SR'</span><span class="p">,</span> <span class="s">'Bowl_Wkts'</span><span class="p">,</span><span class="s">'Bowl_BBIW'</span><span class="p">,</span><span class="s">'Bowl_BBIR'</span><span class="p">,</span><span class="s">'Bowl_BBMW'</span><span class="p">,</span><span class="s">'Bowl_BBMR'</span><span class="p">]</span>
+
+<span class="c"># regex replace * in High scores</span>
+<span class="n">data</span><span class="p">[</span><span class="s">'Bat_HS'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">'Bat_HS'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">r'</span><span class="err">\</span><span class="s">*$'</span><span class="p">,</span><span class="s">''</span><span class="p">,</span><span class="n">regex</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[</span><span class="n">numeric_cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">numeric_cols</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s">'-'</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[</span><span class="n">numeric_cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">numeric_cols</span><span class="p">]</span><span class="o">.</span><span class="nb">apply</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">,</span> <span class="n">errors</span><span class="o">=</span><span class="s">'coerce'</span><span class="p">)</span>
+<span class="n">data</span><span class="p">[</span><span class="n">numeric_cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">numeric_cols</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+
+</code></pre>
+</div>
+<p>If we check the data type again, we will see that all the numerical fields are interpreted as int or float datatype as expected.</p>
+
+<blockquote>
+  <p>Be careful when filling NaN with zeroes. Idea is not to introduce false values in to the dataset. In this case, a value of zero is neutral since it represents the same value as absent numbers. But for certain types of data, such as temperature, zero introduces a false value in to the data set since temperature values can be less than zero.</p>
+</blockquote>
+
+<h2 id="pre-processing">Pre-processing</h2>
+
+<h3 id="deriving-new-features">Deriving new features</h3>
+
+<p>When using data in our models we have to understand the units in which they are represented. Not all features are directly comparable. For instance, Average &amp; Strike rates are already averaged over the number of matches that a player plays. But other aggregate statistics aren’t. So in effect it would be meaningless to compare run tally of a player who has played only 10 matches with that of another who has played a hundred matches.</p>
+
+<p>To understand better, let us plot runs scored vs the matches played.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">sns</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">"Bat_Runs"</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s">"Bat_Inns"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+</code></pre>
+</div>
+<p><img src="/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/bat-inns-vs-bat-runs.png" alt="Bat Inns vs Bat Runs" /></p>
+
+<p>Obviously there is a strong correlation between no. of matches played and no. of runs scored. Ideally we want our features to be as independent of each other as possible. To separate the influence of number of matches played on the batting runs feature, we will divide the aggregate statistics by number of matches played.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># select aggregate stats such as no. of hundreds, runs scored etc.,</span>
+<span class="n">bat_features_raw</span> <span class="o">=</span> <span class="p">[</span><span class="s">'Bat_100'</span><span class="p">,</span> <span class="s">'Bat_4s'</span><span class="p">,</span> <span class="s">'Bat_50'</span><span class="p">,</span> <span class="s">'Bat_6s'</span><span class="p">,</span> 
+                    <span class="s">'Bat_BF'</span><span class="p">,</span> <span class="s">'Bat_Ct'</span><span class="p">,</span> <span class="s">'Bat_NO'</span><span class="p">,</span> <span class="s">'Bat_Runs'</span><span class="p">,</span><span class="s">'Bat_St'</span><span class="p">]</span>
+
+<span class="c"># column names for scaled features</span>
+<span class="n">bat_features_scaled</span> <span class="o">=</span> <span class="p">[</span><span class="s">'Bat_100_sc'</span><span class="p">,</span> <span class="s">'Bat_4s_sc'</span><span class="p">,</span> <span class="s">'Bat_50_sc'</span><span class="p">,</span> <span class="s">'Bat_6s_sc'</span><span class="p">,</span> 
+                    <span class="s">'Bat_BF_sc'</span><span class="p">,</span> <span class="s">'Bat_Ct_sc'</span><span class="p">,</span> <span class="s">'Bat_NO_sc'</span><span class="p">,</span> <span class="s">'Bat_Runs_sc'</span><span class="p">,</span><span class="s">'Bat_St_sc'</span><span class="p">]</span>
+
+<span class="c"># leave aside match and innings count and other aggregate stats such as best bowling figures, strike rate and average</span>
+<span class="n">bowl_features_raw</span> <span class="o">=</span> <span class="p">[</span><span class="s">'Bowl_10'</span><span class="p">,</span> <span class="s">'Bowl_4w'</span><span class="p">,</span> <span class="s">'Bowl_5w'</span><span class="p">,</span>  
+                     <span class="s">'Bowl_Balls'</span><span class="p">,</span> <span class="s">'Bowl_Runs'</span><span class="p">,</span><span class="s">'Bowl_Wkts'</span><span class="p">]</span>
+
+<span class="c"># column names for scaled features</span>
+<span class="n">bowl_features_scaled</span> <span class="o">=</span> <span class="p">[</span><span class="s">'Bowl_10_sc'</span><span class="p">,</span> <span class="s">'Bowl_4w_sc'</span><span class="p">,</span> <span class="s">'Bowl_5w_sc'</span><span class="p">,</span>  
+                     <span class="s">'Bowl_Balls_sc'</span><span class="p">,</span> <span class="s">'Bowl_Runs_sc'</span><span class="p">,</span><span class="s">'Bowl_Wkts_sc'</span><span class="p">]</span>
+
+<span class="c"># divide by innings count since it is more relevant than match count</span>
+<span class="n">data</span><span class="p">[</span><span class="n">bat_features_scaled</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">bat_features_raw</span><span class="p">]</span><span class="o">.</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">/</span><span class="n">data</span><span class="p">[</span><span class="s">'Bat_Inns'</span><span class="p">])</span>
+<span class="n">data</span><span class="p">[</span><span class="n">bowl_features_scaled</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">bowl_features_raw</span><span class="p">]</span><span class="o">.</span><span class="nb">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">/</span><span class="n">data</span><span class="p">[</span><span class="s">'Bowl_Inns'</span><span class="p">])</span>
+
+<span class="c"># these are the meaningful features which will be the input for our model. </span>
+<span class="n">features</span> <span class="o">=</span> <span class="p">[</span><span class="s">'Bat_Ave'</span><span class="p">,</span><span class="s">'Bat_HS'</span><span class="p">,</span> <span class="s">'Bat_SR'</span><span class="p">]</span> <span class="o">+</span> <span class="n">bat_features_scaled</span> <span class="o">+</span> <span class="p">[</span><span class="s">'Bowl_Ave'</span><span class="p">,</span><span class="s">'Bowl_Econ'</span><span class="p">,</span><span class="s">'Bowl_SR'</span><span class="p">,</span><span class="s">'Bowl_BBIW'</span><span class="p">,</span> <span class="s">'Bowl_BBIR'</span><span class="p">,</span> <span class="s">'Bowl_BBMW'</span><span class="p">,</span> <span class="s">'Bowl_BBMR'</span><span class="p">]</span> <span class="o">+</span> <span class="n">bowl_features_scaled</span>
+
+<span class="c"># fill numerical features with zero</span>
+<span class="n">data</span><span class="p">[</span><span class="n">features</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</code></pre>
+</div>
+<blockquote>
+  <p>It can be argued that averaging the runs scored duplicates the batting average feature. Leaving aside subtle differences in the way in which batting averages are calculated, we would still keep both features to see how our model learns the difference in both the features and assigns weight accordingly.</p>
+</blockquote>
+
+<p>Now let us plot the scaled runs scored value vs the innings played.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">sns</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">"Bat_Runs_sc"</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s">"Bat_Inns"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/bat-inns-vs-bat-runs-sc.png" alt="Bat Inns vs Bat Runs Scaled" /></p>
+
+<p>Clearly this is a far better representation of batting capabilities of a player. You can see there is less dependency on the number of innings played. It is not hard to imagine how this scaling affects our final prediction. The impact is obvious when we plot batting runs and bowling wickets (likely to be the most important features) in a KDE plot. Here is the KDE plot before scaling:</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">sns</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">"Bowl_Wkts"</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s">"Bat_Runs"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span><span class="n">kind</span><span class="o">=</span><span class="s">'kde'</span><span class="p">)</span>
+</code></pre>
+</div>
+<p><img src="/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/bat-inns-vs-bat-runs-kde-before.png" alt="Bowl Wickets vs Bat Runs KDE plot" /></p>
+
+<p>There is no clear clustering indicating that our classification is not going to be effective. In comparison, if we generate the same chart for scaled values, there is a clear grouping.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">sns</span><span class="o">.</span><span class="n">jointplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">"Bowl_Wkts_sc"</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s">"Bat_Runs_sc"</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span><span class="n">kind</span><span class="o">=</span><span class="s">'kde'</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/bat-inns-vs-bat-runs-kde-after.png" alt="Bowl Wickets Scaled vs Bat Runs Scaled KDE plot" /></p>
+
+<p>This much more promising. Remember, your model will only perform as well as the data you feed in. If the input data is already confused, there is very little a mathematical model can do. Now that we have almost all that we need we will extract those records that have <code class="highlighter-rouge">playing role</code> information and use it for our training &amp; testing. To avoid outliers corrupting our model, we will also exclude players who played less than 5 matches.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># remove players who played less than 5 matches</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s">'Bio_Playing_role'</span><span class="p">]</span><span class="o">.</span><span class="n">notnull</span><span class="p">()</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'Bat_Mat'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">)]</span>
+</code></pre>
+</div>
+
+<h3 id="data-transformation">Data Transformation</h3>
+
+<p>Next let us look at our target feature which is <code class="highlighter-rouge">playing role</code>. We need to understand the values it can assume. Let us look at the unique values for the player features.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># Check the unique playing roles to identify mapping function</span>
+<span class="n">data</span><span class="p">[</span><span class="s">'Bio_Playing_role'</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>array([nan, 'Top-order batsman', 'Bowler', 'Middle-order batsman',
+       'Wicketkeeper batsman', 'Allrounder', 'Batsman', 'Opening batsman',
+       'Wicketkeeper', 'Bowling allrounder', 'Batting allrounder'], dtype=object)
+</code></pre>
+</div>
+
+<p>The playing role definiton is too granular. We want fewer variety of roles so that each role gets sufficient sample data points to train the model. Also the role tagging done by Cricinfo is not consistent. For e.g., not all opening batsmen have been tagged with the opening batsman role. So we define a mapping function to group playing roles in to 4 different categories <code class="highlighter-rouge">['Batsman','Bowler','Wicketkeeper','Allrounder']</code></p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">get_role</span><span class="p">(</span><span class="n">role</span><span class="p">):</span>
+    <span class="k">if</span>  <span class="n">pd</span><span class="o">.</span><span class="n">notnull</span><span class="p">(</span><span class="n">role</span><span class="p">):</span>
+        <span class="k">if</span> <span class="s">'keeper'</span> <span class="ow">in</span> <span class="n">role</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"Wicketkeeper"</span>
+        <span class="k">elif</span> <span class="s">'rounder'</span> <span class="ow">in</span> <span class="n">role</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"Allrounder"</span>
+        <span class="k">elif</span> <span class="s">'atsman'</span> <span class="ow">in</span> <span class="n">role</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"Batsman"</span>
+        <span class="k">elif</span> <span class="s">'owler'</span> <span class="ow">in</span> <span class="n">role</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">"Bowler"</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s">""</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s">""</span>
+    
+<span class="n">data</span><span class="p">[</span><span class="s">'role'</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="s">'Bio_Playing_role'</span><span class="p">]</span><span class="o">.</span><span class="nb">apply</span><span class="p">(</span><span class="n">get_role</span><span class="p">)</span>
+</code></pre>
+</div>
+<p>Note that this feature is a categorical data. It is different from a numerical data such as height or weight. When we want to use Deep Neural Networks we need to represent the target features as numerical data. We will assign one column for each playing role and set its value to one when that playing role fits the player well. Then the function of our model will be to assign a value close to 1 for one of these columns and a value close to 0 for the rest.</p>
+
+<p>It is called One-Hot encoding. Turns out this is a frequent task, so pandas has a handy inbuilt function to perform this.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code>
+<span class="c"># y is categorical feature</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s">'role'</span><span class="p">]</span>
+
+<span class="c"># Convert categorical data into numerical columns</span>
+<span class="n">y_cat</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">y</span><span class="p">)</span>
+
+<span class="c"># X is the input features. We need to covert it from pandas dataframe to numpy array to feed in to our models</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<p>Let us see the new <code class="highlighter-rouge">y_cat</code> dataframe</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">y_cat</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</code></pre>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>Allrounder</th>
+      <th>Batsman</th>
+      <th>Bowler</th>
+      <th>Wicketkeeper</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>19</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>20</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>22</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>25</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>28</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+
+<blockquote>
+  <p>One might be tempted to assign unique numbers for each category ( say 1: Batsman, 2: Bowler etc.,) but that will not work. There is no quantitative relation between categories. Assigning raw numbers implies that there is a numerical progression to the categories. Sometimes it can work for contiguous data such as day of the month, but even then one has to be aware of the bounds and circularity of the target variables.</p>
+</blockquote>
+
+<h3 id="scaling-data">Scaling data</h3>
+<p>Some fields vary over a larger range compared to the rest. Remember we did a preliminary scaling by dividing these values with the number of innings. But that is not sufficient since it only made sure that one feature (‘no. of innings’) did not overtly influence another feature (‘runs scored’). But each features themselves lie between different extremities. For e.g, <code class="highlighter-rouge">Bowling Wickets Scaled</code> only ranges from 0 to 5 whereas <code class="highlighter-rouge">Batting Runs Scaled</code> ranges from 0 to 50. Most machine learning models works the best when the features are vary within the same range. If we let these datapoints influence our calculation without modification, wickets taken will have negligible influence.</p>
+
+<p>So we perform another round of scaling for all input data points. We will use the <code class="highlighter-rouge">MinMax Scaler</code> from Scikit library. This will scale the values such that largest value becomes one and smallest value becomes zero.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">MinMaxScaler</span>
+<span class="n">mms</span> <span class="o">=</span> <span class="n">MinMaxScaler</span><span class="p">(</span><span class="n">feature_range</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c"># X_mms will our new input array with all values scaled to be between 0 and 1</span>
+<span class="n">X_mms</span> <span class="o">=</span> <span class="n">mms</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<h2 id="training-the-model">Training the model</h2>
+
+<h3 id="deep-neural-network">Deep Neural Network</h3>
+
+<p>First we will try to run a Deep Neural Network model on this data. Here are the necessary modules to import.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">keras.models</span> <span class="kn">import</span> <span class="n">Sequential</span>
+<span class="kn">from</span> <span class="nn">keras.layers</span> <span class="kn">import</span> <span class="n">Dense</span>
+<span class="kn">from</span> <span class="nn">keras.optimizers</span> <span class="kn">import</span> <span class="n">SGD</span><span class="p">,</span> <span class="n">Adam</span><span class="p">,</span> <span class="n">Adadelta</span><span class="p">,</span> <span class="n">RMSprop</span>
+<span class="kn">from</span> <span class="nn">keras.wrappers.scikit_learn</span> <span class="kn">import</span> <span class="n">KerasClassifier</span>
+<span class="kn">import</span> <span class="nn">keras.backend</span> <span class="kn">as</span> <span class="nn">K</span>
+</code></pre>
+</div>
+
+<p>Create the Keras Sequential model. I am using a DNN with 1 hidden layer and 1 output layer. The hidden layer has 15 nodes. The number of nodes in the output layer should as the number of categories. So we will go with 4.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">create_baseline</span><span class="p">():</span>
+    <span class="c"># create model</span>
+    <span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="n">input_dim</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="n">kernel_initializer</span><span class="o">=</span><span class="s">'he_normal'</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'relu'</span><span class="p">))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="n">kernel_initializer</span><span class="o">=</span><span class="s">'he_normal'</span><span class="p">,</span> <span class="n">activation</span><span class="o">=</span><span class="s">'softmax'</span><span class="p">))</span>
+    <span class="c"># Compile model</span>
+    <span class="n">model</span><span class="o">.</span><span class="nb">compile</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="s">'categorical_crossentropy'</span><span class="p">,</span> <span class="n">optimizer</span><span class="o">=</span><span class="s">'adam'</span><span class="p">,</span> <span class="n">metrics</span><span class="o">=</span><span class="p">[</span><span class="s">'accuracy'</span><span class="p">])</span>    
+    <span class="k">return</span> <span class="n">model</span>
+</code></pre>
+</div>
+
+<p>The <code class="highlighter-rouge">softmax</code> is a popular activation function for classification problems. In simple words, an activation function is a simple function that decides whether to output TRUE or FALSE for each category. This <code class="highlighter-rouge">softmax</code> function receives an array of values from the previous layer and returns a new array which adds up to 1. The category with the largest value is deemed likely match for our data.</p>
+
+<blockquote>
+  <p><code class="highlighter-rouge">Softmax</code> highlights only the likeliest category for a data. Here for simplicity sake, we assume that our categories are mutually exclusive, i.e, a player can only belong to one category at a time. There are other data types where a single entry can belong to more than one category at a time. We may need to use different activation function for that. Again, know your data before deciding on activation function.</p>
+</blockquote>
+
+<p>The loss function is <code class="highlighter-rouge">categorical_crossentropy</code>. A Loss Function can be thought of as a course correction function which measures the perceived error as our model navigates to ideal set of weights over multiple iterations. Categorical Cross-Entropy loss function penalizes weights that are sure to be wrong. It is a common loss function used for classification problems.</p>
+
+<p>These are the important attributes that closely follows our problem definition. Most of the other parameters can be fiddled with.</p>
+
+<p>Next we will use Keras to train the model. The result is a Keras Classifier function whose weights are trained on our data. We can use this function to predict values for inputs which we haven’t seen so far.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># evaluate model with standardized dataset</span>
+<span class="n">estimator</span> <span class="o">=</span> <span class="n">KerasClassifier</span><span class="p">(</span><span class="n">build_fn</span><span class="o">=</span><span class="n">create_baseline</span><span class="p">,</span> <span class="n">nb_epoch</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</code></pre>
+</div>
+<p>We cannot use all of the data to train our model. The model will closely follow our existing model. It won’t be useful to predict any values we haven’t seen so far. This is called overfitting.</p>
+
+<p><img src="/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/overfitting.png" alt="Overfitting" /></p>
+<p align="center">Example of overfitting - Source Wikipedia </p>
+
+<p>To avoid this, we will split the data into train and test datasets. We will use the former to train the model and compute the scores based on the testing against test data for each iteration of cross-validation. Scikit’s provides a helper function called <code class="highlighter-rouge">cross_val_score</code> to assist in this. <code class="highlighter-rouge">StratifiedKFold</code> is the genertor strategy we will use for selecting this train/test datasets. It splits the data into K folds (set to 10 in our case), trains it on K-1 datasets and tests it against the left out dataset, while preserving the class distribution of the data.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># set the random state to a fixed number for reproducing the results</span>
+<span class="n">kfold</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">shuffle</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span><span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">X_mms</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">kfold</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Results: </span><span class="si">%.2</span><span class="s">f</span><span class="si">%% </span><span class="s">(</span><span class="si">%.2</span><span class="s">f</span><span class="si">%%</span><span class="s">)"</span> <span class="o">%</span> <span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="n">results</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<p>I got a result of 82.2% accuracy. Not bad for the first attempt, particularly since we employed gross simplifications and trained the model with only with around 450 records. The results that you get may be slightly different since we shuffle the data before generating folds.</p>
+
+<h3 id="random-forest-classifier">Random Forest Classifier</h3>
+
+<p>This time let us try to model the data using <code class="highlighter-rouge">Random Forest classifier</code>. Random Forest Classifier is a much simpler method than neural networks. It relies on building multiple decision trees and assembling the results of these decision trees.</p>
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+
+<span class="c"># Instantiate model with 1000 decision trees</span>
+<span class="n">rf_estimator</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">42</span><span class="p">)</span>
+
+<span class="n">rf_results</span> <span class="o">=</span> <span class="n">cross_val_score</span><span class="p">(</span><span class="n">rf_estimator</span><span class="p">,</span> <span class="n">X_mms</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">kfold</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="s">"Results: </span><span class="si">%.2</span><span class="s">f</span><span class="si">%% </span><span class="s">(</span><span class="si">%.2</span><span class="s">f</span><span class="si">%%</span><span class="s">)"</span> <span class="o">%</span> <span class="p">(</span><span class="n">rf_results</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span><span class="o">*</span><span class="mi">100</span><span class="p">,</span> <span class="n">rf_results</span><span class="o">.</span><span class="n">std</span><span class="p">()</span><span class="o">*</span><span class="mi">100</span><span class="p">))</span>
+</code></pre>
+</div>
+
+<p>You will notice that Random Forest Classifier has performed significantly better than the DNN classifier. I got 87.28% accuracy, which is amazing since Random Forest is several times faster and less resource intensive than the DNN classifier. And I didn’t even have to run it on top of tensorflow and make use of GPU. Decision trees are quite effective at classification tasks but they tend to overfit.</p>
+
+<h2 id="reviewing-the-results">Reviewing the results</h2>
+
+<p>Since our Random Forest model has performed significantly better, we will use that model to predict the unseen roles of players.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="c"># Fit the estimator on available data</span>
+<span class="n">rf_estimator</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_mms</span><span class="p">,</span> <span class="n">y</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+<span class="c"># np array to hold all of the input data</span>
+<span class="n">P</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">features</span><span class="p">]</span><span class="o">.</span><span class="n">as_matrix</span><span class="p">()</span>
+
+<span class="c"># An ugly hack to drop infinity values introduced as part of some of the pre-processing tasks</span>
+<span class="n">P</span><span class="p">[</span><span class="n">P</span> <span class="o">&gt;</span> <span class="mf">1e308</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c"># Min Max Scaling</span>
+<span class="n">P_mms</span> <span class="o">=</span> <span class="n">min_max_scaler</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+
+<span class="c"># Prediction based on the Random forest model</span>
+<span class="n">data</span><span class="p">[</span><span class="s">'predicted_role_rf'</span><span class="p">]</span> <span class="o">=</span> <span class="n">rf_estimator</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">P_mms</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<h3 id="confusion-matrix">Confusion Matrix</h3>
+<p>A score alone is not a good indicator that our model has performed well. We need to review its performance by plotting <code class="highlighter-rouge">Confusion Matrix</code>. It is a simple matrix plot based on known test data with predicted values plotted against the true value. The diagonal entries represent correct prediction, rest represents confused values. Let us plot Confusin Matrix for our data.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+<span class="n">mat</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">data</span><span class="p">[(</span><span class="n">data</span><span class="p">[</span><span class="s">'role'</span><span class="p">]</span><span class="o">!=</span><span class="s">''</span><span class="p">)][</span><span class="s">'role'</span><span class="p">],</span> 
+                       <span class="n">data</span><span class="p">[(</span><span class="n">data</span><span class="p">[</span><span class="s">'role'</span><span class="p">]</span><span class="o">!=</span><span class="s">''</span><span class="p">)][</span><span class="s">'predicted_role_rf'</span><span class="p">],</span>
+                       <span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="s">'Batsman'</span><span class="p">,</span><span class="s">'Bowler'</span><span class="p">,</span><span class="s">'Allrounder'</span><span class="p">,</span><span class="s">'Wicketkeeper'</span><span class="p">])</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span><span class="n">mat</span><span class="o">.</span><span class="n">T</span><span class="p">,</span> <span class="n">square</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">annot</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">fmt</span><span class="o">=</span><span class="s">'d'</span><span class="p">,</span> <span class="n">cbar</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s">'true label'</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s">'predicted label'</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/confusion-matrix.png" alt="Confusion Matrix" /></p>
+
+<p>We can see that the model is quite effective in matching the pure roles such as Batsman or Bowler. When it comes to mixed roles such as Allrounder or Wicketkeeper, it fares not that well. Part of the problem lies in our assumption that the roles are mutually exclusive i.e, a player cannot be both Batsman and Bowler at the same time. So we identify only around 37% of the all rounders succesfully. Later we will see that there are other reasons why the predicted role doesn’t match the role marked in cricinfo.</p>
+
+<h3 id="reviewing-the-results-1">Reviewing the results</h3>
+
+<p>Let us see the cases where our predictions differed from the roles defined in cricinfo:</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">data</span><span class="p">[(</span><span class="n">data</span><span class="p">[</span><span class="s">'role'</span><span class="p">]</span> <span class="o">!=</span> <span class="n">data</span><span class="p">[</span><span class="s">'predicted_role_rf'</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'role'</span><span class="p">]</span> <span class="o">!=</span> <span class="s">''</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'Bat_Mat'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">5</span> <span class="p">)][[</span><span class="s">'Bio_Full_name'</span><span class="p">,</span><span class="s">'predicted_role_rf'</span><span class="p">,</span> <span class="s">'role'</span><span class="p">,</span> <span class="s">'Bio_Playing_role'</span><span class="p">]]</span>
+</code></pre>
+</div>
+
+<p>I have extracted the differences for popular players of recent times. Subjectively speaking our model hasn’t performed too bad. There seems to be some merit to the classification offered by the model compared to the playing role assigned in cricinfo bio page.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>Bio_Full_name</th>
+      <th>predicted_role_rf</th>
+      <th>role</th>
+      <th>Bio_Playing_role</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>38</td>
+      <td>Stephen Norman John O’Keefe</td>
+      <td>Bowler</td>
+      <td>Allrounder</td>
+      <td>Allrounder</td>
+    </tr>
+    <tr>
+      <td>44</td>
+      <td>Glenn James Maxwell</td>
+      <td>Batsman</td>
+      <td>Allrounder</td>
+      <td>Batting allrounder</td>
+    </tr>
+    <tr>
+      <td>88</td>
+      <td>Andrew Symonds</td>
+      <td>Batsman</td>
+      <td>Allrounder</td>
+      <td>Allrounder</td>
+    </tr>
+    <tr>
+      <td>227</td>
+      <td>Shai Diego Hope</td>
+      <td>Batsman</td>
+      <td>Wicketkeeper</td>
+      <td>Wicketkeeper batsman</td>
+    </tr>
+    <tr>
+      <td>281</td>
+      <td>Brendon Barrie McCullum</td>
+      <td>Batsman</td>
+      <td>Wicketkeeper</td>
+      <td>Wicketkeeper batsman</td>
+    </tr>
+    <tr>
+      <td>970</td>
+      <td>Angelo Davis Mathews</td>
+      <td>Batsman</td>
+      <td>Allrounder</td>
+      <td>Allrounder</td>
+    </tr>
+    <tr>
+      <td>1437</td>
+      <td>Abraham Benjamin de Villiers</td>
+      <td>Batsman</td>
+      <td>Wicketkeeper</td>
+      <td>Wicketkeeper batsman</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>In most cases, Cricinfo’s playing role is also based on the ODI and T20 formats. Some of the players like ABD Villiers and Brendon McCullum have donned multiple roles but given up gloves for the games longest format. So we can’t really fault the model here for identifying them as batsman. Then there are other cases of a player being regarded as All rounder based on the role they play in shorter formats.</p>
+
+<p>Next to the most interesting part- let us see how our model behaves for the data it hasn’t seen i.e., the classification of those players whose playing role is missing in their bio page. For ease of identification, I have filtered only those players who have played 100 matches or more.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">data</span><span class="p">[(</span><span class="n">data</span><span class="p">[</span><span class="s">'role'</span><span class="p">]</span> <span class="o">!=</span> <span class="n">data</span><span class="p">[</span><span class="s">'predicted_role_rf'</span><span class="p">])</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'role'</span><span class="p">]</span> <span class="o">==</span> <span class="s">''</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="s">'Bat_Mat'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">100</span> <span class="p">)][[</span><span class="s">'Bio_Full_name'</span><span class="p">,</span><span class="s">'predicted_role_rf'</span><span class="p">,</span> <span class="s">'role'</span><span class="p">,</span> <span class="s">'Bio_Playing_role'</span><span class="p">]]</span>
+</code></pre>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Bio_Full_name</th>
+      <th>predicted_role_rf</th>
+      <th>role</th>
+      <th>Bio_Playing_role</th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>134</td>
+      <td>Mark Edward Waugh</td>
+      <td>Batsman</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>137</td>
+      <td>Mark Anthony Taylor</td>
+      <td>Batsman</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>139</td>
+      <td>Ian Andrew Healy</td>
+      <td>Wicketkeeper</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>599</td>
+      <td>Sourav Chandidas Ganguly</td>
+      <td>Batsman</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>743</td>
+      <td>Anil Kumble</td>
+      <td>Bowler</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>925</td>
+      <td>Brian Charles Lara</td>
+      <td>Batsman</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>929</td>
+      <td>Carl Llewellyn Hooper</td>
+      <td>Batsman</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>937</td>
+      <td>Courtney Andrew Walsh</td>
+      <td>Bowler</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>957</td>
+      <td>Desmond Leo Haynes</td>
+      <td>Batsman</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>1072</td>
+      <td>Kapildev Ramlal Nikhanj</td>
+      <td>Bowler</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>1074</td>
+      <td>Dilip Balwant Vengsarkar</td>
+      <td>Batsman</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>1088</td>
+      <td>Sunil Manohar Gavaskar</td>
+      <td>Batsman</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>1257</td>
+      <td>Cuthbert Gordon Greenidge</td>
+      <td>Batsman</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>1258</td>
+      <td>Isaac Vivian Alexander Richards</td>
+      <td>Batsman</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>1284</td>
+      <td>Clive Hubert Lloyd</td>
+      <td>Batsman</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>1326</td>
+      <td>Warnakulasuriya Patabendige Ushantha Joseph Chaminda Vaas</td>
+      <td>Bowler</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>1463</td>
+      <td>Makhaya Ntini</td>
+      <td>Bowler</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>1474</td>
+      <td>Gary Kirsten</td>
+      <td>Batsman</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>1676</td>
+      <td>Alec James Stewart</td>
+      <td>Batsman</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>2020</td>
+      <td>Inzamam-ul-Haq</td>
+      <td>Batsman</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>2168</td>
+      <td>Graham Alan Gooch</td>
+      <td>Batsman</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>2205</td>
+      <td>Wasim Akram</td>
+      <td>Bowler</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>2216</td>
+      <td>Saleem Malik</td>
+      <td>Batsman</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>2320</td>
+      <td>Geoffrey Boycott</td>
+      <td>Batsman</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>2366</td>
+      <td>Michael Colin Cowdrey</td>
+      <td>Batsman</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <td>2381</td>
+      <td>Mohammad Javed Miandad Khan</td>
+      <td>Batsman</td>
+      <td> </td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Even a cursory look can tell us that our model worked splendidly. It is surprising how many prominent player bio pages has their playing role information missing. Well, it looks like even a simple ML model can fix that gap.</p>
+
+<p>Let us see how the two most critical features (<code class="highlighter-rouge">Bat_Runs_sc</code> and <code class="highlighter-rouge">Bowl_Wkts_sc</code>) affects our predicted role.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">sns</span><span class="o">.</span><span class="n">set_palette</span><span class="p">(</span><span class="s">"bright"</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">lmplot</span><span class="p">(</span><span class="s">'Bowl_Wkts_sc'</span><span class="p">,</span><span class="s">'Bat_Runs_sc'</span><span class="p">,</span><span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s">'Bat_Mat'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">5</span> <span class="p">],</span>
+           <span class="n">hue</span><span class="o">=</span><span class="s">'predicted_role_rf'</span><span class="p">,</span> <span class="n">fit_reg</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mf">7.0</span><span class="p">],[</span><span class="mi">100</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+</code></pre>
+</div>
+
+<p><img src="/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/bat-runs-bowl-wkts-roles.png" alt="Bat Runs vs Bowl Wkts" /></p>
+
+<p>I have plotted a diagonal line, below which most of the points are clustered. It represents a kind of pareto-frontier which only exceptional players can breach. Note that there is no statistical basis for my choice of x and y intercepts, I just based it on visual inspection. Let us see the list of players who reside above this threshold.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">data</span><span class="p">[</span><span class="n">data</span><span class="p">[</span><span class="s">'Bat_Mat'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s">'Bowl_Wkts_sc*100 + Bat_Runs_sc*7 &gt; 700 '</span><span class="p">)[[</span><span class="s">'Bio_Full_name'</span><span class="p">,</span><span class="s">'Bat_Mat'</span><span class="p">,</span><span class="s">'predicted_role_rf'</span><span class="p">,</span><span class="s">'Bowl_Wkts_sc'</span><span class="p">,</span><span class="s">'Bat_Runs_sc'</span><span class="p">]]</span>
+</code></pre>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th>Bio_Full_name</th>
+      <th>Bat_Mat</th>
+      <th>predicted_role_rf</th>
+      <th>Bowl_Wkts_sc</th>
+      <th>Bat_Runs_sc</th>
+      <th> </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>62</td>
+      <td>Steven Peter Devereux Smith</td>
+      <td>59</td>
+      <td>Batsman</td>
+      <td>0.288136</td>
+      <td>98.237288</td>
+    </tr>
+    <tr>
+      <td>377</td>
+      <td>Ravindrasinh Anirudhsinh Jadeja</td>
+      <td>35</td>
+      <td>Bowler</td>
+      <td>4.714286</td>
+      <td>33.600000</td>
+    </tr>
+    <tr>
+      <td>380</td>
+      <td>Ravichandran Ashwin</td>
+      <td>55</td>
+      <td>Bowler</td>
+      <td>5.527273</td>
+      <td>37.363636</td>
+    </tr>
+    <tr>
+      <td>456</td>
+      <td>Christopher Lance Cairns</td>
+      <td>62</td>
+      <td>Allrounder</td>
+      <td>3.516129</td>
+      <td>53.548387</td>
+    </tr>
+    <tr>
+      <td>526</td>
+      <td>Shakib Al Hasan</td>
+      <td>51</td>
+      <td>Allrounder</td>
+      <td>3.686275</td>
+      <td>70.470588</td>
+    </tr>
+    <tr>
+      <td>720</td>
+      <td>Sikandar Raza Butt</td>
+      <td>9</td>
+      <td>Allrounder</td>
+      <td>1.444444</td>
+      <td>84.111111</td>
+    </tr>
+    <tr>
+      <td>832</td>
+      <td>Donald George Bradman</td>
+      <td>52</td>
+      <td>Batsman</td>
+      <td>0.038462</td>
+      <td>134.538462</td>
+    </tr>
+    <tr>
+      <td>1133</td>
+      <td>Herbert Vivian Hordern</td>
+      <td>7</td>
+      <td>Bowler</td>
+      <td>6.571429</td>
+      <td>36.285714</td>
+    </tr>
+    <tr>
+      <td>1177</td>
+      <td>Richard John Hadlee</td>
+      <td>86</td>
+      <td>Bowler</td>
+      <td>5.011628</td>
+      <td>36.325581</td>
+    </tr>
+    <tr>
+      <td>1240</td>
+      <td>Yasir Shah</td>
+      <td>28</td>
+      <td>Bowler</td>
+      <td>5.892857</td>
+      <td>15.892857</td>
+    </tr>
+    <tr>
+      <td>1468</td>
+      <td>Jacques Henry Kallis</td>
+      <td>166</td>
+      <td>Allrounder</td>
+      <td>1.759036</td>
+      <td>80.054217</td>
+    </tr>
+    <tr>
+      <td>1548</td>
+      <td>Charles Thomas Biass Turner</td>
+      <td>17</td>
+      <td>Bowler</td>
+      <td>5.941176</td>
+      <td>19.000000</td>
+    </tr>
+    <tr>
+      <td>1748</td>
+      <td>Garfield St Aubrun Sobers</td>
+      <td>93</td>
+      <td>Allrounder</td>
+      <td>2.526882</td>
+      <td>86.365591</td>
+    </tr>
+    <tr>
+      <td>1825</td>
+      <td>Michael John Procter</td>
+      <td>7</td>
+      <td>Bowler</td>
+      <td>5.857143</td>
+      <td>32.285714</td>
+    </tr>
+    <tr>
+      <td>1838</td>
+      <td>Robert Graeme Pollock</td>
+      <td>23</td>
+      <td>Batsman</td>
+      <td>0.173913</td>
+      <td>98.086957</td>
+    </tr>
+    <tr>
+      <td>1849</td>
+      <td>Edgar John Barlow</td>
+      <td>30</td>
+      <td>Allrounder</td>
+      <td>1.333333</td>
+      <td>83.866667</td>
+    </tr>
+    <tr>
+      <td>1860</td>
+      <td>Trevor Leslie Goddard</td>
+      <td>41</td>
+      <td>Allrounder</td>
+      <td>3.000000</td>
+      <td>61.365854</td>
+    </tr>
+    <tr>
+      <td>2157</td>
+      <td>Ian Terence Botham</td>
+      <td>102</td>
+      <td>Allrounder</td>
+      <td>3.754902</td>
+      <td>50.980392</td>
+    </tr>
+    <tr>
+      <td>2285</td>
+      <td>Mulvantrai Himmatlal Mankad</td>
+      <td>44</td>
+      <td>Allrounder</td>
+      <td>3.681818</td>
+      <td>47.931818</td>
+    </tr>
+    <tr>
+      <td>2386</td>
+      <td>Imran Khan Niazi</td>
+      <td>88</td>
+      <td>Allrounder</td>
+      <td>4.113636</td>
+      <td>43.261364</td>
+    </tr>
+    <tr>
+      <td>2522</td>
+      <td>George Aubrey Faulkner</td>
+      <td>25</td>
+      <td>Allrounder</td>
+      <td>3.280000</td>
+      <td>70.160000</td>
+    </tr>
+    <tr>
+      <td>2741</td>
+      <td>George Joseph Thompson</td>
+      <td>6</td>
+      <td>Allrounder</td>
+      <td>3.833333</td>
+      <td>45.500000</td>
+    </tr>
+    <tr>
+      <td>2769</td>
+      <td>Sydney Francis Barnes</td>
+      <td>27</td>
+      <td>Bowler</td>
+      <td>7.000000</td>
+      <td>8.962963</td>
+    </tr>
+    <tr>
+      <td>2809</td>
+      <td>Thomas Richardson</td>
+      <td>14</td>
+      <td>Bowler</td>
+      <td>6.285714</td>
+      <td>12.642857</td>
+    </tr>
+    <tr>
+      <td>2821</td>
+      <td>John James Ferris</td>
+      <td>9</td>
+      <td>Bowler</td>
+      <td>6.777778</td>
+      <td>12.666667</td>
+    </tr>
+    <tr>
+      <td>2845</td>
+      <td>George Alfred Lohmann</td>
+      <td>18</td>
+      <td>Bowler</td>
+      <td>6.222222</td>
+      <td>11.833333</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>The list is dominated by exceptional all-rounders. Among specialists, bowlers fare better. Perhaps it is my fault that I set the bar for greatness too high. The <code class="highlighter-rouge">Bat_Runs_sc</code> of Bradman is so far ahead of the rest, that it one tends to choose a higher value for y-intercept.</p>
+
+<p>Finally let us plot <code class="highlighter-rouge">Bat_Runs_sc</code> against predicted playing role using a violin plot. This will shows distribution of runs scored across the multiple categories of playing role. We can see that for batsmen, the bulk of the violin plot is top heavy whereas for the bowlers it is bottom heavy.</p>
+
+<div class="language-python highlighter-rouge"><pre class="highlight"><code><span class="n">sns</span><span class="o">.</span><span class="n">violinplot</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="s">'predicted_role_rf'</span><span class="p">,</span> 
+               <span class="n">y</span><span class="o">=</span><span class="s">'Bat_Runs_sc'</span><span class="p">,</span>
+               <span class="n">data</span><span class="o">=</span><span class="n">data</span><span class="p">,</span>
+               <span class="n">scale</span><span class="o">=</span><span class="s">'width'</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p><img src="/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/bat-runs-roles-violin-plot.png" alt="Bat Runs Violin Plot" /></p>
+
+<h2 id="conclusion">Conclusion</h2>
+<p>If you review the length of the posts, less than 20% is allocated to running the actual machine learning code. That closely reflects the time spent on this project as well. Bulk of the time is spent in collecting and curating the data. Also the results from RandomForest Classifier is revealing. Right tool for the right job is often more effective than a generic tool which is universally useful.</p>
+
+<p>Machine Learning and Data science is a vast subject. Despite the length of this post, I have barely touched the surface of this domain. Apart from the knowledge of tools and procedures, one needs to have a good understanding of the data and be conscious of the inherent biases in the numerical models. Errors may creep in during</p>
+
+<p>Finally, <a href="http://scikit-learn.org/stable/">scikit-learn</a> is an excellent resource for learning and practising Machine learning. It has excellent documentation and helper functions for many of the common tasks. <a href="https://github.com/jakevdp/PythonDataScienceHandbook/">Python Data Science Handbook</a> is another great resource which is available for free.</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            
+            <a href="/tag/#/pandas" rel="tag"># pandas</a>
+          
+            
+            <a href="/tag/#/keras" rel="tag"># keras</a>
+          
+            
+            <a href="/tag/#/machine%20learning" rel="tag"># machine learning</a>
+          
+            
+            <a href="/tag/#/visualization" rel="tag"># visualization</a>
+          
+        </div>
+      
+
+      
+      
+      
+      
+      
+
+      
+      
+        <div class="post-nav" id="post-nav-id">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/machine%20learning/2018/04/23/2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1/" rel="prev" title="Predicting the playing role of a cricketer using Machine Learning (Part 1)">
+                Predicting the playing role of a cricketer using Machine Learning (Part 1) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+      
+
+      
+    </footer>
+  </article>
+
+  <div class="post-spread">
+    
+  </div>
+</div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+        
+        
+        
+
+
+
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/assets/images/confused-monkey.jpg"
+               alt="Tamizh" />
+          <p class="site-author-name" itemprop="name">Tamizh</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">categories</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/">
+                <span class="site-state-item-count">29</span>
+                <span class="site-state-item-name">tags</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+        
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              
+              
+              <span class="links-of-author-item">
+                <a href="https://www.linkedin.com/in/thamizh/" target="_blank" title="LinkedIn">
+                  
+                    <i class="fa fa-fw fa-linkedin"></i>
+                  
+                  LinkedIn
+                </a>
+              </span>
+            
+              
+              
+              <span class="links-of-author-item">
+                <a href="https://github.com/thamizh85" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              
+              
+              <span class="links-of-author-item">
+                <a href="https://twitter.com/t4m1zh" target="_blank" title="Twitter">
+                  
+                    <i class="fa fa-fw fa-twitter"></i>
+                  
+                  Twitter
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+            
+            
+            
+
+
+
+
+
+            
+              <div class="post-toc-content">
+    <ol class=nav>
+      <li class="nav-item nav-level-2"> <a class="nav-link" href="#importing-data"> <span class="nav-number">1</span> <span class="nav-text">Importing data</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#pre-processing"> <span class="nav-number">2</span> <span class="nav-text">Pre-processing</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#deriving-new-features"> <span class="nav-number">2.1</span> <span class="nav-text">Deriving new features</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#data-transformation"> <span class="nav-number">2.2</span> <span class="nav-text">Data Transformation</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#scaling-data"> <span class="nav-number">2.3</span> <span class="nav-text">Scaling data</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#training-the-model"> <span class="nav-number">3</span> <span class="nav-text">Training the model</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#deep-neural-network"> <span class="nav-number">3.1</span> <span class="nav-text">Deep Neural Network</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#random-forest-classifier"> <span class="nav-number">3.2</span> <span class="nav-text">Random Forest Classifier</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#reviewing-the-results"> <span class="nav-number">4</span> <span class="nav-text">Reviewing the results</span> </a> <ol class="nav-child"> <li class="nav-item nav-level-3"> <a class="nav-link" href="#confusion-matrix"> <span class="nav-number">4.1</span> <span class="nav-text">Confusion Matrix</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-3"> <a class="nav-link" href="#reviewing-the-results-1"> <span class="nav-number">4.2</span> <span class="nav-text">Reviewing the results</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> </li></ol> </li></ol> </li></ol> </li></ol> </li> <li class="nav-item nav-level-2"> <a class="nav-link" href="#conclusion"> <span class="nav-number">5</span> <span class="nav-text">Conclusion</span> </a> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child"> <ol class="nav-child">
+    </ol>
+  </div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-hand-spock-o"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Tamizh</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://jekyllrb.com">Jekyll</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/simpleyyt/jekyll-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+   
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  
+  
+  
+  
+  <script type="text/javascript" src="/assets/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/assets/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/assets/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/assets/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/assets/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
+
+  <script type="text/javascript" src="/assets/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/assets/js/src/post-details.js?v=5.1.1"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/assets/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+  
+
+    
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+
+  
+
+  
+
+  
+
+</body>
+</html>
+
