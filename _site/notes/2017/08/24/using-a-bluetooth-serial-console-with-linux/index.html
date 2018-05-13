@@ -14,7 +14,7 @@
 
 
 
-<html class="theme-next muse use-motion" lang="en">
+<html class="theme-next pisces use-motion" lang="en">
 <head>
   <meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -72,7 +72,7 @@
   
     
     
-    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+    <link href="//fonts.googleapis.com/css?family=Roboto:300,300italic,400,400italic,700,700italic|Lato:300,300italic,400,400italic,700,700italic|Oswald:300,300italic,400,400italic,700,700italic|Roboto Mono:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
   
 
 
@@ -113,24 +113,24 @@
 
 
 
-<meta name="description" content="Recently I bought a bluetooth RS232 serial convertor. I wasn’t sure whether it would work with my Linux laptop. But it turned out to be quite simple to setup. Pre-requisites The following packages are required: bluez bluez-utils byobu (optional) Bluez provides the bluetooth protocol stack (most likely shipped with the OS), bluez-utils provides the bluetoothctl utility and byobu is a wrapper around screen terminal emulator. You can also use ‘screen’ directly. Install these using your distributions recommended procedure. Steps Start daemon: Swanky:~$ systemctl start bluetooth Discover using bluetoothctl: Swanky:~$ bluetoothctl [NEW] Controller &amp;lt;controller-mac-address&amp;gt; xkgt-Swanky [default] [bluetooth]# power on [bluetooth]# scan on Once you can see your device, turn off the scan and pair [bluetooth]# scan off [bluetooth]# pair &amp;lt;device-mac-address&amp;gt; Exit blutoothctl and create serial device (Note that root privileges are required): [bluetooth]# exit Swanky:~$ sudo rfcomm bind 0 &amp;lt;device-mac-address&amp;gt; You should now have /dev/rfcomm0. Connect to it using byobu-screen utility: Swanky:~$ byobu-screen /dev/rfcomm0 Enjoy your wireless console connection!">
+<meta name="description" content="Recently I bought a bluetooth RS232 serial convertor. I wasn’t sure whether it would work with my Linux laptop. But it turned out to be quite simple to setup.">
 <meta name="keywords" content="bluetooth, Linux">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Using a bluetooth serial console with linux">
 <meta property="og:url" content="http://localhost:4000/notes/2017/08/24/using-a-bluetooth-serial-console-with-linux/">
 <meta property="og:site_name" content="Ephemeral Electrons">
-<meta property="og:description" content="Recently I bought a bluetooth RS232 serial convertor. I wasn’t sure whether it would work with my Linux laptop. But it turned out to be quite simple to setup. Pre-requisites The following packages are required: bluez bluez-utils byobu (optional) Bluez provides the bluetooth protocol stack (most likely shipped with the OS), bluez-utils provides the bluetoothctl utility and byobu is a wrapper around screen terminal emulator. You can also use ‘screen’ directly. Install these using your distributions recommended procedure. Steps Start daemon: Swanky:~$ systemctl start bluetooth Discover using bluetoothctl: Swanky:~$ bluetoothctl [NEW] Controller &amp;lt;controller-mac-address&amp;gt; xkgt-Swanky [default] [bluetooth]# power on [bluetooth]# scan on Once you can see your device, turn off the scan and pair [bluetooth]# scan off [bluetooth]# pair &amp;lt;device-mac-address&amp;gt; Exit blutoothctl and create serial device (Note that root privileges are required): [bluetooth]# exit Swanky:~$ sudo rfcomm bind 0 &amp;lt;device-mac-address&amp;gt; You should now have /dev/rfcomm0. Connect to it using byobu-screen utility: Swanky:~$ byobu-screen /dev/rfcomm0 Enjoy your wireless console connection!">
+<meta property="og:description" content="Recently I bought a bluetooth RS232 serial convertor. I wasn’t sure whether it would work with my Linux laptop. But it turned out to be quite simple to setup.">
 <meta property="og:locale" content="en">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Using a bluetooth serial console with linux">
-<meta name="twitter:description" content="Recently I bought a bluetooth RS232 serial convertor. I wasn’t sure whether it would work with my Linux laptop. But it turned out to be quite simple to setup. Pre-requisites The following packages are required: bluez bluez-utils byobu (optional) Bluez provides the bluetooth protocol stack (most likely shipped with the OS), bluez-utils provides the bluetoothctl utility and byobu is a wrapper around screen terminal emulator. You can also use ‘screen’ directly. Install these using your distributions recommended procedure. Steps Start daemon: Swanky:~$ systemctl start bluetooth Discover using bluetoothctl: Swanky:~$ bluetoothctl [NEW] Controller &amp;lt;controller-mac-address&amp;gt; xkgt-Swanky [default] [bluetooth]# power on [bluetooth]# scan on Once you can see your device, turn off the scan and pair [bluetooth]# scan off [bluetooth]# pair &amp;lt;device-mac-address&amp;gt; Exit blutoothctl and create serial device (Note that root privileges are required): [bluetooth]# exit Swanky:~$ sudo rfcomm bind 0 &amp;lt;device-mac-address&amp;gt; You should now have /dev/rfcomm0. Connect to it using byobu-screen utility: Swanky:~$ byobu-screen /dev/rfcomm0 Enjoy your wireless console connection!">
+<meta name="twitter:description" content="Recently I bought a bluetooth RS232 serial convertor. I wasn’t sure whether it would work with my Linux laptop. But it turned out to be quite simple to setup.">
 
 
 <script type="text/javascript" id="hexo.configurations">
   var NexT = window.NexT || {};
   var CONFIG = {
     root: '',
-    scheme: 'Muse',
+    scheme: 'Pisces',
     sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
     fancybox: true,
     motion: true,
@@ -609,7 +609,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>
@@ -631,7 +631,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/">
-                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-count">29</span>
                 <span class="site-state-item-name">tags</span>
               </a>
             </div>
@@ -757,7 +757,7 @@
 <div class="theme-info">
   Theme -
   <a class="theme-link" href="https://github.com/simpleyyt/jekyll-theme-next">
-    NexT.Muse
+    NexT.Pisces
   </a>
 </div>
 
@@ -861,6 +861,13 @@
 
   
   
+
+
+  <script type="text/javascript" src="/assets/js/src/affix.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/assets/js/src/schemes/pisces.js?v=5.1.1"></script>
+
+
 
   <script type="text/javascript" src="/assets/js/src/scrollspy.js?v=5.1.1"></script>
 <script type="text/javascript" src="/assets/js/src/post-details.js?v=5.1.1"></script>

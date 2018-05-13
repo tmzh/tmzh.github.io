@@ -4,7 +4,7 @@ comments: true
 date: 2018-04-23 12:00:00+08:00
 layout: post
 slug: 2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1
-title: Predicting the playing role of a cricketer using Machine Learning
+title: Predicting the playing role of a cricketer using Machine Learning (Part 1)
 categories:
 - Machine Learning
 tags:
@@ -15,6 +15,8 @@ tags:
 
 In this project, we will apply Machine Learning techniques to predict whether a particular cricket player is a batsman or bowler based on his career stats. First we will use Deep Neural Networks (DNN) model and later compare the results with a simpler classifier algorithm such as Random Forest Classifier.
 
+For the uninitiated, Cricket is a game of bat and ball, much similar to baseball. Cricket players have different roles to play in a game. Batsman's role is to score runs while not losing their wicket, bowlers role is to get the batsman's wicket while restricting their run score in due process. Allrounders can do both batting and bowling role well. A wicketkeeper is a specialist role whose purpose is to catch behind the wickets during the bowling innings. If you really intend to understand tne data behind this exercise, my half-baked explanations are barely sufficient. I suggest to refer to better reference such as [this](https://www.britannica.com/sports/cricket-sport).
+
 For the sake of consistency, we will consider only test players. Apart from being a puritan choice, the playing role of a player may differ from format to format and so we can't expect a consistent prediction. The cricinfo player bio page has this `playing role` information, but that covers only around 20% of the test players. For vast majority of players we only have numerical stats but no description whether the player is a batsman or a bowler. 
 
 This is a perfect problem for ML to assist. We have a decent amount of training data (600+ players) and good amount of features (statistics) to base our prediction on. It would also be interesting to observe which features are relevant to our consideration of a player as batsman or bowler.
@@ -22,10 +24,9 @@ This is a perfect problem for ML to assist. We have a decent amount of training 
 This is by no means a comprehensive tutorial for ML. The goal of this post is to serve as gentle introduction and wet the appetite for newcomers. So in the process, I would cover the following areas:
 
 1. Data collection
-2. Data cleaning
-3. Data visualization
-4. Machine Learning
-
+2. Data processing
+3. Machine Learning
+4. Data visualization
 
 ## Data Collection 
 Most ML examples work with pre-processed data but in reality data is seldom available prepackaged. For this problem, we will have to scrape the data off cricinfo website. We will use Scrapy for getting this info off cricinfo website.
