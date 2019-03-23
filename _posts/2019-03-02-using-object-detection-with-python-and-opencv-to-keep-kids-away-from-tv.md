@@ -19,9 +19,11 @@ This was John Watson, one of the founders of [Behaviorism](https://www.wikiwand.
 
 ## Problem statement
 
-I play YouTube rhymes on my HTPC which is connected to our living room TV. While watching rhymes, my kids sometimes get down from the couch and walk to the TV. When they do, I want to turn off the video automatically to let them know that they have gone too close and not resume the playback until they get back to the couch. For my setup, that means pausing YouTube player and minimzing the browser. 
+I play YouTube rhymes on my HTPC which is connected to our living room TV. While watching they sometimes get down from the couch and walk to the TV. When they do, I want to turn off the video automatically to let them know that they have gone too close and not resume the playback until they get back to the couch. For my setup, that means pausing youtube player and minimzing the browser. 
 
-Fortunately this is easy to do with a camera and OpenCV. Let us see how.
+Fortunately this is easy to do with a camera and [OpenCV](https://github.com/opencv/opencv). Let us see how.
+
+![Open CV](https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/OpenCV_Logo_with_text_svg_version.svg/195px-OpenCV_Logo_with_text_svg_version.svg.png)
 
 ## Tools and solutions
 
@@ -117,11 +119,11 @@ def set_active_window(window_id):
     win32gui.SetForegroundWindow(window_id)
     win32gui.SetActiveWindow(window_id)
 
-def search_and_restore_YouTube(window_id, hwnd):
+def search_and_restore_youtube(window_id, hwnd):
     if "YouTube" in win32gui.GetWindowText(window_id):
         set_active_window(window_id)
 
-def check_for_YouTube(window_id, hwnd):
+def check_for_youtube(window_id, hwnd):
     if "YouTube" in win32gui.GetWindowText(window_id):
         hwnd.append(window_id)
     return True 
@@ -172,7 +174,7 @@ class FrameCounter():
 
     def restore_firefox(self):
         print("Restoring firefox at {0}".format(self.counter))
-        win32gui.EnumWindows(search_and_restore_YouTube, None)
+        win32gui.EnumWindows(search_and_restore_youtube, None)
         pyautogui.hotkey('k')
         self.minimized = False
 
@@ -213,7 +215,7 @@ if __name__ == '__main__':
     hwnd=[]
     while(cap.isOpened()):
         # Run only when Youtube is one of the running window titles
-        win32gui.EnumWindows(check_for_YouTube, hwnd)
+        win32gui.EnumWindows(check_for_youtube, hwnd)
         if (hwnd):
             ret, frame = cap.read()
             find_kids(frame,frame_counter)
@@ -228,6 +230,6 @@ if __name__ == '__main__':
 ## Results
 Overall, I would say that the whole exercise was quite effective. The kids have learnt stay away from TV... most of the times. Sometimes they do succumb to the temptation and get closer. And when the playback stops, they move away from the TV and wait for the playback to automatically resume. It seems they have figured out their environment on their own. 
 
-But the kids cognition process is not without its faults though, there were some unexpected results. For instance, my son developed a superstition that everytime the playback stops he needs to run all the way to kitchen for it to resume (exactly the time taken for the resume timer to cooldown) and so far he hasn't observed any counter-examples to break the correlation between trip to kitchen and resumption of YouTube videos. But I expect that over the next few days he will refine his model of environment. My daughter has developed no such belief, she climbs back in to the couch and waits for the playback to resume. 
+But the kids cognition process is not without its faults though, there were some unexpected results. For instance, my son developed a superstition that everytime the playback stops he needs to run all the way to kitchen for it to resume (exactly the time taken for the resume timer to cooldown) and so far he hasn't observed any counter-examples to break the correlation between trip to kitchen and resumption of youtube videos. But I expect that over the next few days he will refine his model of environment. My daughter has developed no such belief, she climbs back in to the couch and waits for the playback to resume. 
 
-Now, I think I have solved my initial problem satisfactorily using technology, further strengthening my conviction that technology be a solution when used properly. Now all I need to do is find some technical solutions to get rid of those earworm rhymes that I keep humming awkwardly in public.
+Now, I think I have solved my initial problem satisfactorily using technology, further strengthening my conviction that technology can be a solution when used properly. Now all I need to do is find some technical solutions to get rid of those earworm rhymes that I keep humming awkwardly in public.
