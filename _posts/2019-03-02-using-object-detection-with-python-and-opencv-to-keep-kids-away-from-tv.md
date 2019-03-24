@@ -23,6 +23,8 @@ I play YouTube rhymes on my HTPC which is connected to our living room TV. While
 
 Fortunately this is easy to do with a camera and [OpenCV](https://github.com/opencv/opencv). Let us see how.
 
+[Open CV](https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/OpenCV_Logo_with_text_svg_version.svg/195px-OpenCV_Logo_with_text_svg_version.svg.png)
+
 ## Tools and solutions
 
 Object detection is among the fundamental features of OpenCV and there are a few ways to do it. I explored three of them: 
@@ -37,8 +39,11 @@ Among all the methods this is the one which impressed me! All we need is a singl
 This is among the cheaper method in terms of computational requirements and it was just the method I needed for my simple requirement. It works by identifying contours in a picture. If the picture is black and white, the contour detection works better. Fortunately, since I only needed to detect a head in the visual frame and the hair in the head helped to distinguish the contours clearly. So this seemed to be the best fit for my requirement and I went with it. 
 
 ## Using Contour detection
+With the default OpenCV video capture drivers, my camera returned a frame with resolution 640 x 480 pixels. Here you can see my son lost in the colorful world of baby rhymes, hoping to dive into the TV to enjoy the rhymes in full splendor. 
 
-With the default OpenCV video capture drivers, my camera returned a frame with resolution 640 x 480 pixels. First I cropped the image to focus only on the area that I want to monitor- a small rectange close to TV. Blurring was done to smoothen the contours.
+![Naughty kid](/assets/images/2019/03/using-opencv-object-detection-to-keep-kids-away-from-tv/naughty-kid.png)
+
+First I cropped the image to focus only on the area that I want to monitor- a small rectange close to TV. Blurring was done to smoothen the contours.
 
 ```python
 cropped = frame[100:300, 0:630]
