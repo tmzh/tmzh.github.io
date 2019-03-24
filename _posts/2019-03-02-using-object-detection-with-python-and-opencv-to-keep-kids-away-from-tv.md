@@ -23,7 +23,7 @@ I play YouTube rhymes on my HTPC which is connected to our living room TV. While
 
 Fortunately this is easy to do with a camera and [OpenCV](https://github.com/opencv/opencv). Let us see how.
 
-[Open CV](https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/OpenCV_Logo_with_text_svg_version.svg/195px-OpenCV_Logo_with_text_svg_version.svg.png)
+![Open CV](https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/OpenCV_Logo_with_text_svg_version.svg/195px-OpenCV_Logo_with_text_svg_version.svg.png)
 
 ## Tools and solutions
 
