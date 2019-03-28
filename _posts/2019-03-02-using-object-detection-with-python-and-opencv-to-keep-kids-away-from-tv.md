@@ -15,11 +15,11 @@ tags:
 
 >Give me a dozen healthy infants, well formed, and my own specified world to bring them up in and I’ll guarantee to take any one at random and train him to become any type of specialist I might select—doctor, lawyer, artist, merchant-chief and yes, even beggar-man thief, regardless of his talents, penchants, tendencies, abilities, vocations, and race of his ancestors.
 
-This was John Watson, one of the founders of [Behaviorism](https://www.wikiwand.com/en/Behaviorism), writing around 1925. He believed that human behavior is completely malleable and that it can be shaped into anything given the right environment. While I don't harbor any grand objectives or sinister experiments like Watson did, I do hope to be able to teach my kids good habits using controlled environments. For instance, my two year old kids started developing the habit of getting too close to the TV. I don't want to use force or impose restrictions on them, so I thought I could use technology to discourage them from getting too close to TV.
+This was John Watson, one of the founders of [Behaviorism](https://www.wikiwand.com/en/Behaviorism), writing around 1925. He believed that human behavior is completely malleable and that it can be shaped into anything given the right environment. While I don't harbor any grand objectives or sinister experiments like Watson did, I do hope to be able to teach my kids good habits using controlled environments. For instance, my two year old kids started developing the habit of getting too close to the TV. I didn't want to use force or impose restrictions on them, so I thought I could use technology to discourage them from getting too close to TV.
 
 ## Problem statement
 
-I play YouTube rhymes on my HTPC which is connected to our living room TV. While watching they sometimes get down from the couch and walk to the TV. When they do, I want to turn off the video automatically to let them know that they have gone too close and not resume the playback until they get back to the couch. For my setup, that means pausing youtube player and minimzing the browser. 
+I play YouTube rhymes on my HTPC which is connected to our living room TV. While watching they sometimes get down from the couch and walk to the TV. When they do, I want to turn off the video automatically to let them know that they have gone too close and not resume the playback until they get back to the couch. For my setup, that means pausing the youtube player and minimzing the browser. 
 
 Fortunately this is easy to do with a camera and [OpenCV](https://github.com/opencv/opencv). Let us see how.
 
@@ -54,9 +54,9 @@ blurred = cv2.blur(cropped, (3, 3))
 
 ![Cropped image](/assets/images/2019/03/using-opencv-object-detection-to-keep-kids-away-from-tv/cropped.png)
 
-Next I needed to do convert some color channels. Contour detection is not efficient when the color intensities are in 3 dimensions (RGB). The job is greatly simplified if we can restict the colors to a single dimension. And it works even better with binary images where the pixels are either pure black or white (even for us black and white are easier to tell apart than a million shades of other colors in between). 
+Next I needed to convert color channels. Contour detection is not efficient when the color intensities are in 3 dimensions (RGB). The job is greatly simplified if we can restict the colors to a single dimension. And it works even better with binary images where the pixels are either pure black or white (even for us black and white are easier to tell apart than a million shades of other colors in between). 
 
-So we apply a threshold using `cv2.inRange` function  which converts the image to black and white (not grey scale). This is done by specifying a range of interesting colors and every  pixel that fall in the range will be converted to white and rest to black. Now it is easy to find contours with `cv2.findContours` method.
+So we apply a threshold using `cv2.inRange` function  which converts the image to black and white (not grey scale). This is done by specifying a range of interesting colors and every  pixel that fall in the range will be converted to white and rest to black. 
 
 ```python
 # Convert to HSV color space
@@ -227,8 +227,8 @@ if __name__ == '__main__':
 ```
   
 ## Results
-Overall, I would say that the whole exercise was quite effective. The kids have learnt stay away from TV... most of the times. Sometimes they do succumb to the temptation and get closer. And when the playback stops, they move away from the TV and wait for the playback to automatically resume. It seems they have figured out their environment on their own. 
+Overall, I would say that the whole exercise was quite effective. The kids have learnt stay away from TV- well, most of the times. Sometimes they do succumb to the temptation and get closer. And when the playback stops, they move away from the TV and wait for the playback to automatically resume. It seems they have figured out their environment on their own. 
 
-But the kids cognition process is not without its faults though, there were some unexpected results. For instance, my son developed a superstition that everytime the playback stops he needs to run all the way to kitchen for it to resume (exactly the time taken for the resume timer to cooldown) and so far he hasn't observed any counter-examples to break the correlation between trip to kitchen and resumption of youtube videos. But I expect that over the next few days he will refine his model of environment. My daughter has developed no such belief, she climbs back in to the couch and waits for the playback to resume. 
+But the kids cognition process is not without its faults, there were some unexpected results. For instance, my son developed a superstition that everytime the playback stops he needs to run all the way to kitchen for it to resume (exactly the time taken for the resume timer to cooldown) and so far he hasn't observed any counter-examples to break the correlation between trip to kitchen and resumption of youtube videos. But I expect that over the next few days he will refine his model of environment. My daughter has developed no such belief, she climbs back in to the couch and patiently waits for the playback to resume. 
 
-Now, I think I have solved my initial problem satisfactorily using technology, further strengthening my conviction that technology can be a solution when used properly. Now all I need to do is find some technical solutions to get rid of those earworm rhymes that I keep humming awkwardly in public.
+Now, I think I have solved my initial problem satisfactorily using technology, further strengthening my conviction that when used properly, technology can be a solution and not a problem. Now all I need to do is find some technical solutions to get rid of those earworm rhymes that I keep awkwardly humming in public.
