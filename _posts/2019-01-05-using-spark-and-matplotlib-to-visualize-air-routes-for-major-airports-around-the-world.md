@@ -12,8 +12,9 @@ tags:
 - matplotlib
 - pandas
 ---
-## Introduction
 In 2nd Century AD, Hellenic Cartographer Ptolemy was beset with an arbitrary choice of whether his maps should have north on the top or any other direction. Based in Alexandria, he reasoned that all population centers and places of importance lie to the north and would be convenient for study if they were in the upper right corner of the map. This arbitrary choice had long, unintended repercussions for mankind such as Australia being considered "Down under" or even our solar system to be perceived as rotating in counter-clockwise direction. Who would have thought that the stroke of a cartographer carried celestial importance!
+
+<!--more-->
 
 Similarly, I am always fascinated about the distribution of population masses and economic activities acrosss the globe and what sort of external signals gets influenced by this distribution. Flight routes in major airports would be one such signal. For instance, closer you get to north pole , most of your businesses will be facing south and vice versa. Or across the Atlantic, it would be interesting to note whether east-west trans-atlantic traffic volume dominates over domestic air traffic in America. I tried to visualize this flight path orientation across important airports in the globe. This post is partly inspired by another beautiful piece of visualization of [street orientation of major cities across the world](http://geoffboeing.com/2018/07/comparing-city-street-orientations/) by Goef Boeing. 
 

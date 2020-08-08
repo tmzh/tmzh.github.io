@@ -30,6 +30,8 @@ For running Machine Learning models:
 2. Keras
 3. Scikit-learn 
 
+<!--more-->
+
 ## Importing data
 First let us load the necessary modules:
 

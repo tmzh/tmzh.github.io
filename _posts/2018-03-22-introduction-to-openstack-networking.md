@@ -13,9 +13,9 @@ tags:
 - networking
 ---
 
-## Introduction
-
 This post is a gentle introduction to networking with Openstack using the Neutron module. Being an introduction, we will not focus on setting up OpenStack from scratch. Instead we will familiarize ourselves with core concepts of Neutron and common administrative tasks. We will use the latest release of Openstack, **Queens**. 
+
+<!--more-->
 
 For ease of setup, we will make use of pre-packaged Devstack environment. Devstack is a set of scripts from official OpenStack community that allows us to quickly build an Openstack instance with latest versions of all modules. It is very useful for testing and training purposes. 
 

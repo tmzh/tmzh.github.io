@@ -3,8 +3,8 @@ author: thamizh85
 comments: true
 date: 2017-12-09 12:00:00+08:00
 layout: post
-slug: 2017-12-09-solving-an-ancient-chinese-math-puzzle-with-constraint-programming-using-googles-or-tools
-title: Solving an ancient Chinese math puzzle with Constraint Programming using Google's OR-Tools
+slug: 2017-12-09-using-constraint-programming-to-solve-an-ancient-chinese-math-puzzle
+title: Using Constraint Programming Tools to solve an ancient Chinese math puzzle
 categories:
 - Modelling
 tags:
@@ -14,10 +14,11 @@ tags:
 - operations research
 - constraint programming
 ---
-## Introduction
 [Constraint programming (CP)](https://www.wikiwand.com/en/Constraint_programming) is a subset of Operations Research (OR) where our task is to identify all feasible solutions to a given problem that satisfies a set of constraints. This is different from an optimization problem, where an objective function is defined and we arrive at solutions that either maximizes or minimizes an objective function. 
 
 CP is mostly well suited for solving logic puzzles, since most logic puzzles are based on constraints and enumerating feasible solutions. But apart from recreational maths, CP also has a lot of practical applications in Scheduling, Resource allocation, Manufacturing etc.,
+
+<!--more-->
 
 Recently I came across [or-tools](https://developers.google.com/optimization/) from Google github repo. It is a suite of libraries for solving Operations Research problems. I wanted to give it a try by solving a simple logic puzzle. The puzzle I chose is called [Hundred Fowls Problem](https://www.wikiwand.com/en/Hundred_Fowls_Problem). Let us see how it goes. 
 

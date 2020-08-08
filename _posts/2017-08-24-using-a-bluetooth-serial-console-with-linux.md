@@ -3,7 +3,7 @@ author: thamizh85
 comments: true
 date: 2017-08-24 15:41:28+00:00
 layout: post
-slug: using-a-bluetooth-serial-console-with-linux
+slug: 2017-08-24-using-a-bluetooth-serial-console-with-linux
 title: Using a bluetooth serial console with linux
 wordpress_id: 182
 categories:
@@ -24,6 +24,8 @@ The following packages are required:
   * byobu (optional)
 
 Bluez provides the bluetooth protocol stack (most likely shipped with the OS), bluez-utils provides the bluetoothctl utility and byobu is a wrapper around screen terminal emulator. You can also use 'screen' directly. Install these using your distributions recommended procedure.
+
+<!--more-->
 
 ## Steps
 

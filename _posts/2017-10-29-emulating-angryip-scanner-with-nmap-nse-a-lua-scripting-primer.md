@@ -3,7 +3,7 @@ author: thamizh85
 comments: true
 date: 2017-10-29 12:08:28+08:00
 layout: post
-slug: emulating-angryip-scanner-with-nmap-scripting-engine-a-lua-scripting-primer
+slug: 2017-10-29-emulating-angryip-scanner-with-nmap-scripting-engine-a-lua-scripting-primer
 title: Emulating Angry IP Scanner with nmap scripting engine - A lua scripting primer
 categories:
 - Scripting
@@ -12,12 +12,13 @@ tags:
 - nmap
 - network-discovery
 ---
-## Introduction
 Often we have to discover the devices on a network. I use a very simple nmap command for performing a pingsweep. 
 
 `sudo nmap -sn <subnet or ip range>`
 
 On my Windows PC, I wrap it around in a batch script and place it in the search PATH. On Linux, it can be dropped in as an alias in bashrc.
+
+<!--more-->
 
 It is handy, but not complete. I would like to have some extra information such as hostnames (collected by various means not just DNS reverse lookup), platform info etc., Such details are available in tools such as AngryIP scanner, but I don't prefer to launch a GUI tool for single task and keep it running until the task is done. 
 

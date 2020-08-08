@@ -11,8 +11,6 @@ tags:
 - python
 - opencv
 ---
-## Introduction
-
 >Give me a dozen healthy infants, well formed, and my own specified world to bring them up in and I’ll guarantee to take any one at random and train him to become any type of specialist I might select—doctor, lawyer, artist, merchant-chief and yes, even beggar-man thief, regardless of his talents, penchants, tendencies, abilities, vocations, and race of his ancestors.
 
 This was John Watson, one of the founders of [Behaviorism](https://www.wikiwand.com/en/Behaviorism), writing around 1925. He believed that human behavior is completely malleable and that it can be shaped into anything given the right environment. While I don't harbor any grand objectives or sinister experiments like Watson did, I do hope to be able to teach my kids good habits using controlled environments. For instance, my two year old kids started developing the habit of getting too close to the TV. I didn't want to use force or impose restrictions on them, so I thought I could use technology to discourage them from getting too close to TV.
