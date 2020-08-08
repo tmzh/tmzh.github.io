@@ -36,7 +36,7 @@ Let us go through the important terms first:
 
 We will create the below topology on Openstack. Hosts `host-1` & `host-2` will be on same subnet while `host-3` will be on another subnet. We will enable reachability between all 3 hosts. Finally, we will also enable bi-directional connectivity to `host-1` from internet.
 
-![topology](/assets/images/2018/04/introduction-to-openstack-networking-for-network-engineers/topology.png)
+![topology](/images/topology.png)
 
 
 ## Preparing the environment

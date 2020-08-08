@@ -2,72 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4bfb9930-006f-48f0-9432-b6de59091de7" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/_sass/_bias_inputrange.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_sass/_default_highlights.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_sass/_monokai_highlights.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/_sass/_weight_inputrange.scss" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/css/bootstrap-theme.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/css/bootstrap-theme.css.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/css/bootstrap-theme.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/css/bootstrap-theme.min.css.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/css/bootstrap.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/css/bootstrap.css.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/css/bootstrap.min.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/css/bootstrap.min.css.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/css/qunit-2.0.1.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/15-dhcp-request.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/airport_traffic_orientation.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/algolia_logo.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/avatar.gif" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/bat-inns-vs-bat-runs-kde-after.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/bat-inns-vs-bat-runs-kde-before.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/bat-inns-vs-bat-runs-sc.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/bat-inns-vs-bat-runs.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/bat-runs-bowl-wkts-roles.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/bat-runs-roles-violin-plot.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/button/fa-pencil-square-o.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/cc-by-nc-nd.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/cc-by-nc-sa.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/cc-by-nc.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/cc-by-nd.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/cc-by-sa.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/cc-by.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/cc-zero.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/confused-monkey.jpg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/confusion-matrix.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/contour-detection.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/cropped.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/filtered.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/loading.gif" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/naughty-kid.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/overfitting.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/placeholder.gif" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/quote-l.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/quote-r.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/searchicon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/images/topology.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js/bootstrap.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js/bootstrap.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js/d3-jetpack.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js/d3-selection-multi.v0.4.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js/d3.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js/jquery-3.1.1.slim.min.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js/npm.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js/qunit-2.0.1.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/js/require.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_config.yml" beforeDir="false" afterPath="$PROJECT_DIR$/_config.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_layouts/default.html" beforeDir="false" afterPath="$PROJECT_DIR$/_layouts/default.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_posts/2019-01-05-using-spark-and-matplotlib-to-visualize-air-routes-for-major-airports-around-the-world.md" beforeDir="false" afterPath="$PROJECT_DIR$/_posts/2019-01-05-using-spark-and-matplotlib-to-visualize-air-routes-for-major-airports-around-the-world.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_posts/2017-07-19-dynamic-registration-of-dns-for-linux-devices-in-an-active-directory-environment-with-windows-dns-server.md" beforeDir="false" afterPath="$PROJECT_DIR$/_posts/2017-07-19-dynamic-registration-of-dns-for-linux-devices-in-an-active-directory-environment-with-windows-dns-server.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_posts/2018-03-22-introduction-to-openstack-networking.md" beforeDir="false" afterPath="$PROJECT_DIR$/_posts/2018-03-22-introduction-to-openstack-networking.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/_posts/2018-04-28-predicting-the-primary-role-of-cricket-player-using-machine-learning-part-2.md" beforeDir="false" afterPath="$PROJECT_DIR$/_posts/2018-04-28-predicting-the-primary-role-of-cricket-player-using-machine-learning-part-2.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/_posts/2019-03-02-using-object-detection-with-python-and-opencv-to-keep-kids-away-from-tv.md" beforeDir="false" afterPath="$PROJECT_DIR$/_posts/2019-03-02-using-object-detection-with-python-and-opencv-to-keep-kids-away-from-tv.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_sass/_highlights.scss" beforeDir="false" afterPath="$PROJECT_DIR$/_sass/_highlights.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_sass/_svg-icons.scss" beforeDir="false" afterPath="$PROJECT_DIR$/_sass/_svg-icons.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/_sass/_variables.scss" beforeDir="false" afterPath="$PROJECT_DIR$/_sass/_variables.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/config.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/first-post.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/jekyll-now-theme-screenshot.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/images/step1.gif" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/style.scss" beforeDir="false" afterPath="$PROJECT_DIR$/style.scss" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -129,19 +67,28 @@
       <option name="project" value="LOCAL" />
       <updated>1596804353078</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="working version">
+      <created>1596844870912</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1596844870912</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="initial cleanup" />
     <MESSAGE value="add gitignore" />
     <MESSAGE value="basic jekyll config" />
-    <option name="LAST_COMMIT_MESSAGE" value="basic jekyll config" />
+    <MESSAGE value="working version" />
+    <option name="LAST_COMMIT_MESSAGE" value="working version" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="193" y="29" key="CommitChangelistDialog2" timestamp="1596804352376">
+    <state x="193" y="29" key="CommitChangelistDialog2" timestamp="1596844869553">
       <screen x="0" y="0" width="1440" height="920" />
     </state>
+    <state x="193" y="29" key="CommitChangelistDialog2/0.0.1440.920/20.-2160.2560.1400@0.0.1440.920" timestamp="1596844869553" />
     <state x="193" y="29" key="CommitChangelistDialog2/0.0.1440.920@0.0.1440.920" timestamp="1596804352376" />
     <state x="93" y="93" width="1255" height="735" key="DiffContextDialog" timestamp="1596804157490">
       <screen x="0" y="0" width="1440" height="920" />
@@ -151,9 +98,10 @@
       <screen x="0" y="0" width="1440" height="920" />
     </state>
     <state x="313" y="193" key="Vcs.Push.Dialog.v2/0.0.1440.920@0.0.1440.920" timestamp="1596804355614" />
-    <state x="411" y="-2140" width="589" height="801" key="find.popup" timestamp="1596843735304">
+    <state x="411" y="-2140" width="977" height="801" key="find.popup" timestamp="1596845040578">
       <screen x="20" y="-2160" width="2560" height="1400" />
     </state>
-    <state x="411" y="-2140" width="589" height="801" key="find.popup/0.0.1440.920/20.-2160.2560.1400@0.0.1440.920" timestamp="1596843735304" />
+    <state x="411" y="-2140" width="977" height="801" key="find.popup/0.0.1440.920/20.-2160.2560.1400@0.0.1440.920" timestamp="1596844903562" />
+    <state x="411" y="-2140" width="977" height="801" key="find.popup/0.0.1440.920/20.-2160.2560.1400@20.-2160.2560.1400" timestamp="1596845040578" />
   </component>
 </project>

@@ -43,7 +43,7 @@ This is among the cheaper method in terms of computational requirements and it w
 ## Using Contour detection
 With the default OpenCV video capture drivers, my camera returned a frame with resolution 640 x 480 pixels. Here you can see my son lost in the colorful world of baby rhymes, hoping to dive into the TV to enjoy the rhymes in full splendor. 
 
-![Naughty kid](/assets/images/2019/03/using-opencv-object-detection-to-keep-kids-away-from-tv/naughty-kid.png)
+![Naughty kid](/images/naughty-kid.png)
 
 First I cropped the image to focus only on the area that I want to monitor- a small rectange close to TV. Blurring was done to smoothen the contours.
 
@@ -54,7 +54,7 @@ cropped = frame[100:300, 0:630]
 blurred = cv2.blur(cropped, (3, 3))
 ```
 
-![Cropped image](/assets/images/2019/03/using-opencv-object-detection-to-keep-kids-away-from-tv/cropped.png)
+![Cropped image](/images/cropped.png)
 
 Next I needed to convert color channels. Contour detection is not efficient when the color intensities are in 3 dimensions (RGB). The job is greatly simplified if we can restict the colors to a single dimension. And it works even better with binary images where the pixels are either pure black or white (even for us black and white are easier to tell apart than a million shades of other colors in between). 
 
@@ -72,7 +72,7 @@ upper_black = np.array([180, 255, 50])
 thresh = cv2.inRange(hsv, lower_black, upper_black)
 ```
 
-![Thresholded image](/assets/images/2019/03/using-opencv-object-detection-to-keep-kids-away-from-tv/filtered.png)
+![Thresholded image](/images/filtered.png)
 
 Finally we turn to the `cv2.findContours` method. The `cv2.findContours` method returns an array of contours. I looked for the largest contour by area and triggered helper methods when the area was bigger than a threshold. We can even plot the contours to see how our object detection works, as I have done in the picture below.
 
@@ -85,7 +85,7 @@ if contours:
         # Object detected. Do something
 cv2.drawContours(cropped, contours, -1, (0,255,0), 3)
 ```
-![Contour detection](/assets/images/2019/03/using-opencv-object-detection-to-keep-kids-away-from-tv/contour-detection.png)
+![Contour detection](/images/contour-detection.png)
 
 And there you go! The naughty infiltrator is caught.
 
