@@ -17,6 +17,8 @@ tags:
 
 This was John Watson, one of the founders of [Behaviorism](https://www.wikiwand.com/en/Behaviorism), writing around 1925. He believed that human behavior is completely malleable and that it can be shaped into anything given the right environment. While I don't harbor any grand objectives or sinister experiments like Watson did, I do hope to be able to teach my kids good habits using controlled environments. For instance, my two year old kids started developing the habit of getting too close to the TV. I didn't want to use force or impose restrictions on them, so I thought I could use technology to discourage them from getting too close to TV.
 
+<!--more-->
+
 ## Problem statement
 
 I play YouTube rhymes on my HTPC which is connected to our living room TV. While watching they sometimes get down from the couch and walk to the TV. When they do, I want to turn off the video automatically to let them know that they have gone too close and not resume the playback until they get back to the couch. For my setup, that means pausing the youtube player and minimzing the browser. 

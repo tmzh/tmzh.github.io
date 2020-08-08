@@ -168,4 +168,4 @@ def polar_plot(ax, bearings, n=36, title=''):
 ## Conclusion
 Here is the resultant plot. The most obvious pattern that we can observe is that northernmost cities have most of their routes pointing towards south. This is expected because our model of earth is flat and hence it precludes the possibility of any polar routes between two points (which may be the [actual path](https://www.wikiwand.com/en/Polar_route) taken by an aircraft). Also note that the absence of pacific-bound routes (towards americas) from chinese airports or the relative dominance of south-eastern routes from London and north-eastern routes from Hong Kong. Doesn't it tell something about the current politico-economic climate of the world? I am sure the shipping routes will tell a different story though.
 
-![Polar plot](/assets/images/2019/01/using-spark-and-matplotlib-to-visualize-air-routes-for-major-airports-around-the-world/airport_traffic_orientation.png)
+![Polar plot](/images/airport_traffic_orientation.png)

@@ -9,14 +9,11 @@ name: Ephemeral Electrons
 description: Web Developer from Somewhere
 
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
-avatar: https://raw.githubusercontent.com/barryclark/jekyll-now/master/images/jekyll-logo.png
+avatar: https://avatars0.githubusercontent.com/u/2162408?s=460&v=4
 
 #
 # Flags below are optional
 #
-  GitHub : https://github.com/tmzh
-  Twitter : https://twitter.com/t4m1zh
-
 # Includes an icon in the footer for each username you enter
 footer-links:
   dribbble:
@@ -86,3 +83,5 @@ exclude:
   - LICENSE
   - README.md
   - CNAME
+
+excerpt_separator: "<!--more-->"
