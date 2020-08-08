@@ -15,6 +15,7 @@ tags:
 ---
 In the previous [post](https://thamizh85.github.io/machine%20learning/2018/04/23/2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1/) we saw how to scrape raw data from a content rich webpage. In this post, we will explore how to process that raw data and use Machine Learning tools to predict the playing role of a cricket player just based on his career statistics.
 
+<!--more-->
 
 Here are the tools that we will use for this exercise. For interactive data analysis and number crunching:
 1. Jupyter 
@@ -29,8 +30,6 @@ For running Machine Learning models:
 1. Tensorflow
 2. Keras
 3. Scikit-learn 
-
-<!--more-->
 
 ## Importing data
 First let us load the necessary modules:
@@ -439,8 +438,8 @@ Next to the most interesting part- let us see how our model behaves for the data
 data[(data['role'] != data['predicted_role_rf']) & (data['role'] == '') & (data['Bat_Mat'] > 100 )][['Bio_Full_name','predicted_role_rf', 'role', 'Bio_Playing_role']]
 ```
 
-Bio_Full_name|predicted_role_rf|role|Bio_Playing_role
----|------------|-----------------|----------|--------------
+||Bio_Full_name|predicted_role_rf|role|Bio_Playing_role
+|---|------------|-----------------|----------|--------------
 134|Mark Edward Waugh|Batsman||NaN
 137|Mark Anthony Taylor|Batsman||NaN
 139|Ian Andrew Healy|Wicketkeeper||NaN
@@ -487,8 +486,8 @@ I have plotted a diagonal line, below which most of the points are clustered. It
 data[data['Bat_Mat'] > 5].query('Bowl_Wkts_sc*100 + Bat_Runs_sc*7 > 700 ')[['Bio_Full_name','Bat_Mat','predicted_role_rf','Bowl_Wkts_sc','Bat_Runs_sc']]
 ```
 
-Bio_Full_name|Bat_Mat|predicted_role_rf|Bowl_Wkts_sc|Bat_Runs_sc
----|---------------|-----------|-----------------------|-----------------|------------------
+| | Bio_Full_name|Bat_Mat|predicted_role_rf|Bowl_Wkts_sc|Bat_Runs_sc
+|---|---------------|-----------|-----------------------|-----------------|------------------
 62|Steven Peter Devereux Smith|59|Batsman|0.288136|98.237288
 377|Ravindrasinh Anirudhsinh Jadeja|35|Bowler|4.714286|33.600000
 380|Ravichandran Ashwin|55|Bowler|5.527273|37.363636

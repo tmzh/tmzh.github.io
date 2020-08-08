@@ -23,8 +23,6 @@ I play YouTube rhymes on my HTPC which is connected to our living room TV. While
 
 Fortunately this is easy to do with a camera and [OpenCV](https://github.com/opencv/opencv). Let us see how.
 
-![Open CV](https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/OpenCV_Logo_with_text_svg_version.svg/195px-OpenCV_Logo_with_text_svg_version.svg.png)
-
 ## Tools and solutions
 
 Object detection is among the fundamental features of OpenCV and there are a few ways to do it. I explored three of them: 
