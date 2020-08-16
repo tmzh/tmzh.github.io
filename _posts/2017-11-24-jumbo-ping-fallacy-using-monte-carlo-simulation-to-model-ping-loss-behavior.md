@@ -1,10 +1,10 @@
 ---
-author: thamizh85
+author: tmzh
 comments: true
 date: 2017-11-24 08:01:28+08:00
 layout: post
-slug: jumbo-ping-fallacy-using-monte-carlo-simulation-to-model-ping-loss-behavior
-title: Jumbo Ping Fallacy- Using Monte-Carlo Simulation to model ping loss behavior
+slug: 2017-11-24-using-monte-carlo-simulation-to-model-ping-test-results
+title: Using Monte-Carlo Simulation to model ping test results
 categories:
 - Modelling
 tags:
@@ -14,13 +14,14 @@ tags:
 - probability
 - scripting
 ---
-## Background
-Recently we had a cabling issue in our core infrastructure which caused around 3 to 12% packet loss across few IP streams. One of my colleagues made an interesting observation that when he tried to ping with large packet size (5000 bytes) the packet loss rose up to 40%. In his opinion, that meant some applications were experiencing up to 40% packet loss. I seldom do large packet ping tests unless I am troubleshooting MTU issues, so to me this observation was interesting. 
+Recently we had a cabling issue in our core infrastructure which caused around 3 to 12% packet loss across few IP streams. One of my colleagues made an interesting observation that when he tried to ping with large packet size (5000 bytes) the packet loss rose up as high as 40%. In his opinion, that meant some applications were experiencing up to 40% packet loss. I seldom do large packet ping tests unless I am troubleshooting MTU issues, so to me this observation was interesting. 
 
-At the outset, it may look like an aggravated problem. But you know that your network path MTU doesn't support jumbo frames end-to-end. If so why is there a difference in packet loss rate when you ping with large datagams? Once you reason that the ping test results only represent ICMP datagram loss and not ethernet frame loss, you will realize that both tests results represent the same network performane but in different metrics. Interpreting them as two separate test cases is fallacious. Let us explore why.
+At the outset, it may look like an aggravated problem. Yet you know that your network path MTU doesn't support jumbo frames end-to-end. If so, why is there a difference in packet loss rate when you ping with large datagrams? The answer is not too obvious. The important thing to note is that a ping test result is not a measure of ethernet frame loss but ICMP datagram loss. In most cases (when the ICMP datagram is smaller than ethernet MTU) both are the same. But why do large ICMP datagrams have higher loss percentage than individual ethernet frames? Enter Math.
+
+<!--more-->
 
 ## Normal ping vs Large ping
-In windows a normal ping packet size is 32 bytes and in most environments, the default MTU is 1500 bytes. So a single frame is sufficient to transmit a ping packet. Things get weirder when we ping with large packets. In windows, you can specify the ping packet size using -l option. Note that this size doesn't include the packet header (20 bytes for IP header + 8 bytes for ICMP header). Which means with a 1500 MTU size, we can send only up to 1472 bytes in a single frame. Any length above this must be fragmented.
+In windows a normal ping packet size is 32 bytes and in most environments, the default MTU is 1500 bytes. So a single frame is sufficient to transmit a ping packet. Things get weirder when we ping with large packets. In windows, to simulate larger packets you can use the `-l` option to specify packet size. Note that this size doesn't include the packet header (20 bytes for IP header + 8 bytes for ICMP header). Which means that we can only fit 1472 bytes of ICMP payload inside a 1500 MTU ethernet frame. Any length above this must be fragmented.
 
 We can test this easily. Below is the result when pinging with 1472 as the ping size (`ping 8.8.8.8 -n 2 -l 1472`)
 ```
@@ -41,11 +42,10 @@ Capturing on 'Ethernet 2'
 
 So when we ping with 5000 bytes, 4 packets are sent. And ICMP protocol considers a datagram to be lost even when one of them fails. So the probability of the ICMP datagram loss is higher than the probability of single frame loss.
 
-
-But is this what is happening in the ping test result? We can calculate the probability of datagram loss using probability theory but let us defer to it later on and do a numerical simulation first using Monte Carlo simulation.
+Is this what is happening in the ping test result? We can calculate the probability of datagram loss using probability theory but let us defer to it later on and do a numerical simulation first using Monte Carlo simulation.
 
 ## Monte Carlo Simulation
-[Monte carlo simulation](https://www.wikiwand.com/en/Monte_Carlo_method) is a rather fancy title for a simple simulation using random event generator, but it is quite handy and widely used. Usually Monte Carlo simulation is useful for simulating events that are truly random in nature. In a chaotic backbone network, that handles traffic stream of different kinds, we can assume the frame loss to happen approximately in a random fashion. 
+[Monte carlo simulation](https://www.wikiwand.com/en/Monte_Carlo_method) is a rather fancy title for a simple simulation using random event generator, but it is quite handy and widely used. Usually Monte Carlo simulation is useful for simulating events that are truly random in nature. In a chaotic backbone network, that handles traffic stream of different kinds, we can assume the frame loss to be random.
 
 Let us write a short program to simulate random packet loss.  
 
@@ -81,21 +81,21 @@ print("The probability of a group failure is {:.2f}%".format(failCount/len(grpEv
     The probability of a group failure is 11.78%
     
 
-There you see! Even a 3% ethernet frame loss translates to 12% packet loss for jumbo ping test. This is same as what we observed. Now this is just a simulation with random input. But does the math agree? 
+There you see! Even a 3% ethernet frame loss translates to 12% packet loss for jumbo ping test. This is same as what we observed. Now this is just a simulation with random input. Does the math agree? 
 
 ## Using Probability Theory
-If `p` is the probability of a single frame loss, `(1-p)` is the probability of a successful transfer. And a datagram is successful only if all of its frames are successful. So an ICMP datagram which is 4 frame long, will have `(1-p)**4` probability of succesful delivery. To calculate the failure rate, just take its inverse.  
+If `p` is the probability of a single frame loss, `(1-p)` is the probability of a successful transfer. And a datagram is successful only if all of its frames are successful. So a 4 frame long ICMP datagram transmission is successful only if 4 consecutive ethernet frame transmissions are successful. The probability is `(1-p)**n` where `n` is the number of frames. To calculate the failure rate, just take its inverse.  
 
 ```python
-1- (1-p)**4
+n = 4
+1- (1-p)**n
 ```
     0.11470719000000007
 
 As expected the simulation is slightly off from the calculated probability. But it will get closer to the real figure when we increase the simulation count.
 
 ## Conclusion
-The exactness of our calculation hinges on the assumption of random nature of packet loss. While it happened to be close to true in my case, it need not be all the time. The link may be loaded in a bursty manner and since our ping streams are evenly spaced over time, their chances of failure may not be truly random. 
+The exactness of our calculation hinges on the assumption of random nature of packet loss. While it happened to be close to true in my case, it need not be the case all the time. The link may have a bursty load and since our ping streams are evenly spaced over time, their chances of failure may not be truly random. 
 
 Nevertheless, we should be wary of the difference between a datagram loss and ethernet loss while interpreting results. Consider the MTU of the network path while testing with different packet sizes.
 
-###### Jupyter notebook version of this post can be viewed [here](https://goo.gl/DYxpCo)

@@ -1,9 +1,9 @@
 ---
-author: thamizh85
+author: tmzh
 comments: true
 date: 2017-10-29 12:08:28+08:00
 layout: post
-slug: emulating-angryip-scanner-with-nmap-scripting-engine-a-lua-scripting-primer
+slug: 2017-10-29-emulating-angryip-scanner-with-nmap-scripting-engine-a-lua-scripting-primer
 title: Emulating Angry IP Scanner with nmap scripting engine - A lua scripting primer
 categories:
 - Scripting
@@ -12,12 +12,13 @@ tags:
 - nmap
 - network-discovery
 ---
-## Introduction
 Often we have to discover the devices on a network. I use a very simple nmap command for performing a pingsweep. 
 
 `sudo nmap -sn <subnet or ip range>`
 
 On my Windows PC, I wrap it around in a batch script and place it in the search PATH. On Linux, it can be dropped in as an alias in bashrc.
+
+<!--more-->
 
 It is handy, but not complete. I would like to have some extra information such as hostnames (collected by various means not just DNS reverse lookup), platform info etc., Such details are available in tools such as AngryIP scanner, but I don't prefer to launch a GUI tool for single task and keep it running until the task is done. 
 
@@ -98,7 +99,7 @@ This returned value is processed by nmap scripting engine and printed in the out
 >Lua functions are of the format `foo = function ( args ) body end`. It can be defined in a single line. To call the function, call the variable with argument such as `foo('bar')` 
 
 ## Where to go next
-Since this is only a basic script, we have not customized the output format at all. The hostnames when available gets printed below each host-discovered. If you notice, the print action is executed within the ACTION function whose scope is limited to one host at a time. If we need our output to be consolidated in a tabular form, we can write a postrule function, store and retrieve our findings from nmap registry. Refer to my [script](https://raw.githubusercontent.com/thamizh85/Nmap-scripts/master/hostinfo-discover.nse) (work in progress) to see one way of doing it.
+Since this is only a basic script, we have not customized the output format at all. The hostnames when available gets printed below each host-discovered. If you notice, the print action is executed within the ACTION function whose scope is limited to one host at a time. If we need our output to be consolidated in a tabular form, we can write a postrule function, store and retrieve our findings from nmap registry. Refer to my [script](https://raw.githubusercontent.com/tmzh/Nmap-scripts/master/hostinfo-discover.nse) (work in progress) to see one way of doing it.
 
 I strongly recommend to try this [walkthrough](https://thesprawl.org/research/writing-nse-scripts-for-vulnerability-scanning/) as well. It greatly helped me to get started with NMAP scripting and understanding the way a NSE script is structured.
 

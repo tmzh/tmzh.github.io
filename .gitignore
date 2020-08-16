@@ -1,5 +1,12 @@
-.vscode/
-_site/
-.sass-cache/
-.jekyll-cache/
+_site
+.DS_Store
+.jekyll
+.jekyll-cache
 .jekyll-metadata
+.bundle
+.sass-cache
+.idea
+Gemfile
+Gemfile.lock
+node_modules
+package.json

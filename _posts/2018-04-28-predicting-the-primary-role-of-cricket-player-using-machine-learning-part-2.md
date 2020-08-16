@@ -1,5 +1,5 @@
 ---
-author: thamizh85
+author: tmzh
 comments: true
 date: 2018-04-28 12:00:00+08:00
 layout: post
@@ -13,8 +13,9 @@ tags:
 - machine learning
 - visualization
 ---
-In the previous [post](https://thamizh85.github.io/machine%20learning/2018/04/23/2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1/) we saw how to scrape raw data from a content rich webpage. In this post, we will explore how to process that raw data and use Machine Learning tools to predict the playing role of a cricket player just based on his career statistics.
+In the previous [post](https://tmzh.github.io/machine%20learning/2018/04/23/2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1/) we saw how to scrape raw data from a content rich webpage. In this post, we will explore how to process that raw data and use Machine Learning tools to predict the playing role of a cricket player just based on his career statistics.
 
+<!--more-->
 
 Here are the tools that we will use for this exercise. For interactive data analysis and number crunching:
 1. Jupyter 
@@ -155,7 +156,7 @@ To understand better, let us plot runs scored vs the matches played.
 ```python
 sns.jointplot(x="Bat_Runs", y="Bat_Inns", data=data)
 ```
-![Bat Inns vs Bat Runs](/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/bat-inns-vs-bat-runs.png)
+![Bat Inns vs Bat Runs](/images/bat-inns-vs-bat-runs.png)
 
 Obviously there is a strong correlation between no. of matches played and no. of runs scored. Ideally we want our features to be as independent of each other as possible. To separate the influence of number of matches played on the batting runs feature, we will divide the aggregate statistics by number of matches played.
 
@@ -194,14 +195,14 @@ Now let us plot the scaled runs scored value vs the innings played.
 sns.jointplot(x="Bat_Runs_sc", y="Bat_Inns", data=data)
 ```
 
-![Bat Inns vs Bat Runs Scaled](/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/bat-inns-vs-bat-runs-sc.png)
+![Bat Inns vs Bat Runs Scaled](/images/bat-inns-vs-bat-runs-sc.png)
 
 Clearly this is a far better representation of batting capabilities of a player. You can see there is less dependency on the number of innings played. It is not hard to imagine how this scaling affects our final prediction. The impact is obvious when we plot batting runs and bowling wickets (likely to be the most important features) in a KDE plot. Here is the KDE plot before scaling:
 
 ```python
 sns.jointplot(x="Bowl_Wkts", y="Bat_Runs", data=df,kind='kde')
 ```
-![Bowl Wickets vs Bat Runs KDE plot](/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/bat-inns-vs-bat-runs-kde-before.png)
+![Bowl Wickets vs Bat Runs KDE plot](/images/bat-inns-vs-bat-runs-kde-before.png)
 
 There is no clear clustering indicating that our classification is not going to be effective. In comparison, if we generate the same chart for scaled values, there is a clear grouping.
 
@@ -209,7 +210,7 @@ There is no clear clustering indicating that our classification is not going to 
 sns.jointplot(x="Bowl_Wkts_sc", y="Bat_Runs_sc", data=df,kind='kde')
 ```
 
-![Bowl Wickets Scaled vs Bat Runs Scaled KDE plot](/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/bat-inns-vs-bat-runs-kde-after.png)
+![Bowl Wickets Scaled vs Bat Runs Scaled KDE plot](/images/bat-inns-vs-bat-runs-kde-after.png)
 
 This much more promising. Remember, your model will only perform as well as the data you feed in. If the input data is already confused, there is very little a mathematical model can do. Now that we have almost all that we need we will extract those records that have `playing role` information and use it for our training & testing. To avoid outliers corrupting our model, we will also exclude players who played less than 5 matches.
 
@@ -342,7 +343,7 @@ estimator = KerasClassifier(build_fn=create_baseline, nb_epoch=100, batch_size=5
 ```
 We cannot use all of the data to train our model. The model will closely follow our existing model. It won't be useful to predict any values we haven't seen so far. This is called overfitting. 
 
-![Overfitting](/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/overfitting.png)
+![Overfitting](/images/overfitting.png)
 <p align='center'>Example of overfitting - Source Wikipedia </p>
 
 To avoid this, we will split the data into train and test datasets. We will use the former to train the model and compute the scores based on the testing against test data for each iteration of cross-validation. Scikit's provides a helper function called `cross_val_score` to assist in this. `StratifiedKFold` is the genertor strategy we will use for selecting this train/test datasets. It splits the data into K folds (set to 10 in our case), trains it on K-1 datasets and tests it against the left out dataset, while preserving the class distribution of the data. 
@@ -405,7 +406,7 @@ plt.xlabel('true label')
 plt.ylabel('predicted label')
 ```
 
-![Confusion Matrix](/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/confusion-matrix.png)
+![Confusion Matrix](/images/confusion-matrix.png)
 
 We can see that the model is quite effective in matching the pure roles such as Batsman or Bowler. When it comes to mixed roles such as Allrounder or Wicketkeeper, it fares not that well. Part of the problem lies in our assumption that the roles are mutually exclusive i.e, a player cannot be both Batsman and Bowler at the same time. So we identify only around 37% of the all rounders succesfully. Later we will see that there are other reasons why the predicted role doesn't match the role marked in cricinfo.
 
@@ -437,8 +438,8 @@ Next to the most interesting part- let us see how our model behaves for the data
 data[(data['role'] != data['predicted_role_rf']) & (data['role'] == '') & (data['Bat_Mat'] > 100 )][['Bio_Full_name','predicted_role_rf', 'role', 'Bio_Playing_role']]
 ```
 
-Bio_Full_name|predicted_role_rf|role|Bio_Playing_role
----|------------|-----------------|----------|--------------
+||Bio_Full_name|predicted_role_rf|role|Bio_Playing_role
+|---|------------|-----------------|----------|--------------
 134|Mark Edward Waugh|Batsman||NaN
 137|Mark Anthony Taylor|Batsman||NaN
 139|Ian Andrew Healy|Wicketkeeper||NaN
@@ -477,7 +478,7 @@ sns.lmplot('Bowl_Wkts_sc','Bat_Runs_sc',data[data['Bat_Mat'] > 5 ],
     plt.plot([0,7.0],[100,0])
 ```
 
-![Bat Runs vs Bowl Wkts](/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/bat-runs-bowl-wkts-roles.png)
+![Bat Runs vs Bowl Wkts](/images/bat-runs-bowl-wkts-roles.png)
 
 I have plotted a diagonal line, below which most of the points are clustered. It represents a kind of pareto-frontier which only exceptional players can breach. Note that there is no statistical basis for my choice of x and y intercepts, I just based it on visual inspection. Let us see the list of players who reside above this threshold.
 
@@ -485,8 +486,8 @@ I have plotted a diagonal line, below which most of the points are clustered. It
 data[data['Bat_Mat'] > 5].query('Bowl_Wkts_sc*100 + Bat_Runs_sc*7 > 700 ')[['Bio_Full_name','Bat_Mat','predicted_role_rf','Bowl_Wkts_sc','Bat_Runs_sc']]
 ```
 
-Bio_Full_name|Bat_Mat|predicted_role_rf|Bowl_Wkts_sc|Bat_Runs_sc
----|---------------|-----------|-----------------------|-----------------|------------------
+| | Bio_Full_name|Bat_Mat|predicted_role_rf|Bowl_Wkts_sc|Bat_Runs_sc
+|---|---------------|-----------|-----------------------|-----------------|------------------
 62|Steven Peter Devereux Smith|59|Batsman|0.288136|98.237288
 377|Ravindrasinh Anirudhsinh Jadeja|35|Bowler|4.714286|33.600000
 380|Ravichandran Ashwin|55|Bowler|5.527273|37.363636
@@ -525,7 +526,7 @@ sns.violinplot(x='predicted_role_rf',
                scale='width')
 ```
 
-![Bat Runs Violin Plot](/assets/images/2018/04/predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/bat-runs-roles-violin-plot.png)
+![Bat Runs Violin Plot](/images/bat-runs-roles-violin-plot.png)
 
 ## Conclusion
 If you review the length of the posts, less than 20% is allocated to running the actual machine learning code. That closely reflects the time spent on this project as well. Bulk of the time is spent in collecting and curating the data. Also the results from RandomForest Classifier is revealing. Right tool for the right job is often more effective than a generic tool which is universally useful.  

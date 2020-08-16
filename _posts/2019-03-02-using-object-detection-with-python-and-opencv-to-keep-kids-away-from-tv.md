@@ -1,5 +1,5 @@
 ---
-author: thamizh85
+author: tmzh
 comments: true
 date: 2019-03-02 12:00:00+08:00
 layout: post
@@ -11,19 +11,17 @@ tags:
 - python
 - opencv
 ---
-## Introduction
-
 >Give me a dozen healthy infants, well formed, and my own specified world to bring them up in and I’ll guarantee to take any one at random and train him to become any type of specialist I might select—doctor, lawyer, artist, merchant-chief and yes, even beggar-man thief, regardless of his talents, penchants, tendencies, abilities, vocations, and race of his ancestors.
 
 This was John Watson, one of the founders of [Behaviorism](https://www.wikiwand.com/en/Behaviorism), writing around 1925. He believed that human behavior is completely malleable and that it can be shaped into anything given the right environment. While I don't harbor any grand objectives or sinister experiments like Watson did, I do hope to be able to teach my kids good habits using controlled environments. For instance, my two year old kids started developing the habit of getting too close to the TV. I didn't want to use force or impose restrictions on them, so I thought I could use technology to discourage them from getting too close to TV.
+
+<!--more-->
 
 ## Problem statement
 
 I play YouTube rhymes on my HTPC which is connected to our living room TV. While watching they sometimes get down from the couch and walk to the TV. When they do, I want to turn off the video automatically to let them know that they have gone too close and not resume the playback until they get back to the couch. For my setup, that means pausing the youtube player and minimzing the browser. 
 
 Fortunately this is easy to do with a camera and [OpenCV](https://github.com/opencv/opencv). Let us see how.
-
-![Open CV](https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/OpenCV_Logo_with_text_svg_version.svg/195px-OpenCV_Logo_with_text_svg_version.svg.png)
 
 ## Tools and solutions
 
@@ -41,7 +39,7 @@ This is among the cheaper method in terms of computational requirements and it w
 ## Using Contour detection
 With the default OpenCV video capture drivers, my camera returned a frame with resolution 640 x 480 pixels. Here you can see my son lost in the colorful world of baby rhymes, hoping to dive into the TV to enjoy the rhymes in full splendor. 
 
-![Naughty kid](/assets/images/2019/03/using-opencv-object-detection-to-keep-kids-away-from-tv/naughty-kid.png)
+![Naughty kid](/images/naughty-kid.png)
 
 First I cropped the image to focus only on the area that I want to monitor- a small rectange close to TV. Blurring was done to smoothen the contours.
 
@@ -52,7 +50,7 @@ cropped = frame[100:300, 0:630]
 blurred = cv2.blur(cropped, (3, 3))
 ```
 
-![Cropped image](/assets/images/2019/03/using-opencv-object-detection-to-keep-kids-away-from-tv/cropped.png)
+![Cropped image](/images/cropped.png)
 
 Next I needed to convert color channels. Contour detection is not efficient when the color intensities are in 3 dimensions (RGB). The job is greatly simplified if we can restict the colors to a single dimension. And it works even better with binary images where the pixels are either pure black or white (even for us black and white are easier to tell apart than a million shades of other colors in between). 
 
@@ -70,7 +68,7 @@ upper_black = np.array([180, 255, 50])
 thresh = cv2.inRange(hsv, lower_black, upper_black)
 ```
 
-![Thresholded image](/assets/images/2019/03/using-opencv-object-detection-to-keep-kids-away-from-tv/filtered.png)
+![Thresholded image](/images/filtered.png)
 
 Finally we turn to the `cv2.findContours` method. The `cv2.findContours` method returns an array of contours. I looked for the largest contour by area and triggered helper methods when the area was bigger than a threshold. We can even plot the contours to see how our object detection works, as I have done in the picture below.
 
@@ -83,7 +81,7 @@ if contours:
         # Object detected. Do something
 cv2.drawContours(cropped, contours, -1, (0,255,0), 3)
 ```
-![Contour detection](/assets/images/2019/03/using-opencv-object-detection-to-keep-kids-away-from-tv/contour-detection.png)
+![Contour detection](/images/contour-detection.png)
 
 And there you go! The naughty infiltrator is caught.
 

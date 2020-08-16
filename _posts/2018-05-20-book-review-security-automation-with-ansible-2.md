@@ -1,5 +1,5 @@
 ---
-author: thamizh85
+author: tmzh
 comments: true
 date: 2018-05-20 12:00:00+08:00
 layout: post
@@ -14,6 +14,8 @@ tags:
 ---
 
 Security is a huge, complex, rapidly changing field. Advancements in infrastructue hosting, development methodologies has had the most impact on this domain. Thanks to automation, instances are spawned and deleted in a matter of second. Continuous development/Continuous Integration means that an average lifetime of a block of code is ever decreasing. Code review and vulnerability assessments based on static code and IP are hardly affordable at current rate of change. At the same time, the rate of proliferation of technology has seen comparable increase in risk vectors, vulnerabilities and attack methodologies. To keep up with this pace, automation in security operations has become more important than ever. 
+
+<!--more-->
 
 Unfortunately even within the CyberSecurity field, this automation domain is quite nascent and has sparse literature. So I was quite excited when I got a chance to review "Security Automation with Ansible 2" by Akash Mahajan and Madhu Akula. Before reading any further, if you are a security engineer struggling with these problems, grab hold of this book. It is quite extensive in scope and examples.  
 

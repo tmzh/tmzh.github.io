@@ -1,5 +1,5 @@
 ---
-author: thamizh85
+author: tmzh
 comments: true
 date: 2018-03-22 12:00:00+08:00
 layout: post
@@ -13,9 +13,9 @@ tags:
 - networking
 ---
 
-## Introduction
-
 This post is a gentle introduction to networking with Openstack using the Neutron module. Being an introduction, we will not focus on setting up OpenStack from scratch. Instead we will familiarize ourselves with core concepts of Neutron and common administrative tasks. We will use the latest release of Openstack, **Queens**. 
+
+<!--more-->
 
 For ease of setup, we will make use of pre-packaged Devstack environment. Devstack is a set of scripts from official OpenStack community that allows us to quickly build an Openstack instance with latest versions of all modules. It is very useful for testing and training purposes. 
 
@@ -36,7 +36,7 @@ Let us go through the important terms first:
 
 We will create the below topology on Openstack. Hosts `host-1` & `host-2` will be on same subnet while `host-3` will be on another subnet. We will enable reachability between all 3 hosts. Finally, we will also enable bi-directional connectivity to `host-1` from internet.
 
-![topology](/assets/images/2018/04/introduction-to-openstack-networking-for-network-engineers/topology.png)
+![topology](/images/topology.png)
 
 
 ## Preparing the environment
