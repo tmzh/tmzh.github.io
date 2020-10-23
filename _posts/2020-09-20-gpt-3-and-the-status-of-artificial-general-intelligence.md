@@ -25,8 +25,12 @@ GPT-3 can already create poetry, mimic [writing style of personalities](https://
 ![Natural Language Shell](/images/2020-09-26-nlsh.png)
 
 
-## Meta-learning
-The model approaches decent results on many NLP tasks and benchmarks without fine-tuning. OpenAI claims that if a NLP model is sufficiently complex and trained on large volume of data, it can learn to do a new task just by looking at few examples prompts i.e, the model is capable of learning new task on the go and it has learnt to learn[2]. This is one of the reasons why GPT-3 is generating quite a buzz. 
+## Learning how to learn
+One of the amazing aspects of GPT-3 model is that it doesn't need any task specific fine-tuning and yet achieve decent results on many of the NLP benchmark tasks. OpenAI claims that if a NLP model is sufficiently complex and trained on large volume of data, it can learn to do a new task just by looking at few examples prompts i.e, the model is capable of learning new task on the go and it has learnt to [learn](https://www.gwern.net/newsletter/2020/05#meta-learning). In the chart below, you can see how well the GPT-3 175B curve is propped up, just by looking at few examples.
+
+![Meta-learning](/images/2020-09-26-meta-learning.png)
+
+The ability to learn is one of the defining characteristics of AGI and now you can understand why GPT-3 is generating the buzz.
 
 ## Unreasonable effectiveness of data
 In 2009, Google's Peter Norvig wrote a [paper](https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/35179.pdf) about unreasonable effectiveness of data. GPT-3 seems to be the latest example of that. GPT-3 has no direct exposure to reality, except via large corpus of text. Yet the knowledge imparted from this large volume of text allows GPT-3 to reason about the physical world as seen in the [example](https://www.lesswrong.com/posts/L5JSMZQvkBAx9MD5A/to-what-extent-is-gpt-3-capable-of-reasoning) below 
@@ -73,4 +77,4 @@ The whole point of the article is not to make the grand claim that GPT-3 model i
 2. We haven't hit the wall in terms of diminishing returns from a more complex model. It will be interesting to explore whether such walls exist.
 3. At higher model complexities, interesting behaviors seems to emerge such as the ability to learn new tasks
 
-The year 2018 has been called as the ImageNet moment for NLP and we can see why. The amount of progress made in NLP during the last couple of years is staggering. For millennia philosophers used to construct thought experiments and argue about consciousness, the nature of knowledge, innateness vs blank slate etc., Now technology is advancing the discourse at a pace never seen before. Whichever side of fence one sits on, the world awaits with bated breath as the story unfolds.
+The year 2018 has been called as the [ImageNet moment](https://thegradient.pub/nlp-imagenet/) for NLP and we can see why. The amount of progress made in NLP during the last couple of years and the continued investments in the domain is staggering. For millennia philosophers used to construct thought experiments and argue about consciousness, the nature of knowledge, innateness vs blank slate etc., Now technology is advancing the discourse at a pace never seen before. Whichever side of fence one sits on, the world awaits with bated breath as the story unfolds.
