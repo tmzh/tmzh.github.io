@@ -26,7 +26,7 @@ GPT-3 can already create poetry, mimic [the writing style of personalities](http
 
 
 ## Learning how to learn
-One of the amazing aspects of the GPT-3 model is that it doesn't need any task-specific fine-tuning and yet achieves decent results on many of the Natural Language Processing (NLP) benchmarks and tasks. OpenAI's claim is that if an NLP model is sufficiently complex and trained on large volume of data, it can learn to do a new task only by looking at few examples prompts i.e, the model is capable of learning new tasks on the go and it has learned to [learn](https://www.gwern.net/newsletter/2020/05#meta-learning). In the chart below, you can see how well the GPT-3 175B curve is propped up, just by inputting a few examples.
+One of the amazing aspects of the GPT-3 model is that it doesn't need any task-specific fine-tuning and yet achieves decent results on many of the Natural Language Processing (NLP) benchmarks and tasks. OpenAI's claim is that if an NLP model is sufficiently complex and trained on large volume of data, it can learn to do a new task only by looking at few examples prompts i.e, the model is capable of learning new tasks on the go and it has learned to [learn](https://www.gwern.net/newsletter/2020/05#meta-learning). In the chart below, you can see how well the GPT-3 175B curve props up, just by inputting a few examples.
 
 ![Meta-learning](/images/2020-09-26-meta-learning.png)
 
@@ -55,7 +55,7 @@ And not everyone buys the scaling hypothesis. Detractors like Marcus claim that 
 ### It is not as good as SOTA
 To be correct, GPT-3 is not the best model out there. On most NLP tasks & benchmarks, SOTA performs better than GPT-3 (i.e SuperGLUE, CoQA, Winograd, to name a few). But there are other tasks in which it beats fine-tuned SOTA (i.e PhysicalQA, LAMBADA, Penn Tree Bank). But that doesn't matter.
 
-1. Most of the SOTA algorithms are fine-tuned for specific tasks, requiring task-specific datasets and fine-tuning. GPT-3 can do these tasks without large supervised datasets, similar to how humans learn language tasks (hence the suggestions of general intelligence). 
+1. Most of the SOTA algorithms are fine-tuned for specific tasks, requiring task-specific datasets and fine-tuning. GPT-3 can do these tasks without large supervised datasets, like how humans learn language tasks (hence the suggestions of general intelligence). 
 2. Beating SOTA is not the hallmark of general intelligence. As it is, SOTA already performs better than humans on many specific tasks like object recognition, mastering games like Chess and Go. But we don’t let that belittle our intelligence just on that count. In a sense, General intelligence always has to underfit to have wider applicability. 
 	
 ### It is just an autocomplete
