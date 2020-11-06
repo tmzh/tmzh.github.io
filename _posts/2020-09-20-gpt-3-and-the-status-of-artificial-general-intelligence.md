@@ -46,18 +46,20 @@ As recently as last year, training a model with 175B seemed far off into the fut
 
 ![Scaling hypothesis](/images/2020-09-26-scaling-hypothesis.png)
 
-Now I agree that I am playing to the gallery here and being sensational. We cannot compare ML neurons with biological neurons despite the fact that historically the former was inspired by the latter. They are fundamentally quite different. A CNN model can do object detection (in fact better than us) but it doesn't need to have the same structure as our brain to do so.
+Now I agree that I am playing to the gallery here and being sensational. We cannot compare ML neurons with biological neurons despite the fact that historically the former was inspired by the latter. They are fundamentally quite different. A CNN model can do object detection (in fact better than us) but it doesn't share the same structure with our visual cortex. This is why computers outperform humans in certain tasks like detecting anomalies in medical images, yet they can get [confused between a ball and a referees head](https://www.iflscience.com/technology/ai-camera-ruins-soccar-game-for-fans-after-mistaking-referees-bald-head-for-ball/).
 
-And not everyone buys the scaling hypothesis. Detractors like Marcus claim that just because we know how to stack ladders doesn't mean that we can build ladders to the moon. The argument is fundamentally flawed. In the case of ladders to the moon, we know the governing rules and the limits of possibility. But we don't know enough about intelligence to confidently say that such an impervious chasm exists between a statistical model and causal reasoning. 
+And not everyone buys the scaling hypothesis. Detractors like Marcus claim that just because we know how to stack ladders doesn't mean that we can build ladders to the moon. The argument is loaded with an assumption. In the case of ladders to the moon, we know the governing rules and the limits of possibility. But to extend the metaphor to AGI, we don't know enough about intelligence to confidently say that there is an impervious chasm between a statistical model and causal reasoning. Like the expression [Turtles all thew way down](https://www.wikiwand.com/en/Turtles_all_the_way_down), perhaps our intelligence is also made of statistical models stacked all the way down.
 
 
 ## What do the critics say?
 ### It is not as good as SOTA
-To be correct, GPT-3 is not the best model out there. On most NLP tasks & benchmarks, SOTA performs better than GPT-3 (i.e SuperGLUE, CoQA, Winograd, to name a few). But there are other tasks in which it beats fine-tuned SOTA (i.e PhysicalQA, LAMBADA, Penn Tree Bank). But that doesn't matter.
+To be correct, GPT-3 is not the best model out there. On most NLP tasks & benchmarks, other State Of The art Algorithms (SOTA) performs better than GPT-3 (i.e SuperGLUE, CoQA, Winograd, to name a few). But those criticisms are missing the point.
 
-1. Most of the SOTA algorithms are fine-tuned for specific tasks, requiring task-specific datasets and fine-tuning. GPT-3 can do these tasks without large supervised datasets, like how humans learn language tasks (hence the suggestions of general intelligence). 
+1. Most of the SOTA algorithms are fine-tuned for specific tasks, with task-specific datasets and fine-tuning whereas GPT-3 is not. GPT-3 has learnt to do these tasks by understanding (in a specific sense) english language, somewhat like how humans learn language tasks. 
 2. Beating SOTA is not the hallmark of general intelligence. As it is, SOTA already performs better than humans on many specific tasks like object recognition, mastering games like Chess and Go. But we don’t let that belittle our intelligence just on that count. In a sense, General intelligence always has to underfit to have wider applicability. 
-	
+
+But there are other tasks in which it beats fine-tuned SOTA (i.e PhysicalQA, LAMBADA, Penn Tree Bank)
+
 ### It is just an autocomplete
 Some critics say that GPT-3 is just a sophisticated text prediction engine[1]. It doesn't understand what those words mean. But I think we don't know enough to confidently define what it means to understand something[5]. Generations of philosophers have toiled at this task and not come to a conclusion.
 
