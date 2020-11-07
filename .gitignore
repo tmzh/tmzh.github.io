@@ -6,6 +6,7 @@ _site
 .bundle
 .sass-cache
 .idea
+.vscode
 Gemfile
 Gemfile.lock
 node_modules
