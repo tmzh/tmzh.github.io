@@ -3,8 +3,8 @@ author: tmzh
 comments: true
 date: 2020-09-20 12:00:00+08:00
 layout: post
-slug: 2020-09-20-gpt-3-and-the-status-of-artificial-general-intelligence
-title: GPT-3 and the status of Artificial General Intelligence 
+slug: 2020-09-20-gpt-3-and-prospects-of-artificial-general-intelligence
+title: GPT-3 and prospects of Artificial General Intelligence 
 categories:
 - Artificial Intelligence 
 tags:
