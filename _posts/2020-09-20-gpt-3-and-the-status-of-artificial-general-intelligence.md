@@ -70,12 +70,15 @@ Searle claims that looking up a dictionary doesn't represent understanding, but 
 ### It has already seen the data it is predicting on
 This is a more serious allegation than the ones above. Since GPT-3 was trained on a huge volume of data, there is a chance that it has already seen the inputs and it is simply recalling them from memory. For example, Yannic Kilcher in his [video](https://youtu.be/SY5PvZrJhLE) suspects that it can do arithmetic predictions because the model is likely to have seen the same data in the training dataset. OpenAI team claims to have done sufficient deduplication to remove the testing dataset from the training data. But given the volume of data, their deduplication is only [optimistic](https://arxiv.org/pdf/2005.14165.pdf#page=25).
 
-But there is growing evidence that transformer models can indeed answer tasks that it has not seen before. Karpathy trained a [mini GPT model](https://github.com/karpathy/minGPT) exclusively on synthetic data and it was already able to do 2 digit arithmetic. In this case, there is a clear separation between the training set and validation set. So we can only conclude that the result is not impossible.
+But there is evidence that transformer models can indeed generate answers that it has not seen before. Karpathy trained a [mini GPT model](https://github.com/karpathy/minGPT) exclusively on synthetic data and it was already able to do 2 digit arithmetic. In this case, there is a clear separation between the training set and validation set. So to conclude, the results we see from GPT-3 is not impossible and need not necessarily come out of a training data set corruption.
 
 ## Conclusion
-The whole point of the article is not to make the grand claim that GPT-3 model is an AGI or that it conclusively proves that AGI is possible. However, there are a few noteworthy conclusions to draw from this:
-1. NLP models can be a shortcut to AGI as they have the ability to indirectly model the physical world
-2. We haven't hit the wall in terms of diminishing returns from a more complex model. It will be interesting to explore whether such walls exist.
-3. At higher model complexities, interesting behaviors seem to emerge such as the ability to learn new tasks
+All these comparisons with AGI doesn't mean we should haphazardly claim that GPT-3 is an AGI or that it definitively proves that AGI is possible. However, the results from GPT-3 are very interesting for few salient points:
+1. It shows that NLP models can be a shortcut to AGI as they have the ability to indirectly model the physical world.
+2. The performance of GPT model continues to scale with the model size and hasn't tapered off yet. So there is the promise that if we make bigger models we can get more intelligent models. 
+3. At higher model complexities, interesting behaviors seem to emerge, such as the ability to learn new tasks, perform non-linguistic tasks etc.,
 
-The year 2018 has been called the [ImageNet moment](https://thegradient.pub/nlp-imagenet/) for NLP and we can see why. The amount of progress made in NLP during the last couple of years and the continued investments in the domain is staggering. For millennia philosophers used to construct thought experiments and argue about consciousness, the nature of knowledge, innateness vs blank slate etc., Now technology is advancing this discourse at a pace never seen before. Whichever side of the fence one sits on, the world waits with bated breath as the story unfolds.
+The year 2018 has been called the [ImageNet moment](https://thegradient.pub/nlp-imagenet/) for NLP and we can see why. The amount of progress made in NLP during the last couple of years is staggering and there is continued interest and investments in the domain. And mastering NLP domain is closely linked with mastering General Intelligence.
+
+There are many who believe that intelligence is somewhat innate to biological processes and cannot be reduced to mathematical models. There are others who believe that it is possible. In a way, this is just another incarnation of nature vs nurture debate raging in the philosophical world for centuries. Except this time, we are not relying on thought experiments and we get to see the answers in reality. Whichever side of the fence one sits on, the world waits with bated breath as the journey of our species unfolds.
+
