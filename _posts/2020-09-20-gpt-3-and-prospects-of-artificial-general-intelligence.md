@@ -15,13 +15,13 @@ image: /images/2020-09-26-meta-learning.png
 
 Last year OpenAI released the Generative Pre-trained Transformer 2 (GPT-2) model. GPT-2 was a language model with 1.5 billion parameters, trained on 8 million web pages. It generated quite a buzz as it could generate coherent text, comprehend paragraphs, answer questions, and summarize text and do all sorts of smart stuff... all without any task-specific learning. OpenAI even deemed the model too dangerous to release but eventually ended up releasing them.
 
-In May 2020, OpenAI released their follow-up GPT-3 model which took the game several notches higher. It was trained with 175 billion parameters, using close to half-a-trillion tokens. The model and its weights alone would take up 300GB VRAM. This is a drastic increase in scale and complexity, anyway you look at it. So what can a huge model like this achieve?
+In May 2020, OpenAI released their follow-up GPT-3 model which took the game several notches higher. They trained it with 175 billion parameters, using close to half-a-trillion tokens. The model and its weights alone would take up 300GB VRAM. This is a drastic increase in scale and complexity, anyway you look at it. So what can a huge model like this achieve and why has it reinvigorated the talks ?
 
 ![GPT-3 Training Size](/images/2020-09-26-gpt-3-training-size.png)
 
 <!--more-->
 
-GPT-3 can already create poetry, mimic [the writing style of personalities](https://www.gwern.net/GPT-3#literary-parodies). It performs better than an average college applicant in [SAT analogy problems](https://arxiv.org/pdf/2005.14165.pdf#page=25), generates [cohesive stories](https://medium.com/@aidungeon/ai-dungeon-dragon-model-upgrade-7e8ea579abfe), writes news articles that are [hard to distinguish](https://arxiv.org/pdf/2005.14165.pdf#page=27) from a human-written article. You can even ask it to do system admin jobs in natural language and it will come up with shell commands and execute them- like a seasoned sysadmin. 
+GPT-3 can write poetry, mimic [the writing style of personalities](https://www.gwern.net/GPT-3#literary-parodies). It also performs better than an average college applicant in [SAT analogy problems](https://arxiv.org/pdf/2005.14165.pdf#page=25), generates [cohesive stories](https://medium.com/@aidungeon/ai-dungeon-dragon-model-upgrade-7e8ea579abfe), writes news articles that are [hard to distinguish](https://arxiv.org/pdf/2005.14165.pdf#page=27) from a human-written article. You can even ask it to do system admin jobs in natural language and it will come up with shell commands and execute them- like a seasoned sysadmin. 
 
 ![Natural Language Shell](/images/2020-09-26-nlsh.png)
 
@@ -47,9 +47,9 @@ As recently as last year, training a model with 175B seemed far off into the fut
 
 ![Scaling hypothesis](/images/2020-09-26-scaling-hypothesis.png)
 
-Now I agree that I am playing to the gallery here and being sensational. We cannot compare ML neurons with biological neurons despite the fact that historically the former was inspired by the latter. They are fundamentally quite different. A CNN model can do object detection (in fact better than us) but it doesn't share the same structure with our visual cortex. This is why computers outperform humans in certain tasks like detecting anomalies in medical images, yet they can get [confused between a ball and a referee's head](https://www.iflscience.com/technology/ai-camera-ruins-soccar-game-for-fans-after-mistaking-referees-bald-head-for-ball/).
+> Now I agree that I am playing to the gallery here and being sensational. Biological neurons and ML neurons are quite different. A CNN model can do object detection (in fact better than us) but it doesn't share the same structure with our visual cortex. This is why CNN outperforms humans in certain tasks like detecting anomalies in medical images, yet they can get [confused between a ball and a referee's head](https://www.iflscience.com/technology/ai-camera-ruins-soccar-game-for-fans-after-mistaking-referees-bald-head-for-ball/). 
 
-And not everyone buys the scaling hypothesis. Detractors like Marcus claim that just because we know how to stack ladders doesn't mean that we can build ladders to the moon. The argument is loaded with an assumption. In the case of ladders to the moon, we know the governing rules and the limits of possibility. But to extend the metaphor to AGI, we don't understand our own intelligence completely and we confidently say that there is an impervious chasm between a statistical model and causal reasoning. Like the expression [Turtles all the way down](https://www.wikiwand.com/en/Turtles_all_the_way_down), perhaps our intelligence is also made of statistical models stacked all the way down.
+Not everyone buys the scaling hypothesis. Detractors like Marcus claim that just because we know how to stack ladders doesn't mean that we can build ladders to the moon. The argument is loaded with an assumption. In the case of ladders to the moon, we know the governing rules and the limits of possibility. But to extend the metaphor to AGI, we don't understand our own intelligence well enough and we cannot say for sure that the chasm between a statistical model and causal reasoning is impervious. Like the expression [Turtles all the way down](https://www.wikiwand.com/en/Turtles_all_the_way_down), perhaps our intelligence is also made of statistical models stacked all the way down.
 
 
 ## What do the critics say?
