@@ -5,8 +5,9 @@ _site
 .jekyll-metadata
 .bundle
 .sass-cache
-.idea
-.vscode
+.idea/
+.vscode/
+*.swp
 Gemfile
 Gemfile.lock
 node_modules
