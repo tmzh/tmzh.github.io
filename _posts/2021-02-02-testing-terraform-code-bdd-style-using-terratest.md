@@ -10,7 +10,7 @@ categories:
 tags:
 - terraform
 - iac
-image: /images/2020-09-26-meta-learning.png
+image: https://raw.githubusercontent.com/cucumber/godog/master/logo.png
 ---
 
 Terratest is a popular library for testing Terraform code. Testing Infrastructure As Code (IAC) is not as widespread as it should be. The reasons are multi-fold, ranging from developer's attitude towards testing to the difficulty of writing unit tests because of inherent side effects of IAC. Nevertheless, testing is no less important, in particular under these scenarios:
@@ -34,11 +34,14 @@ Let us start with a simple terraform module that deploys a Hello world lambda fu
 
 ```terraform
 terraform {
-  required_version = ">= 0.12.26"
-}
+  required_version = ">= 0.14.6"
 
-provider "archive" {
-  version = "1.3"
+  required_providers {
+    archive = {
+      source  = "hashicorp/archive"
+      version = "1.3"
+    }
+}
 }
 
 data "archive_file" "zip" {
@@ -56,8 +59,24 @@ resource "aws_lambda_function" "lambda" {
   filename         = data.archive_file.zip.output_path
   source_code_hash = data.archive_file.zip.output_base64sha256
   function_name    = var.function_name
+  role             = aws_iam_role.lambda.arn
   handler          = "handler"
   runtime          = "go1.x"
+}
+
+resource "aws_iam_role" "lambda" {
+  name               = var.function_name
+  assume_role_policy = data.aws_iam_policy_document.policy.json
+}
+
+data "aws_iam_policy_document" "policy" {
+  statement {
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
+    }
+  }
 }
 
 output "lambda_function" {
@@ -78,8 +97,12 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 )
 
-func HandleRequest(ctx context.Context, name string) (string, error) {
-	return fmt.Sprintf("Hello %s", name), fmt.Errorf("Failed to handle %#v", evnt)
+type Event struct {
+	Name string `json:"Name"`
+}
+
+func HandleRequest(ctx context.Context, evnt Event) (string, error) {
+	return fmt.Sprintf("Hello %s!", evnt.Name), nil
 }
 
 func main() {
@@ -102,36 +125,42 @@ To test this using Terratest, we need to write tests using Go's built-in package
 
 The content of the test case is:
 
-```go
+```golang
 package test
 
 import (
-	"fmt"
-	"testing"
-	"time"
-
-	http_helper "github.com/gruntwork-io/terratest/modules/http-helper"
-
+	"github.com/gruntwork-io/terratest/modules/aws"
 	"github.com/gruntwork-io/terratest/modules/terraform"
+	"github.com/stretchr/testify/assert"
+
+	"testing"
 )
 
-func TestTerraformAwsLambdaFunction(t *testing.T) {
+type Payload struct {
+	Name string
+}
+
+func TestBasicLambdaFunction(t *testing.T) {
 	t.Parallel()
 
-	// retryable errors in terraform testing.
+	awsRegion := "us-east-1"
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: "..",
+		EnvVars: map[string]string{
+			"AWS_DEFAULT_REGION": awsRegion,
+		},
 	})
 
 	defer terraform.Destroy(t, terraformOptions)
+
 	terraform.InitAndApply(t, terraformOptions)
 	functionName := terraform.Output(t, terraformOptions, "lambda_function")
 
-	response := aws.InvokeFunction(t, awsRegion, functionName, "World")
+	response := aws.InvokeFunction(t, awsRegion, functionName, Payload{Name: "World"})
 
-	assert.Equal(t, `"hi!"`, string(response))
+	assert.Equal(t, `"Hello World!"`, string(response))
+
 }
-
 ```
 To test the module, simply run `go test` command under the test directory. 
 
@@ -149,7 +178,7 @@ This performs the following steps:
 If you have multiple test functions, you can run a specific test as well.
 
 ```
-go test -run TestLambdaFunction
+go test -run TestBasicLambdaFunction
 ```
 
 You can get the complete code for this scenario [here](https://github.com/tmzh/terratest-examples/tree/main/lambda_basic)
@@ -167,7 +196,7 @@ functionError, ok := err.(*aws.FunctionError)
 require.True(t, ok)
 ```
 
-At some pointo of time, adding more test cases like this is going to become unwieldy. Later in the post we will see how to make the test cases more readable and self-documenting by writing BDD style test cases.
+At some point of time, adding more test cases like this is going to become unwieldy. Later we will see how to make the test cases more readable and self-documenting by writing BDD style test cases.
 
 ### Passing other terraform options
 We can also pass custom options to the test code. For example, if we want to override the `function_name` variable, we can pass it as a Vars parameter to terraform options.  
@@ -290,7 +319,7 @@ Feature: Simple test to confirm lambda function behavior
 		Then Cloudwatch log stream is generated
 ```
 
-To test this, we will use a [godog](https://github.com/cucumber/godog) BDD framework for Golang. Let us create a Godog test function and call it `bdd_test.go`.
+To test this, we will use [godog](https://github.com/cucumber/godog) BDD framework for Golang. Let us create a Godog test function and call it `bdd_test.go`.
 
 ```go
 type godogFeaturesScenario struct {
@@ -321,7 +350,11 @@ func TestLambdaFunctionBDD(t *testing.T) {
 }
 ```
 
-Here we pass our Feature file location in the option `godog.Options{Paths: []string{"features"}}`. We also need to pass `TestSuiteInitializer` and `ScenarioInitializer` as part of the TestSuite specs. These functions allows us to hook to events such as `BeforeScenario`, `AfterScenario`. For those coming from a BDD framework like Behave will notice that godog doesn't support a mutable context object. So it cannot be used to pass values between each step. Instead we have to create a struct called `godogFeaturesScenario` on which we implement a `ScenarioInitializer` function. This allows us to pass objects like `Testing.T`, `terraform.Options` which are shared across multiple steps. We have also added a `stepValues` parameter which can be used to capture values from intermediate steps (like getting resource ARN from `terraform.Output`)
+Here we pass our Feature file location in the option `godog.Options{Paths: []string{"features"}}`. We also need to pass `TestSuiteInitializer` and `ScenarioInitializer` as part of the TestSuite specs. These functions allows us to hook to events such as `BeforeScenario`, `AfterScenario`. 
+
+Those coming from a BDD framework like Behave will notice that Godog doesn't support a mutable context object. So it cannot be used to pass values between each step. Instead we have to create a struct called `godogFeaturesScenario` on which we implement a `ScenarioInitializer` function. 
+
+This allows us to pass objects like `Testing.T`, `terraform.Options` which are shared across multiple steps. We have also added a `stepValues` parameter which can be used to capture values from intermediate steps (like getting resource ARN from `terraform.Output`)
 
 Next step would be to map the Step definitions to go functions.
 
