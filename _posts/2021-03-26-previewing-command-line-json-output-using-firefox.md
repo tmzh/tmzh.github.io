@@ -3,8 +3,8 @@ author: tmzh
 comments: true
 date: 2021-03-26 12:00:00+08:00
 layout: post
-slug: 2021-03-27-firefox-as-a-quick-json-viewer-from-command-line
-title: Previewing JSON output from command line using firefox
+slug: 2021-03-26-previewing-command-line-json-output-using-firefox
+title: Previewing command line JSON output using firefox
 categories:
 - tips 
 tags:
@@ -26,6 +26,8 @@ This content is not limited to plain text. It can even be an HTML document:
 ```
 data:text/html,%3Ch1%3EHello%2C%20World!%3C%2Fh1%3E
 ```
+
+<!--more-->
 
 Or any other supported MIME type:
 
@@ -75,3 +77,4 @@ aws ec2 describe-subnets --no-cli-pager | json_viewer
 
 
 Now when firefox starts [supporting intelligent filtering](https://bugzilla.mozilla.org/show_bug.cgi?id=1244922), using either JMESPath or jq syntax, this can become even more useful. 
+
