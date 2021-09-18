@@ -105,14 +105,14 @@ Note that the tokens also consists of some special tokens which encodes special 
  ```
 
  ## Hugging Face Model
+
  Once the input text has been  preprocessed by the tokenizer, we can pass it directly to the model
 
  ```python
  outputs = model(**batch)
  ```
 
-The contents of the model output depends on the task. For [SequenceClassification](https://huggingface.co/transformers/main_classes/output.html#transformers.modeling_outputs.SequenceClassifierOutput) we get back `logit`, an optional `loss`, `hidden_states` and `attentions` attributes
-The `model` class can also be used to do transfer learning for custom NLP tasks. The Transformers library provides a `Trainer` API that takes this model as input, extracts the pre-trained weights and fine tunes it.
+The contents of the model output depends on the task. For [SequenceClassification](https://huggingface.co/transformers/main_classes/output.html#transformers.modeling_outputs.SequenceClassifierOutput) we get back `logit`, an optional `loss`, `hidden_states` and `attentions` attributes.
 
 The `model` class can also be used to do transfer learning for custom NLP tasks. The Transformers library provides a `Trainer` API that takes this model as input, extracts the pre-trained weights and fine tunes it.
 
@@ -134,7 +134,7 @@ trainer.train()
 This covers a high level overview of the Hugging Face Transformers library. Next we will see how to use the library along with Sagemaker.
 
 # Using Hugging Face on Sagemaker
-Hugging Face in collaboration with AWS released Sagemaker Hugging Face Deep Learning Containers (DLCs) that makes it easy to train and deploy Hugging Face models using AWS platform. 
+Hugging Face in collaboration with AWS released Sagemaker Hugging Face Deep Learning Containers (DLCs) that makes it easy to train and deploy Hugging Face models using AWS platform. In the following section, we will see how to use these DLCs to train and deploy Hugging Face Transformer models in AWS.
 
 ## Running a Training job
 
@@ -146,12 +146,8 @@ First we need to prepare the training script. This would be similar to any Trans
 from transformers import AutoModelForSequenceClassification, Trainer, TrainingArguments, AutoTokenizer
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support
 from datasets import load_from_disk
-import random
-import logging
 import sys
 import argparse
-import os
-import torch
 
 if __name__ == "__main__":
 
