@@ -97,22 +97,22 @@ Note that the tokens also consists of some special tokens which encodes special 
 
 ```python
 >>> tokenizer.special_tokens_map
-{'cls_token': '[CLS]',
+{
+  'cls_token': '[CLS]',
  'mask_token': '[MASK]',
  'pad_token': '[PAD]',
  'sep_token': '[SEP]',
- 'unk_token': '[UNK]'}
+ 'unk_token': '[UNK]'
+ }
  ```
 
+## Hugging Face Model
 
- ## Hugging Face Model
+Once the input text has been  preprocessed by the tokenizer, we can pass it directly to the model
 
-
- Once the input text has been  preprocessed by the tokenizer, we can pass it directly to the model
-
- ```python
- outputs = model(**batch)
- ```
+```python
+outputs = model(**batch)
+```
 
 The contents of the model output depends on the task. For [SequenceClassification](https://huggingface.co/transformers/main_classes/output.html#transformers.modeling_outputs.SequenceClassifierOutput) we get back `logit`, an optional `loss`, `hidden_states` and `attentions` attributes.
 
