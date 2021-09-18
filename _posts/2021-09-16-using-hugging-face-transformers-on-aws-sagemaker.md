@@ -6,10 +6,11 @@ layout: post
 slug: 2021-09-16-using-hugging-face-transformers-on-aws-sagemaker
 title: Using Hugging Face Transformers on AWS Sagemaker
 categories:
-- tips 
+- Machine Learning
 tags:
-- command-line
-- json
+- aws 
+- huggingface
+- transformers
 image: https://huggingface.co/blog/assets/17_the_partnership_amazon_sagemaker_and_hugging_face/cover.png 
 ---
 
@@ -57,7 +58,7 @@ model = AutoModelForSequenceClassification.from_pretrained(model_name)
 tokenizer = AutoTokenizer.from_pretrained(model_name)
 
 # tokenize the input
-batch = tokenizer(["We are very happy to show you the 🤗 Transformers library."], 
+batch = tokenizer(["The Hugging Face Transformers library is amazing"], 
                   padding=True, truncation=True, max_length=512, 
                   return_tensors="pt")
 
