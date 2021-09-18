@@ -19,8 +19,8 @@ In this post, we will go through a high level overview of Hugging Face Transform
 
 <!--more-->
 
-# Introduction to HuggingFace Transformers
-The HuggingFace Transformers is a library that makes it easy to use NLP models. It allows developers to leverage hundreds of pretrained models for Natural Language Understanding (NLU) tasks as well as making it simple to train new transformer models. The API of this library is based around 3 broad classes:
+# Introduction to Hugging Face Transformers
+The Hugging Face Transformers is a library that makes it easy to use NLP models. It allows developers to leverage hundreds of pretrained models for Natural Language Understanding (NLU) tasks as well as making it simple to train new transformer models. The API of this library is based around 3 broad classes:
 
 1. **Model** - PyTorch or Keras models that we can use in training loop or for prediction
 2. **Configuration** - Stores all the configuration required to build a model
@@ -33,7 +33,7 @@ classifier = pipeline('sentiment-analysis', model="distilbert-base-uncased-finet
 classifier('We are very happy to show you the 🤗 Transformers library.')
 ```
 
-The first argument is a HuggingFace NLP task, in this case it is `sentiment analysis`. Some of the supported tasks are:
+The first argument is a Hugging Face NLP task, in this case it is `sentiment analysis`. Some of the supported tasks are:
 * Sequence Classification
 * Sentiment Analysis
 * Question Answering
@@ -130,10 +130,10 @@ trainer = Trainer(
 trainer.train()
 ```
 
-This covers a high level overview of the HuggingFace Transformers library. Next we will see how to use the library along with Sagemaker.
+This covers a high level overview of the Hugging Face Transformers library. Next we will see how to use the library along with Sagemaker.
 
 # Using Hugging Face on Sagemaker
-Hugging Face in collaboration with AWS released Sagemaker HuggingFace Deep Learning Containers (DLCs) that makes it easy to train and deploy HuggingFace models using AWS platform. 
+Hugging Face in collaboration with AWS released Sagemaker Hugging Face Deep Learning Containers (DLCs) that makes it easy to train and deploy Hugging Face models using AWS platform. 
 
 ## Running a Training job
 
@@ -207,9 +207,9 @@ test_dataset = load_from_disk(args.test_dir)
 trainer.save_model(args.model_dir)
 ```
 
-### Run training using HuggingFace estimator
+### Run training using Hugging Face estimator
 
-First we create a HuggingFace estimator which exposes methods similar to other Sagemaker Estimator. Note that the `entry_point` attribute matches the file name of our training script.
+First we create a Hugging Face estimator which exposes methods similar to other Sagemaker Estimator. Note that the `entry_point` attribute matches the file name of our training script.
 
 ```python
 from sagemaker.huggingface import HuggingFace
@@ -234,7 +234,7 @@ huggingface_estimator = HuggingFace(
 )
 ```
 
-Training is invoked by calling the `fit` method on `HuggingFace` Estimator.
+Training is invoked by calling the `fit` method on `Hugging Face` Estimator.
 
 ```python
 huggingface_estimator.fit(
@@ -256,14 +256,14 @@ model.tar.gz/
 
 ## Deploying the model for inference
 
-Once the training is completed, we can deploy a `HuggingFace` model directly from the `Estimator` object. 
+Once the training is completed, we can deploy a `Hugging Face` model directly from the `Estimator` object. 
 
 ```python
 # deploy model to SageMaker Inference
 predictor = huggingface_estimator.deploy(initial_instance_count=1, instance_type="ml.m5.xlarge")
 ```
 
-Alternatively, if we already have a completed training job, we can used its output model to deploy a new `HuggingFace` model and deploy it.
+Alternatively, if we already have a completed training job, we can used its output model to deploy a new `Hugging Face` model and deploy it.
 
 ```python
 from sagemaker.huggingface.model import HuggingFaceModel
@@ -284,9 +284,9 @@ predictor = huggingface_model.deploy(
 )
 ```
 
-We can use this deployed model to make predictions on input text. The default inference script in HuggingFace DLC expects a dictionary with `inputs` as key. For details on default input formats for various tasks refer to [this](https://huggingface.co/docs/sagemaker/inference#inference-toolkit---api-description).
+We can use this deployed model to make predictions on input text. The default inference script in Hugging Face DLC expects a dictionary with `inputs` as key. For details on default input formats for various tasks refer to [this](https://huggingface.co/docs/sagemaker/inference#inference-toolkit---api-description).
 
-```
+```python
 # example request. 
 data = {
    "inputs": "Sagemaker SDK is easy to use"
@@ -393,7 +393,7 @@ To use this script, we need to place it under a source directory along with any 
   |- requirements.txt 
 ```
 
-Next when we create the `HuggingFaceModel` we need to set the `source_dir` and `entry_point` attribute. These attributes are derived from the [Sagemaker Estimator Framework](https://sagemaker.readthedocs.io/en/stable/api/training/estimators.html#sagemaker.estimator.Framework) so they are available under all Frameworks.
+Next when we create the `Hugging FaceModel` we need to set the `source_dir` and `entry_point` attribute. These attributes are derived from the [Sagemaker Estimator Framework](https://sagemaker.readthedocs.io/en/stable/api/training/estimators.html#sagemaker.estimator.Framework) so they are available under all Frameworks.
 
 ```python
 huggingface_model = HuggingFaceModel(
@@ -429,7 +429,7 @@ predictor = huggingface_model.deploy(
 
 # example request. 
 data = {
-   "my_custom_input": "The HuggingFace Transformers library is amazing"
+   "my_custom_input": "The Hugging Face Transformers library is amazing"
 }
 
 # request
