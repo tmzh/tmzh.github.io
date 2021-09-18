@@ -104,7 +104,9 @@ Note that the tokens also consists of some special tokens which encodes special 
  'unk_token': '[UNK]'}
  ```
 
+
  ## Hugging Face Model
+
 
  Once the input text has been  preprocessed by the tokenizer, we can pass it directly to the model
 
