@@ -13,9 +13,9 @@ tags:
 image: https://raw.githubusercontent.com/cucumber/godog/master/logo.png 
 ---
 
-Firefox, supports [Data URIs](https://en.wikipedia.org/wiki/Data_URI_scheme) which allows you to load HTML resource from text in URL as if they were external resources. 
+Firefox, like other modern browsers, has an excellent in-built JSON viewer. It also supports [Data URIs](https://en.wikipedia.org/wiki/Data_URI_scheme) which allows you to load HTML resource from text in URL as if they were external resources. We can make use of these two features to have a handy JSON previewer which can be invoked from command line. 
 
-For example, if you enter the below link into your browser, it opens a "Hello world" text document.
+For example, when you enter the below link into your browser, it opens a "Hello world" text document.
 
 ```
 data:,Hello%2C%20World!
