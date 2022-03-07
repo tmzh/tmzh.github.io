@@ -3,8 +3,8 @@ author: tmzh
 comments: true 
 date: 2022-03-07 12:00:00+08:00 
 layout: post 
-slug: 2022-03-07-wordle-solver-strategies
-title: Wordle Solver strategies 
+slug: 2022-03-07-solvers-for-the-wordle-game-comparison-of-strategies
+title: Solvers for the Wordle game - comparison of strategies
 categories:
 -
 tags:
@@ -13,6 +13,9 @@ image:
 ---
 
 Wordle is a web-based word game which has become incredibly popular during the pandemic. It became so popular over a while that it was even bought by New York times for a significant sum and is currently [hosted](https://www.nytimes.com/games/wordle/index.html) there. The game is a lot of fun to solve manually, but I am also solving this computationally. This is my own attempt at coming up with a solution strategy for the game.
+
+
+<!--more-->
 
 # The game
 The game is about guessing a five-letter word which changes every day. You get six tries to get it right. After every guess, the game tells you whether any of your letters are in the secret word and whether they are in the correct place.
@@ -166,7 +169,7 @@ Here is how the three strategies stack up next to each other.
 
 ![Comparison](/images/2022-03-07-comparison.png)
 
-You can find the source code in `wordle.py`
+You can find the source code for the solver in the repo https://github.com/tmzh/wordle.git
 
 ## Further references
 1. The best explanation I have seen for the Information entropy forumula is from Aurélien Géron (https://youtu.be/ErfnhcEV1O8). The concept of information entropy leads to cross entropy which is heavily used as loss function in classification methods. This video is quite short but incredible informative.
