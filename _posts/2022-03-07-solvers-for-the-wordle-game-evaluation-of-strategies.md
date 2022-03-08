@@ -9,7 +9,7 @@ categories:
 -
 tags:
 - 
-image:
+image: https://tmzh.github.io/images/2022-03-07-frequency_count.png
 ---
 
 Wordle is a web-based word game which has become incredibly popular during the pandemic. It became so popular over a while that it was even bought by New York times for a significant sum and is currently [hosted](https://www.nytimes.com/games/wordle/index.html) there. The game is a lot of fun to solve manually, but I am also interested in solving this computationally. This is my attempt at coming up with a solution strategy for the game.
