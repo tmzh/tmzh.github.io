@@ -3,8 +3,8 @@ author: tmzh
 comments: true 
 date: 2022-03-07 12:00:00+08:00 
 layout: post 
-slug: 2022-03-07-solvers-for-the-wordle-game-comparison-of-strategies
-title: Solvers for the Wordle game - comparison of strategies
+slug: 2022-03-07-solvers-for-the-wordle-game-evaluation-of-strategies
+title: Solvers for the Wordle game - Evaluation of strategies
 categories:
 -
 tags:
@@ -12,7 +12,7 @@ tags:
 image:
 ---
 
-Wordle is a web-based word game which has become incredibly popular during the pandemic. It became so popular over a while that it was even bought by New York times for a significant sum and is currently [hosted](https://www.nytimes.com/games/wordle/index.html) there. The game is a lot of fun to solve manually, but I am also solving this computationally. This is my own attempt at coming up with a solution strategy for the game.
+Wordle is a web-based word game which has become incredibly popular during the pandemic. It became so popular over a while that it was even bought by New York times for a significant sum and is currently [hosted](https://www.nytimes.com/games/wordle/index.html) there. The game is a lot of fun to solve manually, but I am also interested in solving this computationally. This is my attempt at coming up with a solution strategy for the game.
 
 
 <!--more-->
@@ -33,6 +33,36 @@ The game is very similar to Master Mind game (which in turn is similar to even o
 Here is an abstract python implementation of parts of this algorithm:
 
 ```python
+def color_remaining(c, index, pattern, count):
+    if count.get(c, 0):
+        pattern[index] = 'y'
+        count[c] -= 1
+    else:
+        pattern[index] = 'r'
+
+
+def compare(this, other):
+    this_count, other_count = Counter(this), Counter(other)
+    this_matches, other_matches = [None] * len(this), [None] * len(other)
+
+    for index, this_char, other_char in zip(range(5), other, this):
+        if this_char == other_char:
+            other_matches[index] = this_matches[index] = 'g'
+            this_count[other_char] -= 1
+            other_count[this_char] -= 1
+
+    for index, this_char, other_char in zip(range(5), this, other):
+        if not this_matches[index]:
+            color_remaining(this_char, index, this_matches, other_count)
+            color_remaining(other_char, index, other_matches, this_count)
+
+    return ''.join(this_matches), ''.join(other_matches)
+
+
+def word_matches_pattern(word, guess, pattern):
+    return compare(guess, word)[0] == pattern
+
+
 class Solver(ABC):
     def __init__(self, word_list):
         self.word_list = word_list
@@ -61,15 +91,15 @@ As a first pass, we can prioritize guessing the words containing most common cha
 
 ![Char frequency in 5 letter words](/images/2022-03-07-char_frequency.png)
 
-By this criteria, `soare` is the ideal first guess as it is made up of the most frequent characters.
+By this criteria, `soare` is the ideal first guess as it is made up of the most frequent characters. Python implementation of this strategy would look like this:
 
 ```python
 from collections import Counter
 
-def top_word(self, words):
+def top_word(words):
     char_counts = Counter()
     for w in words: char_counts.update(w)
-    scores = [(self.score(word, words, char_counts), word) for word in words]
+    scores = [(score(word, words, char_counts), word) for word in words]
     scores.sort(reverse=True)
     return scores[0][1]
 
@@ -81,7 +111,7 @@ True enough, it works well most of the time. Almost half the time, it only takes
 
 ![Most frequent characters strategy](/images/2022-03-07-frequency_count.png)
 
-But we can do better. If we look at the words that take long to solve, there are multiple candidates which are too similar to them. For example, it takes 13 attempts to predict the word `wares`
+But we can do better. If we look at the words that took ong to solve, there are multiple candidates which are too similar to them. For example, it takes 13 attempts to predict the word `wares`
 
 ```
 time_solve('wares', word_list)
@@ -127,12 +157,12 @@ Surprisingly this stochastic approach works better than the first method at a lo
 ## Maximum Entropy
 In the previous strategy, we kind of adopted an exploration-exploitation strategy which is normally used for problems whose probability distribution is not known apriori. But in this case, we can do better. Since the word list is already known, we can calculate the probability distribution. So how can we use this probability information to make a good choice?
 
-One thing to note from Master Mind algorithm is that at every turn, we also learn more information about the target word. We can choose words that gives us more information about the target there by reducing our solution space drastically.
+One thing to note from Master Mind algorithm is that at every turn, we also learn more information about the target word. We can choose words that gives us more information about the target there by reducing our solution space at each turn.
 
 As we are talking about expected information available from a probability distribution, we can use Claude Shannon's defintion of information entropy to assign a score. Here is how it is calculated:
 
-1. Let n be the number of words in the solution space
-2. Group the words into k partitions based on the pattern it generates when compared with our guess word i.e, if our guess word is `east` group `['fast', 'last']` into same partition as they would output a pattern `rggg` with our guess word.
+1. Let _n_ be the number of words in the solution space
+2. Group the words into _k_ partitions based on the pattern it generates when compared with our guess word i.e, if our guess word is `east` group `['fast', 'last']` into same partition as they would output a pattern `rggg` with our guess word.
 3. Let _k<sub>i</sub>_ be the size of the _i<sup>th</sup>_ partition after the current guess.
 4. Then the Shannon entropy score of the guess word is _sum{p<sub>i</sub> * -log(p<sub>i</sub>)}_ where _p<sub>i</sub> = i / n_
 
@@ -165,7 +195,7 @@ By this criteria, `tares` is the best starting word which will give us most info
 ![Maximum Entropy Strategy](/images/2022-03-07-maximum_entropy.png)
 
 ## Conclusion
-Here is how the three strategies stack up next to each other.
+Here is how the three strategies stack up next to each other. Entropy based solution is the clear winner by a mile. On the flip side, it is quite expensive to compute. 
 
 ![Comparison](/images/2022-03-07-comparison.png)
 
