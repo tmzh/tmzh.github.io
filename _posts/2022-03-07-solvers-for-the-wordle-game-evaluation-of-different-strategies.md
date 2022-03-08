@@ -3,7 +3,7 @@ author: tmzh
 comments: true 
 date: 2022-03-07 12:00:00+08:00 
 layout: post 
-slug: 2022-03-07-solvers-for-the-wordle-game-evaluation-of-strategies
+slug: 2022-03-07-solvers-for-the-wordle-game-evaluation-of-different-strategies
 title: Solvers for the Wordle game - Evaluation of strategies
 categories:
 -
