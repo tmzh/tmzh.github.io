@@ -1,0 +1,517 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Using Hugging Face Transformers on AWS Sagemaker - Ephemeral Dance Of Electrons</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="tmzh"><meta name=description content="In July 2021, AWS and Hugging Face announced collaboration to make Hugging Face a first party framework within SageMaker. Earlier, you had to use PyTorch container and install packages manually to do this. With the new Hugging Face Deep Learning Containers (DLC) availabe in Amazon SageMaker, the process of training and deploying models is greatly simplified.
+In this post, we will go through a high level overview of Hugging Face Transformers library before looking at how to use the newly announced Hugging Face DLCs within Sagemaker.
+"><meta name=keywords content="blog,code,recreational"><meta name=generator content="Hugo 0.101.0 with theme even"><link rel=canonical href=https://tmzh.github.io/post/2021-09-16-using-hugging-face-transformers-on-aws-sagemaker/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet><meta property="og:title" content="Using Hugging Face Transformers on AWS Sagemaker"><meta property="og:description" content="In July 2021, AWS and Hugging Face announced collaboration to make Hugging Face a first party framework within SageMaker. Earlier, you had to use PyTorch container and install packages manually to do this. With the new Hugging Face Deep Learning Containers (DLC) availabe in Amazon SageMaker, the process of training and deploying models is greatly simplified.
+In this post, we will go through a high level overview of Hugging Face Transformers library before looking at how to use the newly announced Hugging Face DLCs within Sagemaker."><meta property="og:type" content="article"><meta property="og:url" content="https://tmzh.github.io/post/2021-09-16-using-hugging-face-transformers-on-aws-sagemaker/"><meta property="article:section" content="post"><meta property="article:published_time" content="2021-09-16T12:00:00+00:00"><meta property="article:modified_time" content="2021-09-16T12:00:00+00:00"><meta itemprop=name content="Using Hugging Face Transformers on AWS Sagemaker"><meta itemprop=description content="In July 2021, AWS and Hugging Face announced collaboration to make Hugging Face a first party framework within SageMaker. Earlier, you had to use PyTorch container and install packages manually to do this. With the new Hugging Face Deep Learning Containers (DLC) availabe in Amazon SageMaker, the process of training and deploying models is greatly simplified.
+In this post, we will go through a high level overview of Hugging Face Transformers library before looking at how to use the newly announced Hugging Face DLCs within Sagemaker."><meta itemprop=datePublished content="2021-09-16T12:00:00+00:00"><meta itemprop=dateModified content="2021-09-16T12:00:00+00:00"><meta itemprop=wordCount content="2055"><meta itemprop=keywords content="aws,huggingface,transformers,"><meta name=twitter:card content="summary"><meta name=twitter:title content="Using Hugging Face Transformers on AWS Sagemaker"><meta name=twitter:description content="In July 2021, AWS and Hugging Face announced collaboration to make Hugging Face a first party framework within SageMaker. Earlier, you had to use PyTorch container and install packages manually to do this. With the new Hugging Face Deep Learning Containers (DLC) availabe in Amazon SageMaker, the process of training and deploying models is greatly simplified.
+In this post, we will go through a high level overview of Hugging Face Transformers library before looking at how to use the newly announced Hugging Face DLCs within Sagemaker."><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>Ephemeral Dance Of Electrons</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>Ephemeral Dance Of Electrons</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Using Hugging Face Transformers on AWS Sagemaker</h1><div class=post-meta><span class=post-time>2021-09-16</span><div class=post-category><a href=/categories/machine-learning/>Machine Learning</a></div></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>Contents</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><a href=#introduction-to-hugging-face-transformers>Introduction to Hugging Face Transformers</a><ul><li><a href=#tokenizer>Tokenizer</a></li><li><a href=#hugging-face-model>Hugging Face Model</a></li></ul></li><li><a href=#using-hugging-face-on-sagemaker>Using Hugging Face on Sagemaker</a><ul><li><a href=#running-a-training-job>Running a Training job</a><ul><li><a href=#preparing-a-training-script>Preparing a training script</a></li><li><a href=#run-training-using-hugging-face-estimator>Run training using Hugging Face estimator</a></li></ul></li><li><a href=#deploying-the-model-for-inference>Deploying the model for inference</a><ul><li><a href=#advanced-features-of-the-inference-toolkit>Advanced features of the Inference toolkit</a></li><li><a href=#customizing-inference-script>Customizing Inference script</a></li></ul></li></ul></li><li><a href=#additional-resources>Additional resources</a></li></ul></nav></div></div><div class=post-content><p>In July 2021, AWS and Hugging Face announced collaboration to make Hugging Face a first party framework within SageMaker. Earlier, you had to use PyTorch container and install packages manually to do this. With the new Hugging Face Deep Learning Containers (DLC) availabe in Amazon SageMaker, the process of training and deploying models is greatly simplified.</p><p>In this post, we will go through a high level overview of Hugging Face Transformers library before looking at how to use the newly announced Hugging Face DLCs within Sagemaker.</p><h1 id=introduction-to-hugging-face-transformers>Introduction to Hugging Face Transformers</h1><p>The Hugging Face Transformers is a library that makes it easy to use NLP models. It allows developers to leverage hundreds of pretrained models for Natural Language Understanding (NLU) tasks as well as making it simple to train new transformer models. The API of this library is based around 3 broad classes:</p><ol><li><strong>Model</strong> - PyTorch or Keras models that we can use in training loop or for prediction</li><li><strong>Configuration</strong> - Stores all the configuration required to build a model</li><li><strong>Tokenizer</strong> - Stores the vocabulary and methods for encoding and decoding between strings and tokens</li></ol><p>The transformers library offers a simple abstraction over the above 3 models using the <code>pipeline</code> method. This is the simplest way to get started using the pre-trained models from model hub.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>classifier</span> <span class=o>=</span> <span class=n>pipeline</span><span class=p>(</span><span class=s1>&#39;sentiment-analysis&#39;</span><span class=p>,</span> <span class=n>model</span><span class=o>=</span><span class=s2>&#34;distilbert-base-uncased-finetuned-sst-2-english&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>classifier</span><span class=p>(</span><span class=s1>&#39;We are very happy to show you the 🤗 Transformers library.&#39;</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>The first argument is a Hugging Face NLP task, in this case it is <code>sentiment analysis</code>. Some of the supported tasks are:</p><ul><li>Sequence Classification</li><li>Sentiment Analysis</li><li>Question Answering</li><li>Language Modelling</li><li>Text Generation</li><li>Named Entity Recognition (NER)</li><li>Summarization</li><li>Translation</li></ul><p>See <a href=https://huggingface.co/transformers/task_summary.html#>here</a> for an overview of the tasks supported by the library.</p><p>Under the hood, calling the pipeline method roughly covers the following steps:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>transformers</span> <span class=kn>import</span> <span class=n>AutoTokenizer</span><span class=p>,</span> <span class=n>AutoModelForSequenceClassification</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>torch</span> <span class=kn>import</span> <span class=n>nn</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># download the model and tokenizer</span>
+</span></span><span class=line><span class=cl><span class=n>model_name</span> <span class=o>=</span> <span class=s2>&#34;distilbert-base-uncased-finetuned-sst-2-english&#34;</span>
+</span></span><span class=line><span class=cl><span class=n>model</span> <span class=o>=</span> <span class=n>AutoModelForSequenceClassification</span><span class=o>.</span><span class=n>from_pretrained</span><span class=p>(</span><span class=n>model_name</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>tokenizer</span> <span class=o>=</span> <span class=n>AutoTokenizer</span><span class=o>.</span><span class=n>from_pretrained</span><span class=p>(</span><span class=n>model_name</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># tokenize the input</span>
+</span></span><span class=line><span class=cl><span class=n>batch</span> <span class=o>=</span> <span class=n>tokenizer</span><span class=p>([</span><span class=s2>&#34;The Hugging Face Transformers library is amazing&#34;</span><span class=p>],</span> 
+</span></span><span class=line><span class=cl>                  <span class=n>padding</span><span class=o>=</span><span class=kc>True</span><span class=p>,</span> <span class=n>truncation</span><span class=o>=</span><span class=kc>True</span><span class=p>,</span> <span class=n>max_length</span><span class=o>=</span><span class=mi>512</span><span class=p>,</span> 
+</span></span><span class=line><span class=cl>                  <span class=n>return_tensors</span><span class=o>=</span><span class=s2>&#34;pt&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># run predictions</span>
+</span></span><span class=line><span class=cl><span class=n>outputs</span> <span class=o>=</span> <span class=n>model</span><span class=p>(</span><span class=o>**</span><span class=n>batch</span><span class=p>)</span> <span class=c1># returns logits for classification task</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># get predictions</span>
+</span></span><span class=line><span class=cl><span class=n>predictions</span> <span class=o>=</span> <span class=n>nn</span><span class=o>.</span><span class=n>functional</span><span class=o>.</span><span class=n>softmax</span><span class=p>(</span><span class=n>outputs</span><span class=o>.</span><span class=n>logits</span><span class=p>,</span> <span class=n>dim</span><span class=o>=-</span><span class=mi>1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=nb>print</span><span class=p>(</span><span class=n>predictions</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>The downloaded models are stored in <code>~/.cache/huggingface/transformers</code>.</p><p>Here is the process:</p><ul><li>Instantiate <code>AutoTokenizer</code> to download the tokenizer associated to the model we picked and instantiate it.</li><li>Use <code>AutoModelForSequenceClassification</code> to download the model itself.</li><li>Build a sequence from the input sentence, using the correct model-specific separators token type ids and attention masks</li><li>Pass this sequence through the model to get the logits</li><li>Compute the softmax of the result to get probabilities over the classes</li></ul><h2 id=tokenizer>Tokenizer</h2><p>Tokenizer&rsquo;s job is to preprocess your text into tokens suitable for training or inference. Tokens can be a word (<code>predict</code>) or a subword (<code>##ly</code>). For example, a tokenizer may split the word <code>Transformers</code> into (<code>transform</code>, <code>##ers</code>) so that the model&rsquo;s vocabulary doesn&rsquo;t explode. The tokenizer can also take care of other pre-processing tasks such as normalizing cases and punctuations.</p><p>The tokenization logic is tied to the model we use. That is why in our example we derived the model and tokenizer from the same model name. The <code>AutoTokenizer</code> and <code>AutoModelForxxx</code> classes ensures that the tokenizers and models are paired correctly.</p><p>When we apply a tokenizer to an input text, it returns a dictionary containing <code>ids</code> of the tokens and <code>attention mask</code>. <code>ids</code> are the numerical representation of tokens. To learn about attention mask and other details related to Tokenizers refer <a href=https://huggingface.co/transformers/tokenizer_summary.html>here</a>.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=o>&gt;&gt;&gt;</span> <span class=n>tokenizer</span><span class=p>(</span><span class=s2>&#34;We are very happy to show you the 🤗 Transformers library.&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span><span class=s1>&#39;input_ids&#39;</span><span class=p>:</span> <span class=p>[</span><span class=mi>101</span><span class=p>,</span> <span class=mi>2057</span><span class=p>,</span> <span class=mi>2024</span><span class=p>,</span> <span class=mi>2200</span><span class=p>,</span> <span class=mi>3407</span><span class=p>,</span> <span class=mi>2000</span><span class=p>,</span> <span class=mi>2265</span><span class=p>,</span> <span class=mi>2017</span><span class=p>,</span> <span class=mi>1996</span><span class=p>,</span> <span class=mi>100</span><span class=p>,</span> <span class=mi>19081</span><span class=p>,</span> <span class=mi>3075</span><span class=p>,</span> <span class=mi>1012</span><span class=p>,</span> <span class=mi>102</span><span class=p>],</span> <span class=s1>&#39;attention_mask&#39;</span><span class=p>:</span> <span class=p>[</span><span class=mi>1</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=mi>1</span><span class=p>,</span> <span class=mi>1</span><span class=p>]}</span>
+</span></span></code></pre></td></tr></table></div></div><p>Note that the tokens also consists of some special tokens which encodes special meaning in the sentences. They differ from model to model. In our model, they are:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=o>&gt;&gt;&gt;</span> <span class=n>tokenizer</span><span class=o>.</span><span class=n>special_tokens_map</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=s1>&#39;cls_token&#39;</span><span class=p>:</span> <span class=s1>&#39;[CLS]&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl> <span class=s1>&#39;mask_token&#39;</span><span class=p>:</span> <span class=s1>&#39;[MASK]&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl> <span class=s1>&#39;pad_token&#39;</span><span class=p>:</span> <span class=s1>&#39;[PAD]&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl> <span class=s1>&#39;sep_token&#39;</span><span class=p>:</span> <span class=s1>&#39;[SEP]&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl> <span class=s1>&#39;unk_token&#39;</span><span class=p>:</span> <span class=s1>&#39;[UNK]&#39;</span>
+</span></span><span class=line><span class=cl> <span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=hugging-face-model>Hugging Face Model</h2><p>Once the input text has been preprocessed by the tokenizer, we can pass it directly to the model</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>outputs</span> <span class=o>=</span> <span class=n>model</span><span class=p>(</span><span class=o>**</span><span class=n>batch</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>The contents of the model output depends on the task. For <a href=https://huggingface.co/transformers/main_classes/output.html#transformers.modeling_outputs.SequenceClassifierOutput>SequenceClassification</a> we get back <code>logit</code>, an optional <code>loss</code>, <code>hidden_states</code> and <code>attentions</code> attributes.</p><p>The <code>model</code> class can also be used to do transfer learning for custom NLP tasks. The Transformers library provides a <code>Trainer</code> API that takes this model as input, extracts the pre-trained weights and fine tunes it.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>transformers</span> <span class=kn>import</span> <span class=n>Trainer</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Build the trainer class</span>
+</span></span><span class=line><span class=cl><span class=n>trainer</span> <span class=o>=</span> <span class=n>Trainer</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=n>model</span><span class=o>=</span><span class=n>model</span><span class=p>,</span> 
+</span></span><span class=line><span class=cl>    <span class=n>args</span><span class=o>=</span><span class=n>training_args</span><span class=p>,</span> 
+</span></span><span class=line><span class=cl>    <span class=n>train_dataset</span><span class=o>=</span><span class=n>small_train_dataset</span><span class=p>,</span> 
+</span></span><span class=line><span class=cl>    <span class=n>eval_dataset</span><span class=o>=</span><span class=n>small_eval_dataset</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Fine-tune the model</span>
+</span></span><span class=line><span class=cl><span class=n>trainer</span><span class=o>.</span><span class=n>train</span><span class=p>()</span>
+</span></span></code></pre></td></tr></table></div></div><p>This covers a high level overview of the Hugging Face Transformers library. Next we will see how to use the library along with Sagemaker.</p><h1 id=using-hugging-face-on-sagemaker>Using Hugging Face on Sagemaker</h1><p>Hugging Face in collaboration with AWS released Sagemaker Hugging Face Deep Learning Containers (DLCs) that makes it easy to train and deploy Hugging Face models using AWS platform. In the following section, we will see how to use these DLCs to train and deploy Hugging Face Transformer models in AWS.</p><h2 id=running-a-training-job>Running a Training job</h2><h3 id=preparing-a-training-script>Preparing a training script</h3><p>First we need to prepare the training script. This would be similar to any Transformers training script. A minimal training script would look like this:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=o>%%</span><span class=n>writefile</span> <span class=n>train</span><span class=o>.</span><span class=n>py</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>transformers</span> <span class=kn>import</span> <span class=n>AutoModelForSequenceClassification</span><span class=p>,</span> <span class=n>Trainer</span><span class=p>,</span> <span class=n>TrainingArguments</span><span class=p>,</span> <span class=n>AutoTokenizer</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>sklearn.metrics</span> <span class=kn>import</span> <span class=n>accuracy_score</span><span class=p>,</span> <span class=n>precision_recall_fscore_support</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>datasets</span> <span class=kn>import</span> <span class=n>load_from_disk</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>sys</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>argparse</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=vm>__name__</span> <span class=o>==</span> <span class=s2>&#34;__main__&#34;</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>parser</span> <span class=o>=</span> <span class=n>argparse</span><span class=o>.</span><span class=n>ArgumentParser</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># Data, model, and output directories</span>
+</span></span><span class=line><span class=cl>    <span class=n>parser</span><span class=o>.</span><span class=n>add_argument</span><span class=p>(</span><span class=s2>&#34;--model_dir&#34;</span><span class=p>,</span> <span class=nb>type</span><span class=o>=</span><span class=nb>str</span><span class=p>,</span> <span class=n>default</span><span class=o>=</span><span class=n>os</span><span class=o>.</span><span class=n>environ</span><span class=p>[</span><span class=s2>&#34;SM_MODEL_DIR&#34;</span><span class=p>])</span>
+</span></span><span class=line><span class=cl>    <span class=n>parser</span><span class=o>.</span><span class=n>add_argument</span><span class=p>(</span><span class=s2>&#34;--training_dir&#34;</span><span class=p>,</span> <span class=nb>type</span><span class=o>=</span><span class=nb>str</span><span class=p>,</span> <span class=n>default</span><span class=o>=</span><span class=n>os</span><span class=o>.</span><span class=n>environ</span><span class=p>[</span><span class=s2>&#34;SM_CHANNEL_TRAIN&#34;</span><span class=p>])</span>
+</span></span><span class=line><span class=cl>    <span class=n>parser</span><span class=o>.</span><span class=n>add_argument</span><span class=p>(</span><span class=s2>&#34;--test_dir&#34;</span><span class=p>,</span> <span class=nb>type</span><span class=o>=</span><span class=nb>str</span><span class=p>,</span> <span class=n>default</span><span class=o>=</span><span class=n>os</span><span class=o>.</span><span class=n>environ</span><span class=p>[</span><span class=s2>&#34;SM_CHANNEL_TEST&#34;</span><span class=p>])</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># load datasets</span>
+</span></span><span class=line><span class=cl>    <span class=n>train_dataset</span> <span class=o>=</span> <span class=n>load_from_disk</span><span class=p>(</span><span class=n>args</span><span class=o>.</span><span class=n>training_dir</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>test_dataset</span> <span class=o>=</span> <span class=n>load_from_disk</span><span class=p>(</span><span class=n>args</span><span class=o>.</span><span class=n>test_dir</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># download model from model hub</span>
+</span></span><span class=line><span class=cl>    <span class=n>model_name</span> <span class=o>=</span> <span class=s2>&#34;distilbert-base-uncased-finetuned-sst-2-english&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=n>model</span> <span class=o>=</span> <span class=n>AutoModelForSequenceClassification</span><span class=o>.</span><span class=n>from_pretrained</span><span class=p>(</span><span class=n>model_name</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>tokenizer</span> <span class=o>=</span> <span class=n>AutoTokenizer</span><span class=o>.</span><span class=n>from_pretrained</span><span class=p>(</span><span class=n>model_name</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># define training args</span>
+</span></span><span class=line><span class=cl>    <span class=n>training_args</span> <span class=o>=</span> <span class=n>TrainingArguments</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>output_dir</span><span class=o>=</span><span class=n>args</span><span class=o>.</span><span class=n>model_dir</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># create Trainer instance</span>
+</span></span><span class=line><span class=cl>    <span class=n>trainer</span> <span class=o>=</span> <span class=n>Trainer</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>model</span><span class=o>=</span><span class=n>model</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>args</span><span class=o>=</span><span class=n>training_args</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>train_dataset</span><span class=o>=</span><span class=n>train_dataset</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>eval_dataset</span><span class=o>=</span><span class=n>test_dataset</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>tokenizer</span><span class=o>=</span><span class=n>tokenizer</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=c1># train model</span>
+</span></span><span class=line><span class=cl>    <span class=n>trainer</span><span class=o>.</span><span class=n>train</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=c1># save the model</span>
+</span></span><span class=line><span class=cl>    <span class=n>trainer</span><span class=o>.</span><span class=n>save_model</span><span class=p>(</span><span class=n>args</span><span class=o>.</span><span class=n>model_dir</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>For a more complete version of the script covering model evaluation, logging and additional training arguments, refer to this <a href=https://github.com/huggingface/notebooks/blob/9664c8b62e38083952b849da8912af13a35312b0/sagemaker/01_getting_started_pytorch/scripts/train.py>sample script</a>.</p><p>As with any Sagemaker training job, we need to ensure that this script reads data from DLC&rsquo;s data input directory and saves the model to model directory. The following lines of codes takes care of this.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=c1># loading datasets</span>
+</span></span><span class=line><span class=cl><span class=n>parser</span><span class=o>.</span><span class=n>add_argument</span><span class=p>(</span><span class=s2>&#34;--training_dir&#34;</span><span class=p>,</span> <span class=nb>type</span><span class=o>=</span><span class=nb>str</span><span class=p>,</span> <span class=n>default</span><span class=o>=</span><span class=n>os</span><span class=o>.</span><span class=n>environ</span><span class=p>[</span><span class=s2>&#34;SM_CHANNEL_TRAIN&#34;</span><span class=p>])</span>
+</span></span><span class=line><span class=cl><span class=n>parser</span><span class=o>.</span><span class=n>add_argument</span><span class=p>(</span><span class=s2>&#34;--test_dir&#34;</span><span class=p>,</span> <span class=nb>type</span><span class=o>=</span><span class=nb>str</span><span class=p>,</span> <span class=n>default</span><span class=o>=</span><span class=n>os</span><span class=o>.</span><span class=n>environ</span><span class=p>[</span><span class=s2>&#34;SM_CHANNEL_TEST&#34;</span><span class=p>])</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>train_dataset</span> <span class=o>=</span> <span class=n>load_from_disk</span><span class=p>(</span><span class=n>args</span><span class=o>.</span><span class=n>training_dir</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>test_dataset</span> <span class=o>=</span> <span class=n>load_from_disk</span><span class=p>(</span><span class=n>args</span><span class=o>.</span><span class=n>test_dir</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># storing models</span>
+</span></span><span class=line><span class=cl><span class=n>trainer</span><span class=o>.</span><span class=n>save_model</span><span class=p>(</span><span class=n>args</span><span class=o>.</span><span class=n>model_dir</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=run-training-using-hugging-face-estimator>Run training using Hugging Face estimator</h3><p>First we create a Hugging Face estimator which exposes methods similar to other Sagemaker Estimator. Note that the <code>entry_point</code> attribute matches the file name of our training script.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>sagemaker.huggingface</span> <span class=kn>import</span> <span class=n>HuggingFace</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># hyperparameters, which are passed into the training job</span>
+</span></span><span class=line><span class=cl><span class=n>hyperparameters</span><span class=o>=</span><span class=p>{</span><span class=s1>&#39;epochs&#39;</span><span class=p>:</span> <span class=mi>1</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                 <span class=s1>&#39;per_device_train_batch_size&#39;</span><span class=p>:</span> <span class=mi>32</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                 <span class=s1>&#39;model_name_or_path&#39;</span><span class=p>:</span> <span class=s1>&#39;distilbert-base-uncased&#39;</span>
+</span></span><span class=line><span class=cl>                 <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># create the Estimator</span>
+</span></span><span class=line><span class=cl><span class=n>huggingface_estimator</span> <span class=o>=</span> <span class=n>HuggingFace</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>entry_point</span><span class=o>=</span><span class=s1>&#39;train.py&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>instance_type</span><span class=o>=</span><span class=s1>&#39;ml.p3.2xlarge&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>instance_count</span><span class=o>=</span><span class=mi>1</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>role</span><span class=o>=</span><span class=n>role</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>transformers_version</span><span class=o>=</span><span class=s1>&#39;4.4&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>pytorch_version</span><span class=o>=</span><span class=s1>&#39;1.6&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>py_version</span><span class=o>=</span><span class=s1>&#39;py36&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>hyperparameters</span> <span class=o>=</span> <span class=n>hyperparameters</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>Training is invoked by calling the <code>fit</code> method on <code>Hugging Face</code> Estimator.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>huggingface_estimator</span><span class=o>.</span><span class=n>fit</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>  <span class=p>{</span><span class=s1>&#39;train&#39;</span><span class=p>:</span> <span class=s1>&#39;s3://sagemaker-us-east-1-558105141721/samples/datasets/imdb/train&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>   <span class=s1>&#39;test&#39;</span><span class=p>:</span> <span class=s1>&#39;s3://sagemaker-us-east-1-558105141721/samples/datasets/imdb/test&#39;</span><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>The trained model is a tarball with all the resources needed for inference.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>model.tar.gz/
+</span></span><span class=line><span class=cl>|- pytroch_model.bin
+</span></span><span class=line><span class=cl>|- vocab.txt
+</span></span><span class=line><span class=cl>|- tokenizer_config.json
+</span></span><span class=line><span class=cl>|- config.json
+</span></span><span class=line><span class=cl>|- special_tokens_map.json
+</span></span></code></pre></td></tr></table></div></div><h2 id=deploying-the-model-for-inference>Deploying the model for inference</h2><p>Once the training is completed, we can deploy a <code>Hugging Face</code> model directly from the <code>Estimator</code> object.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=c1># deploy model to SageMaker Inference</span>
+</span></span><span class=line><span class=cl><span class=n>predictor</span> <span class=o>=</span> <span class=n>huggingface_estimator</span><span class=o>.</span><span class=n>deploy</span><span class=p>(</span><span class=n>initial_instance_count</span><span class=o>=</span><span class=mi>1</span><span class=p>,</span> <span class=n>instance_type</span><span class=o>=</span><span class=s2>&#34;ml.m5.xlarge&#34;</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>Alternatively, if we already have a completed training job, we can used its output model to deploy a new <code>Hugging Face</code> model and deploy it.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>sagemaker.huggingface.model</span> <span class=kn>import</span> <span class=n>HuggingFaceModel</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># create Hugging Face Model Class</span>
+</span></span><span class=line><span class=cl><span class=n>huggingface_model</span> <span class=o>=</span> <span class=n>HuggingFaceModel</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>   <span class=n>model_data</span><span class=o>=</span><span class=s2>&#34;s3://models/my-bert-model/model.tar.gz&#34;</span><span class=p>,</span>  <span class=c1># path to your trained sagemaker model</span>
+</span></span><span class=line><span class=cl>   <span class=n>role</span><span class=o>=</span><span class=n>role</span><span class=p>,</span> <span class=c1># iam role with permissions to create an Endpoint</span>
+</span></span><span class=line><span class=cl>   <span class=n>transformers_version</span><span class=o>=</span><span class=s2>&#34;4.6&#34;</span><span class=p>,</span> <span class=c1># transformers version used</span>
+</span></span><span class=line><span class=cl>   <span class=n>pytorch_version</span><span class=o>=</span><span class=s2>&#34;1.7&#34;</span><span class=p>,</span> <span class=c1># pytorch version used</span>
+</span></span><span class=line><span class=cl>   <span class=n>py_version</span><span class=o>=</span><span class=s1>&#39;py36&#39;</span><span class=p>,</span> <span class=c1># python version used</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># deploy model to SageMaker Inference</span>
+</span></span><span class=line><span class=cl><span class=n>predictor</span> <span class=o>=</span> <span class=n>huggingface_model</span><span class=o>.</span><span class=n>deploy</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>   <span class=n>initial_instance_count</span><span class=o>=</span><span class=mi>1</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>   <span class=n>instance_type</span><span class=o>=</span><span class=s2>&#34;ml.m5.xlarge&#34;</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>We can use this deployed model to make predictions on input text. The default inference script in Hugging Face DLC expects a dictionary with <code>inputs</code> as key. For details on default input formats for various tasks refer to <a href=https://huggingface.co/docs/sagemaker/inference#inference-toolkit---api-description>this</a>.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=c1># example request. </span>
+</span></span><span class=line><span class=cl><span class=n>data</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>   <span class=s2>&#34;inputs&#34;</span><span class=p>:</span> <span class=s2>&#34;Sagemaker SDK is easy to use&#34;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=c1># request</span>
+</span></span><span class=line><span class=cl><span class=n>predictor</span><span class=o>.</span><span class=n>predict</span><span class=p>(</span><span class=n>data</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>The above method makes use of Sagemaker SDK to invoke the model. Often in a production ML application, invocation is handled by calling <a href=https://docs.aws.amazon.com/sagemaker/latest/APIReference/API_runtime_InvokeEndpoint.html>InvokeEndpoint API</a> via boto3 or other SDK. A sample boto3 based invocation would look like below:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>os</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>io</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>boto3</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>json</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>csv</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># grab environment variables</span>
+</span></span><span class=line><span class=cl><span class=n>ENDPOINT_NAME</span> <span class=o>=</span> <span class=n>os</span><span class=o>.</span><span class=n>environ</span><span class=p>[</span><span class=s1>&#39;ENDPOINT_NAME&#39;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=n>runtime</span><span class=o>=</span> <span class=n>boto3</span><span class=o>.</span><span class=n>client</span><span class=p>(</span><span class=s1>&#39;runtime.sagemaker&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>lambda_handler</span><span class=p>(</span><span class=n>event</span><span class=p>,</span> <span class=n>context</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;Received event: &#34;</span> <span class=o>+</span> <span class=n>json</span><span class=o>.</span><span class=n>dumps</span><span class=p>(</span><span class=n>event</span><span class=p>,</span> <span class=n>indent</span><span class=o>=</span><span class=mi>2</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=n>data</span> <span class=o>=</span> <span class=n>json</span><span class=o>.</span><span class=n>loads</span><span class=p>(</span><span class=n>json</span><span class=o>.</span><span class=n>dumps</span><span class=p>(</span><span class=n>event</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>    <span class=n>payload</span> <span class=o>=</span> <span class=n>data</span><span class=p>[</span><span class=s1>&#39;data&#39;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=n>payload</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>data</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>   <span class=s2>&#34;inputs&#34;</span><span class=p>:</span> <span class=s2>&#34;Sagemaker SDK is easy to use&#34;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>payload</span> <span class=o>=</span> <span class=n>json</span><span class=o>.</span><span class=n>dumps</span><span class=p>(</span><span class=n>data</span><span class=p>)</span><span class=o>.</span><span class=n>encode</span><span class=p>(</span><span class=s1>&#39;utf-8&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl><span class=n>response</span> <span class=o>=</span> <span class=n>runtime</span><span class=o>.</span><span class=n>invoke_endpoint</span><span class=p>(</span><span class=n>EndpointName</span><span class=o>=</span><span class=n>ENDPOINT_NAME</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                    <span class=n>ContentType</span><span class=o>=</span><span class=s1>&#39;application/json&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                    <span class=n>Body</span><span class=o>=</span><span class=n>payload</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>Remember to delete the endpoint at the end of experiments.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=c1># delete endpoint</span>
+</span></span><span class=line><span class=cl><span class=n>predictor</span><span class=o>.</span><span class=n>delete_endpoint</span><span class=p>()</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=advanced-features-of-the-inference-toolkit>Advanced features of the Inference toolkit</h3><p>We can also pass additional environment variables to the inference model that simplifies deployment.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>hub</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=s1>&#39;HF_MODEL_ID&#39;</span><span class=p>:</span><span class=s1>&#39;distilbert-base-uncased-distilled-squad&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s1>&#39;HF_TASK&#39;</span><span class=p>:</span><span class=s1>&#39;question-answering&#39;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=c1># create Hugging Face Model Class</span>
+</span></span><span class=line><span class=cl><span class=n>huggingface_model</span> <span class=o>=</span> <span class=n>HuggingFaceModel</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=n>transformers_version</span><span class=o>=</span><span class=s1>&#39;4.6&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>pytorch_version</span><span class=o>=</span><span class=s1>&#39;1.7&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>py_version</span><span class=o>=</span><span class=s1>&#39;py36&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>env</span><span class=o>=</span><span class=n>hub</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    
+</span></span></code></pre></td></tr></table></div></div><p>Here, <code>HF_TASK</code> variable defines the task for the Transformers pipeline and <code>HF_MODEL_ID</code> defines the model id to load from <a href=https://huggingface.co/models>huggingface.co/models</a>. For the full list of supported environment variables refer to <a href=https://github.com/aws/sagemaker-huggingface-inference-toolkit#%EF%B8%8F-environment-variables>here</a>.</p><h3 id=customizing-inference-script>Customizing Inference script</h3><p>When creating an inference model, we can specify use defined code/modules that allows us to customize the inference process.</p><p>For example, here is a barebones inference script which we will call <code>inference.py</code>:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>sagemaker_huggingface_inference_toolkit.transformers_utils</span> <span class=kn>import</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=n>_is_gpu_available</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>get_pipeline</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>sagemaker_huggingface_inference_toolkit</span> <span class=kn>import</span> <span class=n>decoder_encoder</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>if</span> <span class=n>_is_gpu_available</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>  <span class=n>device</span> <span class=o>=</span> <span class=nb>int</span><span class=p>(</span><span class=bp>self</span><span class=o>.</span><span class=n>context</span><span class=o>.</span><span class=n>system_properties</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s2>&#34;gpu_id&#34;</span><span class=p>))</span>
+</span></span><span class=line><span class=cl><span class=k>else</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>  <span class=n>device</span> <span class=o>=</span> <span class=o>-</span><span class=mi>1</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>load_fn</span><span class=p>(</span><span class=n>model_dir</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>  <span class=c1># gets pipeline from task tag</span>
+</span></span><span class=line><span class=cl>  <span class=n>hf_pipeline</span> <span class=o>=</span> <span class=n>get_pipeline</span><span class=p>(</span><span class=n>task</span><span class=o>=</span><span class=s1>&#39;sentiment-analysis&#39;</span><span class=p>,</span> 
+</span></span><span class=line><span class=cl>                             <span class=n>model_dir</span><span class=o>=</span><span class=n>model_dir</span><span class=p>,</span> 
+</span></span><span class=line><span class=cl>                             <span class=n>device</span><span class=o>=</span><span class=n>device</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=n>hf_pipeline</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>transform_fn</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>model</span><span class=p>,</span> <span class=n>input_data</span><span class=p>,</span> <span class=n>content_type</span><span class=p>,</span> <span class=n>accept</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>  <span class=n>processed_data</span> <span class=o>=</span> <span class=n>decoder_encoder</span><span class=o>.</span><span class=n>decode</span><span class=p>(</span><span class=n>input_data</span><span class=p>,</span> <span class=n>content_type</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=n>predictions</span> <span class=o>=</span> <span class=n>model</span><span class=p>(</span><span class=n>processed_data</span><span class=p>[</span><span class=s1>&#39;my_custom_input&#39;</span><span class=p>])</span> <span class=c1># Our custom input format</span>
+</span></span><span class=line><span class=cl>  <span class=n>response</span> <span class=o>=</span> <span class=n>decoder_encoder</span><span class=o>.</span><span class=n>encode</span><span class=p>(</span><span class=n>predictions</span><span class=p>,</span> <span class=n>accept</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=n>response</span>
+</span></span></code></pre></td></tr></table></div></div><p>To use this script, we need to place it under a source directory along with any additional files required.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>|- source/
+</span></span><span class=line><span class=cl>  |- inference.py
+</span></span><span class=line><span class=cl>  |- requirements.txt 
+</span></span></code></pre></td></tr></table></div></div><p>Next when we create the <code>Hugging FaceModel</code> we need to set the <code>source_dir</code> and <code>entry_point</code> attribute. These attributes are derived from the <a href=https://sagemaker.readthedocs.io/en/stable/api/training/estimators.html#sagemaker.estimator.Framework>Sagemaker Estimator Framework</a> so they are available under all Frameworks.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>huggingface_model</span> <span class=o>=</span> <span class=n>HuggingFaceModel</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>   <span class=n>model_data</span><span class=o>=</span><span class=s2>&#34;s3://models/my-bert-model/model.tar.gz&#34;</span><span class=p>,</span> 
+</span></span><span class=line><span class=cl>   <span class=n>source_dir</span><span class=o>=</span><span class=s1>&#39;source&#39;</span><span class=p>,</span>  <span class=c1>#relative path to current directory of calling script</span>
+</span></span><span class=line><span class=cl>   <span class=n>entry_point</span><span class=o>=</span><span class=s1>&#39;inference.py&#39;</span> <span class=c1>#name of the inference script under the source dir</span>
+</span></span><span class=line><span class=cl>   <span class=n>role</span><span class=o>=</span><span class=n>role</span><span class=p>,</span> 
+</span></span><span class=line><span class=cl>   <span class=n>transformers_version</span><span class=o>=</span><span class=s2>&#34;4.6&#34;</span><span class=p>,</span> 
+</span></span><span class=line><span class=cl>   <span class=n>pytorch_version</span><span class=o>=</span><span class=s2>&#34;1.7&#34;</span><span class=p>,</span> 
+</span></span><span class=line><span class=cl>   <span class=n>py_version</span><span class=o>=</span><span class=s1>&#39;py36&#39;</span><span class=p>,</span> 
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>This has the effect of setting the environment variables <code>SAGEMAKER_SUBMIT_DIRECTORY</code> to <code>source</code> and <code>SAGEMAKER_PROGRAM</code> to <code>inference.py</code> on the inference model. The inference model also has the files packaged with the following directory structure:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>model.tar.gz/
+</span></span><span class=line><span class=cl>|- pytroch_model.bin
+</span></span><span class=line><span class=cl>|- ....
+</span></span><span class=line><span class=cl>|- code/
+</span></span><span class=line><span class=cl>  |- inference.py
+</span></span><span class=line><span class=cl>  |- requirements.txt 
+</span></span></code></pre></td></tr></table></div></div><p>Now when we deploy the model, we can pass custom inputs to it.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=c1># deploy model to SageMaker Inference</span>
+</span></span><span class=line><span class=cl><span class=n>predictor</span> <span class=o>=</span> <span class=n>huggingface_model</span><span class=o>.</span><span class=n>deploy</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>   <span class=n>initial_instance_count</span><span class=o>=</span><span class=mi>1</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>   <span class=n>instance_type</span><span class=o>=</span><span class=s2>&#34;ml.m5.xlarge&#34;</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># example request. </span>
+</span></span><span class=line><span class=cl><span class=n>data</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>   <span class=s2>&#34;my_custom_input&#34;</span><span class=p>:</span> <span class=s2>&#34;The Hugging Face Transformers library is amazing&#34;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># request</span>
+</span></span><span class=line><span class=cl><span class=n>predictor</span><span class=o>.</span><span class=n>predict</span><span class=p>(</span><span class=n>data</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>For further instructions on how to customize inference, refer to <a href=https://github.com/aws/sagemaker-huggingface-inference-toolkit#%EF%B8%8F-environment-variables>this</a></p><h1 id=additional-resources>Additional resources</h1><p>To learn more, you can refer to:</p><ul><li><a href=https://huggingface.co/transformers/philosophy.html>Philosophy of Hugging Face transformers library</a></li><li><a href=https://huggingface.co/transformers/notebooks.html>Sample Hugging Face Transformers Notebooks</a></li><li><a href=https://huggingface.co/docs/sagemaker/main>Hugging Face on Amazon Sagemaker</a></li></ul></div><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
+<span class=item-content>tmzh</span></p><p class=copyright-item><span class=item-title>LastMod</span>
+<span class=item-content>2021-09-16</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/aws/>aws</a>
+<a href=/tags/huggingface/>huggingface</a>
+<a href=/tags/transformers/>transformers</a></div><nav class=post-nav><a class=prev href=/post/2022-03-07-solvers-for-the-wordle-game-evaluation-of-different-strategies/><i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">Solvers for the Wordle game - Evaluation of strategies</span>
+<span class="prev-text nav-mobile">Prev</span></a>
+<a class=next href=/post/2021-03-26-previewing-command-line-json-output-using-firefox/><span class="next-text nav-default">Previewing command line JSON output using firefox</span>
+<span class="next-text nav-mobile">Next</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div></div></main><footer id=footer class=footer><div class=social-links><a href=https://github.com/tmzh/tmzh.github.io class="iconfont icon-github" title=github></a>
+<a href=https://tmzh.github.io/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>Powered by <a class=hexo-link href=https://gohugo.io>Hugo</a></span>
+<span class=division>|</span>
+<span class=theme-info>Theme -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span>
+<span class=copyright-year>&copy;
+2017 -
+2022<span class=heart><i class="iconfont icon-heart"></i></span><span>tmzh</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js></script></body></html>

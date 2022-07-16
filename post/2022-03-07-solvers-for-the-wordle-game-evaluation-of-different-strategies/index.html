@@ -1,0 +1,228 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Solvers for the Wordle game - Evaluation of strategies - Ephemeral Dance Of Electrons</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="tmzh"><meta name=description content="Wordle is a web-based word game which has become incredibly popular during the pandemic. It became so popular over a while that it was even bought by New York times for a significant sum and is currently hosted there. The game is a lot of fun to solve manually, but I am also interested in solving this computationally. This is my attempt at coming up with a solution strategy for the game.
+"><meta name=keywords content="blog,code,recreational"><meta name=generator content="Hugo 0.101.0 with theme even"><link rel=canonical href=https://tmzh.github.io/post/2022-03-07-solvers-for-the-wordle-game-evaluation-of-different-strategies/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet><meta property="og:title" content="Solvers for the Wordle game - Evaluation of strategies"><meta property="og:description" content="Wordle is a web-based word game which has become incredibly popular during the pandemic. It became so popular over a while that it was even bought by New York times for a significant sum and is currently hosted there. The game is a lot of fun to solve manually, but I am also interested in solving this computationally. This is my attempt at coming up with a solution strategy for the game."><meta property="og:type" content="article"><meta property="og:url" content="https://tmzh.github.io/post/2022-03-07-solvers-for-the-wordle-game-evaluation-of-different-strategies/"><meta property="article:section" content="post"><meta property="article:published_time" content="2022-03-07T12:00:00+00:00"><meta property="article:modified_time" content="2022-03-07T12:00:00+00:00"><meta itemprop=name content="Solvers for the Wordle game - Evaluation of strategies"><meta itemprop=description content="Wordle is a web-based word game which has become incredibly popular during the pandemic. It became so popular over a while that it was even bought by New York times for a significant sum and is currently hosted there. The game is a lot of fun to solve manually, but I am also interested in solving this computationally. This is my attempt at coming up with a solution strategy for the game."><meta itemprop=datePublished content="2022-03-07T12:00:00+00:00"><meta itemprop=dateModified content="2022-03-07T12:00:00+00:00"><meta itemprop=wordCount content="1500"><meta itemprop=keywords content="games,puzzle,entropy,"><meta name=twitter:card content="summary"><meta name=twitter:title content="Solvers for the Wordle game - Evaluation of strategies"><meta name=twitter:description content="Wordle is a web-based word game which has become incredibly popular during the pandemic. It became so popular over a while that it was even bought by New York times for a significant sum and is currently hosted there. The game is a lot of fun to solve manually, but I am also interested in solving this computationally. This is my attempt at coming up with a solution strategy for the game."><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>Ephemeral Dance Of Electrons</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>Ephemeral Dance Of Electrons</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Solvers for the Wordle game - Evaluation of strategies</h1><div class=post-meta><span class=post-time>2022-03-07</span><div class=post-category><a href=/categories/solver/>solver</a></div></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>Contents</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><a href=#the-game>The game</a><ul><li><a href=#base-solution>Base solution</a><ul><li><a href=#character-frequency>Character frequency</a></li></ul></li><li><a href=#random-explore>Random Explore</a></li><li><a href=#maximum-entropy>Maximum Entropy</a></li><li><a href=#conclusion>Conclusion</a></li><li><a href=#further-references>Further references</a></li></ul></li></ul></nav></div></div><div class=post-content><p>Wordle is a web-based word game which has become incredibly popular during the pandemic. It became so popular over a while that it was even bought by New York times for a significant sum and is currently <a href=https://www.nytimes.com/games/wordle/index.html>hosted</a> there. The game is a lot of fun to solve manually, but I am also interested in solving this computationally. This is my attempt at coming up with a solution strategy for the game.</p><h1 id=the-game>The game</h1><p>The game is about guessing a five-letter word which changes every day. You get six tries to get it right. After every guess, the game tells you whether any of your letters are in the secret word and whether they are in the correct place.</p><p>My initial attempts involved getting 5-letter words from a well-known corpus like NLTK. But it turns out that wordle uses a two smaller dictionaries which can be extracted from Javascript. The challenges are from the first dictionary which is a smaller one consisting of more familiar words. The second word list is a larger one, which consists of words that are accepted as guesses. Using a dictionary may sound like cheating, but I just wanted explore the algorithm and math behind solver for the game.</p><h2 id=base-solution>Base solution</h2><p>The game is very similar to Master Mind game (which in turn is similar to even older game Bulls and Cow). As a base solution we can use Donald Knuth&rsquo;s Master Mind algorithm. The algorithm works as follows:</p><ol><li>Create a set of candidates</li><li>Play an initial guess from this list and get the response</li><li>If the response is all green (<code>ggggg</code>) game is won</li><li>Otherwise, filter the candidate list to contain only those words that would give the response that we got. For example, if we guessed <code>ether</code> and got a response <code>rgggg</code> then we can reduce our candidate space to [<code>other</code>, <code>ither</code>]</li><li>Use a scoring strategy to choose the next best guess and repeat</li></ol><p>Here is an abstract python implementation of parts of this algorithm:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>color_remaining</span><span class=p>(</span><span class=n>c</span><span class=p>,</span> <span class=n>index</span><span class=p>,</span> <span class=n>pattern</span><span class=p>,</span> <span class=n>count</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>count</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=n>c</span><span class=p>,</span> <span class=mi>0</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=n>pattern</span><span class=p>[</span><span class=n>index</span><span class=p>]</span> <span class=o>=</span> <span class=s1>&#39;y&#39;</span>
+</span></span><span class=line><span class=cl>        <span class=n>count</span><span class=p>[</span><span class=n>c</span><span class=p>]</span> <span class=o>-=</span> <span class=mi>1</span>
+</span></span><span class=line><span class=cl>    <span class=k>else</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>pattern</span><span class=p>[</span><span class=n>index</span><span class=p>]</span> <span class=o>=</span> <span class=s1>&#39;r&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>compare</span><span class=p>(</span><span class=n>this</span><span class=p>,</span> <span class=n>other</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=n>this_count</span><span class=p>,</span> <span class=n>other_count</span> <span class=o>=</span> <span class=n>Counter</span><span class=p>(</span><span class=n>this</span><span class=p>),</span> <span class=n>Counter</span><span class=p>(</span><span class=n>other</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>this_matches</span><span class=p>,</span> <span class=n>other_matches</span> <span class=o>=</span> <span class=p>[</span><span class=kc>None</span><span class=p>]</span> <span class=o>*</span> <span class=nb>len</span><span class=p>(</span><span class=n>this</span><span class=p>),</span> <span class=p>[</span><span class=kc>None</span><span class=p>]</span> <span class=o>*</span> <span class=nb>len</span><span class=p>(</span><span class=n>other</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>index</span><span class=p>,</span> <span class=n>this_char</span><span class=p>,</span> <span class=n>other_char</span> <span class=ow>in</span> <span class=nb>zip</span><span class=p>(</span><span class=nb>range</span><span class=p>(</span><span class=mi>5</span><span class=p>),</span> <span class=n>other</span><span class=p>,</span> <span class=n>this</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=n>this_char</span> <span class=o>==</span> <span class=n>other_char</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>other_matches</span><span class=p>[</span><span class=n>index</span><span class=p>]</span> <span class=o>=</span> <span class=n>this_matches</span><span class=p>[</span><span class=n>index</span><span class=p>]</span> <span class=o>=</span> <span class=s1>&#39;g&#39;</span>
+</span></span><span class=line><span class=cl>            <span class=n>this_count</span><span class=p>[</span><span class=n>other_char</span><span class=p>]</span> <span class=o>-=</span> <span class=mi>1</span>
+</span></span><span class=line><span class=cl>            <span class=n>other_count</span><span class=p>[</span><span class=n>this_char</span><span class=p>]</span> <span class=o>-=</span> <span class=mi>1</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>index</span><span class=p>,</span> <span class=n>this_char</span><span class=p>,</span> <span class=n>other_char</span> <span class=ow>in</span> <span class=nb>zip</span><span class=p>(</span><span class=nb>range</span><span class=p>(</span><span class=mi>5</span><span class=p>),</span> <span class=n>this</span><span class=p>,</span> <span class=n>other</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=ow>not</span> <span class=n>this_matches</span><span class=p>[</span><span class=n>index</span><span class=p>]:</span>
+</span></span><span class=line><span class=cl>            <span class=n>color_remaining</span><span class=p>(</span><span class=n>this_char</span><span class=p>,</span> <span class=n>index</span><span class=p>,</span> <span class=n>this_matches</span><span class=p>,</span> <span class=n>other_count</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=n>color_remaining</span><span class=p>(</span><span class=n>other_char</span><span class=p>,</span> <span class=n>index</span><span class=p>,</span> <span class=n>other_matches</span><span class=p>,</span> <span class=n>this_count</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=s1>&#39;&#39;</span><span class=o>.</span><span class=n>join</span><span class=p>(</span><span class=n>this_matches</span><span class=p>),</span> <span class=s1>&#39;&#39;</span><span class=o>.</span><span class=n>join</span><span class=p>(</span><span class=n>other_matches</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>word_matches_pattern</span><span class=p>(</span><span class=n>word</span><span class=p>,</span> <span class=n>guess</span><span class=p>,</span> <span class=n>pattern</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>compare</span><span class=p>(</span><span class=n>guess</span><span class=p>,</span> <span class=n>word</span><span class=p>)[</span><span class=mi>0</span><span class=p>]</span> <span class=o>==</span> <span class=n>pattern</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>Solver</span><span class=p>(</span><span class=n>ABC</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=fm>__init__</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>word_list</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=bp>self</span><span class=o>.</span><span class=n>word_list</span> <span class=o>=</span> <span class=n>word_list</span>
+</span></span><span class=line><span class=cl>        <span class=bp>self</span><span class=o>.</span><span class=n>first_word</span> <span class=o>=</span> <span class=bp>self</span><span class=o>.</span><span class=n>top_word</span><span class=p>(</span><span class=n>word_list</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>top_word</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>words</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=k>pass</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>next_guess</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>words</span><span class=p>,</span> <span class=n>prev_guess</span><span class=o>=</span><span class=kc>None</span><span class=p>,</span> <span class=n>prev_result</span><span class=o>=</span><span class=kc>None</span><span class=p>,</span> <span class=n>explore</span><span class=o>=</span><span class=kc>False</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=ow>not</span> <span class=n>prev_guess</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=bp>self</span><span class=o>.</span><span class=n>first_word</span><span class=p>,</span> <span class=n>words</span>
+</span></span><span class=line><span class=cl>        <span class=n>words</span> <span class=o>=</span> <span class=nb>list</span><span class=p>(</span><span class=nb>filter</span><span class=p>(</span><span class=k>lambda</span> <span class=n>word</span><span class=p>:</span> <span class=n>word_matches_pattern</span><span class=p>(</span><span class=n>word</span><span class=p>,</span> <span class=n>prev_guess</span><span class=p>,</span> <span class=n>prev_result</span><span class=p>),</span> <span class=n>words</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=bp>self</span><span class=o>.</span><span class=n>top_word</span><span class=p>(</span><span class=n>words</span><span class=p>),</span> <span class=n>words</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nd>@abstractmethod</span>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>score</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>word</span><span class=p>,</span> <span class=n>words</span><span class=p>,</span> <span class=n>char_counts</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=k>pass</span>
+</span></span></code></pre></td></tr></table></div></div><p>Now we need to choose an ideal scoring strategy that would allow us to make first guess as well as choose the best candidates among the remaining after every guess. This is where we can trial a few approaches and see which one gives the best result.</p><h3 id=character-frequency>Character frequency</h3><p>As a first pass, we can prioritize guessing the words containing most common characters. This should increase our odds of landing on the correct word. For example, here is the frequency of characters appearing in all 5 letter words in the dictionary:</p><p><img src=/images/2022-03-07-char_frequency.png alt="Char frequency in 5 letter words"></p><p>By this criteria, <code>soare</code> is the ideal first guess as it is made up of the most frequent characters. Python implementation of this strategy would look like this:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>collections</span> <span class=kn>import</span> <span class=n>Counter</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>top_word</span><span class=p>(</span><span class=n>words</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=n>char_counts</span> <span class=o>=</span> <span class=n>Counter</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>w</span> <span class=ow>in</span> <span class=n>words</span><span class=p>:</span> <span class=n>char_counts</span><span class=o>.</span><span class=n>update</span><span class=p>(</span><span class=n>w</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>scores</span> <span class=o>=</span> <span class=p>[(</span><span class=n>score</span><span class=p>(</span><span class=n>word</span><span class=p>,</span> <span class=n>words</span><span class=p>,</span> <span class=n>char_counts</span><span class=p>),</span> <span class=n>word</span><span class=p>)</span> <span class=k>for</span> <span class=n>word</span> <span class=ow>in</span> <span class=n>words</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=n>scores</span><span class=o>.</span><span class=n>sort</span><span class=p>(</span><span class=n>reverse</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>scores</span><span class=p>[</span><span class=mi>0</span><span class=p>][</span><span class=mi>1</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>score</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>word</span><span class=p>,</span> <span class=n>counter</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=nb>sum</span><span class=p>(</span><span class=n>counter</span><span class=p>[</span><span class=n>c</span><span class=p>]</span> <span class=k>for</span> <span class=n>c</span> <span class=ow>in</span> <span class=nb>set</span><span class=p>(</span><span class=n>word</span><span class=p>))</span>
+</span></span></code></pre></td></tr></table></div></div><p>True enough, it works well most of the time. Almost half the time, it only takes 3 attempts to guess the word correctly. And 9 out of 10 times we are able to guess within 6 attempts.</p><p><img src=/images/2022-03-07-frequency_count.png alt="Most frequent characters strategy"></p><p>But we can do better. If we look at the words that took ong to solve, there are multiple candidates which are too similar to them. For example, it takes 13 attempts to predict the word <code>wares</code></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>time_solve(&#39;wares&#39;, word_list)
+</span></span><span class=line><span class=cl># Next guess, remaining word list
+</span></span><span class=line><span class=cl>soare 12972
+</span></span><span class=line><span class=cl>aesir 61
+</span></span><span class=line><span class=cl>rales 32
+</span></span><span class=line><span class=cl>tares 12
+</span></span><span class=line><span class=cl>nares 11
+</span></span><span class=line><span class=cl>dares 10
+</span></span><span class=line><span class=cl>cares 9
+</span></span><span class=line><span class=cl>pares 8
+</span></span><span class=line><span class=cl>mares 7
+</span></span><span class=line><span class=cl>hares 6
+</span></span><span class=line><span class=cl>gares 5
+</span></span><span class=line><span class=cl>bares 4
+</span></span><span class=line><span class=cl>fares 3
+</span></span><span class=line><span class=cl>wares 2
+</span></span></code></pre></td></tr></table></div></div><p>The problem here is that once we reach the 3rd guess <code>rales</code>, there are 13 more possibilities for the first char. The only way to find the right answer is to try all 13 possibilities.</p><h2 id=random-explore>Random Explore</h2><p>One way to mitigate this scenario is if we can sacrifice first few attempts in trying to &ldquo;explore&rdquo; the solution space to learn more about valid and invalid characters. This way we are able to zero in on the right answer much quicker. In a way this is like exploration-exploitation strategies seen in reinforcement learning. After exploration, we can revert to frequency based scoring for exploitation.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>random</span>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>RandomExploreExploit</span><span class=p>(</span><span class=n>Solver</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>next_guess</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>words</span><span class=p>,</span> <span class=n>prev_guess</span><span class=o>=</span><span class=kc>None</span><span class=p>,</span> <span class=n>prev_result</span><span class=o>=</span><span class=kc>None</span><span class=p>,</span> <span class=n>explore</span><span class=o>=</span><span class=kc>False</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=n>words</span> <span class=o>=</span> <span class=nb>list</span><span class=p>(</span><span class=nb>filter</span><span class=p>(</span><span class=k>lambda</span> <span class=n>word</span><span class=p>:</span> <span class=n>word_matches_pattern</span><span class=p>(</span><span class=n>word</span><span class=p>,</span> <span class=n>prev_guess</span><span class=p>,</span> <span class=n>prev_result</span><span class=p>),</span> <span class=n>words</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=n>explore</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>random</span><span class=o>.</span><span class=n>shuffle</span><span class=p>(</span><span class=n>words</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=k>return</span> <span class=n>words</span><span class=p>[</span><span class=mi>0</span><span class=p>],</span> <span class=n>words</span><span class=p>[</span><span class=mi>1</span><span class=p>:]</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=bp>self</span><span class=o>.</span><span class=n>top_word</span><span class=p>(</span><span class=n>words</span><span class=p>),</span> <span class=n>words</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>score</span><span class=p>(</span><span class=bp>self</span><span class=p>,</span> <span class=n>word</span><span class=p>,</span> <span class=n>words</span><span class=p>,</span> <span class=n>char_counts</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=nb>sum</span><span class=p>(</span><span class=n>char_counts</span><span class=p>[</span><span class=n>c</span><span class=p>]</span> <span class=k>for</span> <span class=n>c</span> <span class=ow>in</span> <span class=n>word</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p><img src=/images/2022-03-07-random_explore.png alt="Random Explore"></p><p>Surprisingly this stochastic approach works better than the first method at a lower cost (we don&rsquo;t do any scoring for the first 3 attempts). We are able to win the game 93% of the time. More specifically, my run failed 154 out of 2135 challenges. Can we do better?</p><h2 id=maximum-entropy>Maximum Entropy</h2><p>In the previous strategy, we kind of adopted an exploration-exploitation strategy which is normally used for problems whose probability distribution is not known apriori. But in this case, we can do better. Since the word list is already known, we can calculate the probability distribution. So how can we use this probability information to make a good choice?</p><p>One thing to note from Master Mind algorithm is that at every turn, we also learn more information about the target word. We can choose words that gives us more information about the target there by reducing our solution space at each turn.</p><p>As we are talking about expected information available from a probability distribution, we can use Claude Shannon&rsquo;s defintion of information entropy to assign a score. Here is how it is calculated:</p><ol><li>Let <em>n</em> be the number of words in the solution space</li><li>Group the words into <em>k</em> partitions based on the pattern it generates when compared with our guess word i.e, if our guess word is <code>east</code> group <code>['fast', 'last']</code> into same partition as they would output a pattern <code>rggg</code> with our guess word.</li><li>Let <em>k<sub>i</sub></em> be the size of the <em>i<sup>th</sup></em> partition after the current guess.</li><li>Then the Shannon entropy score of the guess word is <em>sum{p<sub>i</sub> * -log(p<sub>i</sub>)}</em> where <em>p<sub>i</sub> = i / n</em></li></ol><p>Here is the Python code to calculate entropy:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>generate_comparison_dict</span><span class=p>(</span><span class=n>word_list</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=n>df</span> <span class=o>=</span> <span class=n>pd</span><span class=o>.</span><span class=n>DataFrame</span><span class=p>(</span><span class=kc>None</span><span class=p>,</span> <span class=n>columns</span><span class=o>=</span><span class=n>word_list</span><span class=p>,</span> <span class=n>index</span><span class=o>=</span><span class=n>word_list</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>i</span><span class=p>,</span> <span class=n>w1</span> <span class=ow>in</span> <span class=n>tqdm</span><span class=p>(</span><span class=nb>enumerate</span><span class=p>(</span><span class=n>word_list</span><span class=p>)):</span>
+</span></span><span class=line><span class=cl>        <span class=n>df</span><span class=p>[</span><span class=n>w1</span><span class=p>][</span><span class=n>w1</span><span class=p>]</span> <span class=o>=</span> <span class=s1>&#39;g&#39;</span> <span class=o>*</span> <span class=nb>len</span><span class=p>(</span><span class=n>w1</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=n>w2</span> <span class=ow>in</span> <span class=n>word_list</span><span class=p>[</span><span class=n>i</span> <span class=o>+</span> <span class=mi>1</span><span class=p>:]:</span>
+</span></span><span class=line><span class=cl>            <span class=n>this_pattern</span><span class=p>,</span> <span class=n>other_pattern</span> <span class=o>=</span> <span class=n>compare</span><span class=p>(</span><span class=n>w1</span><span class=p>,</span> <span class=n>w2</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=n>df</span><span class=p>[</span><span class=n>w1</span><span class=p>][</span><span class=n>w2</span><span class=p>]</span> <span class=o>=</span> <span class=n>other_pattern</span>
+</span></span><span class=line><span class=cl>            <span class=n>df</span><span class=p>[</span><span class=n>w2</span><span class=p>][</span><span class=n>w1</span><span class=p>]</span> <span class=o>=</span> <span class=n>this_pattern</span>
+</span></span><span class=line><span class=cl>    <span class=k>with</span> <span class=n>pd</span><span class=o>.</span><span class=n>HDFStore</span><span class=p>(</span><span class=n>COMPARE_PATTERNS</span><span class=p>)</span> <span class=k>as</span> <span class=n>hdf</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>hdf</span><span class=o>.</span><span class=n>put</span><span class=p>(</span><span class=n>key</span><span class=o>=</span><span class=s2>&#34;df&#34;</span><span class=p>,</span> <span class=n>value</span><span class=o>=</span><span class=n>df</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>entropy_score</span><span class=p>(</span><span class=n>guess</span><span class=p>,</span> <span class=n>word_list</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>global</span> <span class=n>compare_results_df</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=ow>not</span> <span class=nb>isinstance</span><span class=p>(</span><span class=n>compare_results_df</span><span class=p>,</span> <span class=n>pd</span><span class=o>.</span><span class=n>DataFrame</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=ow>not</span> <span class=n>os</span><span class=o>.</span><span class=n>path</span><span class=o>.</span><span class=n>exists</span><span class=p>(</span><span class=n>COMPARE_PATTERNS</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>            <span class=n>generate_comparison_dict</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=n>compare_results_df</span> <span class=o>=</span> <span class=n>pd</span><span class=o>.</span><span class=n>read_hdf</span><span class=p>(</span><span class=n>COMPARE_PATTERNS</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>probs</span> <span class=o>=</span> <span class=n>compare_results_df</span><span class=o>.</span><span class=n>loc</span><span class=p>[</span><span class=n>guess</span><span class=p>][</span><span class=n>word_list</span><span class=p>]</span><span class=o>.</span><span class=n>value_counts</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>stats</span><span class=o>.</span><span class=n>entropy</span><span class=p>(</span><span class=n>probs</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>By this criteria, <code>tares</code> is the best starting word which will give us most information. And it performs way better than the above 2 strategies. Out of 2315 target words, it only fails to guess around 35 words within the first 6 attempts leading to a success rate of 98.4%. In fact 90% of the words can be guessed within the first 4 attempts.</p><p><img src=/images/2022-03-07-maximum_entropy.png alt="Maximum Entropy Strategy"></p><h2 id=conclusion>Conclusion</h2><p>Here is how the three strategies stack up next to each other. Entropy based solution is the clear winner by a mile. On the flip side, it is quite expensive to compute.</p><p><img src=/images/2022-03-07-comparison.png alt=Comparison></p><p>You can find the source code for the solver in the repo <a href=https://github.com/tmzh/wordle.git>https://github.com/tmzh/wordle.git</a></p><h2 id=further-references>Further references</h2><ol><li>The best explanation I have seen for the Information entropy forumula is from Aurélien Géron (<a href=https://youtu.be/ErfnhcEV1O8)>https://youtu.be/ErfnhcEV1O8)</a>. The concept of information entropy leads to cross entropy which is heavily used as loss function in classification methods. This video is quite short but incredible informative.</li><li>Grant Sanderson (from 3Blue1Brown) has also released an excellent video (as usual) on solving Worlde using Information theory. He goes much more in detail into the intuition behind the entropy formula.</li></ol></div><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
+<span class=item-content>tmzh</span></p><p class=copyright-item><span class=item-title>LastMod</span>
+<span class=item-content>2022-03-07</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/games/>games</a>
+<a href=/tags/puzzle/>puzzle</a>
+<a href=/tags/entropy/>entropy</a></div><nav class=post-nav><a class=next href=/post/2021-09-16-using-hugging-face-transformers-on-aws-sagemaker/><span class="next-text nav-default">Using Hugging Face Transformers on AWS Sagemaker</span>
+<span class="next-text nav-mobile">Next</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div></div></main><footer id=footer class=footer><div class=social-links><a href=https://github.com/tmzh/tmzh.github.io class="iconfont icon-github" title=github></a>
+<a href=https://tmzh.github.io/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>Powered by <a class=hexo-link href=https://gohugo.io>Hugo</a></span>
+<span class=division>|</span>
+<span class=theme-info>Theme -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span>
+<span class=copyright-year>&copy;
+2017 -
+2022<span class=heart><i class="iconfont icon-heart"></i></span><span>tmzh</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js></script></body></html>

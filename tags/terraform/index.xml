@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>terraform on Ephemeral Dance Of Electrons</title><link>https://tmzh.github.io/tags/terraform/</link><description>Recent content in terraform on Ephemeral Dance Of Electrons</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Tue, 02 Feb 2021 12:00:00 +0000</lastBuildDate><atom:link href="https://tmzh.github.io/tags/terraform/index.xml" rel="self" type="application/rss+xml"/><item><title>Writing BDD tests for Terraform Code Using Terratest</title><link>https://tmzh.github.io/post/2021-02-02-testing-terraform-code-using-terratest/</link><pubDate>Tue, 02 Feb 2021 12:00:00 +0000</pubDate><guid>https://tmzh.github.io/post/2021-02-02-testing-terraform-code-using-terratest/</guid><description>&lt;p>Terratest is a popular library for testing Terraform code. Testing Infrastructure As Code (IAC) is not as widespread as it should be. The reasons are multi-fold, ranging from developer&amp;rsquo;s attitude towards testing to the difficulty of writing unit tests because of inherent side effects of IAC. Nevertheless, testing is no less important, in particular under these scenarios:&lt;/p>
+&lt;ol>
+&lt;li>When your module gets complicated, with medium to complex behaviour logic&lt;/li>
+&lt;li>When your module makes underlying assumptions of external dependencies (such as AWS SCPs at Organization level permitting certain actions)&lt;/li>
+&lt;/ol>
+&lt;p>In this post, we will take a look at using Terratest to test Terraform code. A typical Terratest testing pattern involves:&lt;/p>
+&lt;ol>
+&lt;li>Deploying real infrastructure in real environment&lt;/li>
+&lt;li>Asserting that the deployed resources behaves as expected&lt;/li>
+&lt;li>Undeploy everything at the end of the test.&lt;/li>
+&lt;/ol>
+&lt;p>Behavior Driven Test (BDD) uses examples to describe the behavior of a system. It serves the dual purpose of testing the code and documenting it at the same time. Terratest is not a BDD testing framework, however it is possible to write BDD tests that executes Terratest code. In a later section of this post, we will see how this can be achieved using Godog which is a Go BDD testing library.&lt;/p></description></item></channel></rss>

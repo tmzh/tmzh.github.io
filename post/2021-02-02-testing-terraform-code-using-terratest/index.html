@@ -1,0 +1,691 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Writing BDD tests for Terraform Code Using Terratest - Ephemeral Dance Of Electrons</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="tmzh"><meta name=description content="Terratest is a popular library for testing Terraform code. Testing Infrastructure As Code (IAC) is not as widespread as it should be. The reasons are multi-fold, ranging from developer&amp;rsquo;s attitude towards testing to the difficulty of writing unit tests because of inherent side effects of IAC. Nevertheless, testing is no less important, in particular under these scenarios:
+When your module gets complicated, with medium to complex behaviour logic When your module makes underlying assumptions of external dependencies (such as AWS SCPs at Organization level permitting certain actions) In this post, we will take a look at using Terratest to test Terraform code. A typical Terratest testing pattern involves:
+Deploying real infrastructure in real environment Asserting that the deployed resources behaves as expected Undeploy everything at the end of the test. Behavior Driven Test (BDD) uses examples to describe the behavior of a system. It serves the dual purpose of testing the code and documenting it at the same time. Terratest is not a BDD testing framework, however it is possible to write BDD tests that executes Terratest code. In a later section of this post, we will see how this can be achieved using Godog which is a Go BDD testing library.
+"><meta name=keywords content="blog,code,recreational"><meta name=generator content="Hugo 0.101.0 with theme even"><link rel=canonical href=https://tmzh.github.io/post/2021-02-02-testing-terraform-code-using-terratest/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet><meta property="og:title" content="Writing BDD tests for Terraform Code Using Terratest"><meta property="og:description" content="Terratest is a popular library for testing Terraform code. Testing Infrastructure As Code (IAC) is not as widespread as it should be. The reasons are multi-fold, ranging from developer&rsquo;s attitude towards testing to the difficulty of writing unit tests because of inherent side effects of IAC. Nevertheless, testing is no less important, in particular under these scenarios:
+
+When your module gets complicated, with medium to complex behaviour logic
+When your module makes underlying assumptions of external dependencies (such as AWS SCPs at Organization level permitting certain actions)
+
+In this post, we will take a look at using Terratest to test Terraform code. A typical Terratest testing pattern involves:
+
+Deploying real infrastructure in real environment
+Asserting that the deployed resources behaves as expected
+Undeploy everything at the end of the test.
+
+Behavior Driven Test (BDD) uses examples to describe the behavior of a system. It serves the dual purpose of testing the code and documenting it at the same time. Terratest is not a BDD testing framework, however it is possible to write BDD tests that executes Terratest code. In a later section of this post, we will see how this can be achieved using Godog which is a Go BDD testing library."><meta property="og:type" content="article"><meta property="og:url" content="https://tmzh.github.io/post/2021-02-02-testing-terraform-code-using-terratest/"><meta property="article:section" content="post"><meta property="article:published_time" content="2021-02-02T12:00:00+00:00"><meta property="article:modified_time" content="2021-02-02T12:00:00+00:00"><meta itemprop=name content="Writing BDD tests for Terraform Code Using Terratest"><meta itemprop=description content="Terratest is a popular library for testing Terraform code. Testing Infrastructure As Code (IAC) is not as widespread as it should be. The reasons are multi-fold, ranging from developer&rsquo;s attitude towards testing to the difficulty of writing unit tests because of inherent side effects of IAC. Nevertheless, testing is no less important, in particular under these scenarios:
+
+When your module gets complicated, with medium to complex behaviour logic
+When your module makes underlying assumptions of external dependencies (such as AWS SCPs at Organization level permitting certain actions)
+
+In this post, we will take a look at using Terratest to test Terraform code. A typical Terratest testing pattern involves:
+
+Deploying real infrastructure in real environment
+Asserting that the deployed resources behaves as expected
+Undeploy everything at the end of the test.
+
+Behavior Driven Test (BDD) uses examples to describe the behavior of a system. It serves the dual purpose of testing the code and documenting it at the same time. Terratest is not a BDD testing framework, however it is possible to write BDD tests that executes Terratest code. In a later section of this post, we will see how this can be achieved using Godog which is a Go BDD testing library."><meta itemprop=datePublished content="2021-02-02T12:00:00+00:00"><meta itemprop=dateModified content="2021-02-02T12:00:00+00:00"><meta itemprop=wordCount content="2567"><meta itemprop=keywords content="terraform,iac,"><meta name=twitter:card content="summary"><meta name=twitter:title content="Writing BDD tests for Terraform Code Using Terratest"><meta name=twitter:description content="Terratest is a popular library for testing Terraform code. Testing Infrastructure As Code (IAC) is not as widespread as it should be. The reasons are multi-fold, ranging from developer&rsquo;s attitude towards testing to the difficulty of writing unit tests because of inherent side effects of IAC. Nevertheless, testing is no less important, in particular under these scenarios:
+
+When your module gets complicated, with medium to complex behaviour logic
+When your module makes underlying assumptions of external dependencies (such as AWS SCPs at Organization level permitting certain actions)
+
+In this post, we will take a look at using Terratest to test Terraform code. A typical Terratest testing pattern involves:
+
+Deploying real infrastructure in real environment
+Asserting that the deployed resources behaves as expected
+Undeploy everything at the end of the test.
+
+Behavior Driven Test (BDD) uses examples to describe the behavior of a system. It serves the dual purpose of testing the code and documenting it at the same time. Terratest is not a BDD testing framework, however it is possible to write BDD tests that executes Terratest code. In a later section of this post, we will see how this can be achieved using Godog which is a Go BDD testing library."><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>Ephemeral Dance Of Electrons</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>Ephemeral Dance Of Electrons</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Writing BDD tests for Terraform Code Using Terratest</h1><div class=post-meta><span class=post-time>2021-02-02</span><div class=post-category><a href=/categories/cloud-computing/>Cloud Computing</a></div></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>Contents</h2><div class="post-toc-content always-active"><nav id=TableOfContents><ul><li><ul><li><a href=#a-basic-test-scenario>A Basic Test Scenario</a><ul><li><a href=#terraform-code>Terraform code</a></li><li><a href=#terratest-code>Terratest code</a></li><li><a href=#testing-multiple-behaviours>Testing multiple behaviours</a></li><li><a href=#passing-other-terraform-options>Passing other terraform options</a></li></ul></li><li><a href=#bdd-testing-using-godog>BDD Testing using GoDog</a></li><li><a href=#tips-for-testing-with-terratest>Tips for testing with terratest</a><ul><li><a href=#testing-in-random-folder>Testing in random folder</a></li><li><a href=#testing-in-random-regions>Testing in random regions</a></li></ul></li></ul></li></ul></nav></div></div><div class=post-content><p>Terratest is a popular library for testing Terraform code. Testing Infrastructure As Code (IAC) is not as widespread as it should be. The reasons are multi-fold, ranging from developer&rsquo;s attitude towards testing to the difficulty of writing unit tests because of inherent side effects of IAC. Nevertheless, testing is no less important, in particular under these scenarios:</p><ol><li>When your module gets complicated, with medium to complex behaviour logic</li><li>When your module makes underlying assumptions of external dependencies (such as AWS SCPs at Organization level permitting certain actions)</li></ol><p>In this post, we will take a look at using Terratest to test Terraform code. A typical Terratest testing pattern involves:</p><ol><li>Deploying real infrastructure in real environment</li><li>Asserting that the deployed resources behaves as expected</li><li>Undeploy everything at the end of the test.</li></ol><p>Behavior Driven Test (BDD) uses examples to describe the behavior of a system. It serves the dual purpose of testing the code and documenting it at the same time. Terratest is not a BDD testing framework, however it is possible to write BDD tests that executes Terratest code. In a later section of this post, we will see how this can be achieved using Godog which is a Go BDD testing library.</p><h2 id=a-basic-test-scenario>A Basic Test Scenario</h2><h3 id=terraform-code>Terraform code</h3><p>Let us start with a simple terraform module that deploys a Hello world lambda function.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-terraform data-lang=terraform><span class=line><span class=cl><span class=nx>terraform</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=na>required_version</span> = <span class=s2>&#34;&gt;= 0.14.6&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=nx>required_providers</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=na>archive</span> = <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=na>source</span>  = <span class=s2>&#34;hashicorp/archive&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=na>version</span> = <span class=s2>&#34;1.3&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kr>
+</span></span></span><span class=line><span class=cl><span class=kr>data</span> <span class=s2>&#34;archive_file&#34;</span> <span class=s2>&#34;zip&#34;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=na>type</span>        = <span class=s2>&#34;zip&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=na>source_dir</span>  = <span class=s2>&#34;</span><span class=si>${</span><span class=nx>path</span><span class=p>.</span><span class=nb>module</span><span class=si>}</span><span class=s2>/src&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=na>output_path</span> = <span class=s2>&#34;</span><span class=si>${</span><span class=nx>path</span><span class=p>.</span><span class=nb>module</span><span class=si>}</span><span class=s2>/</span><span class=si>${</span><span class=nb>var</span><span class=p>.</span><span class=nx>function_name</span><span class=si>}</span><span class=s2>.zip&#34;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kr>
+</span></span></span><span class=line><span class=cl><span class=kr>variable</span> <span class=s2>&#34;function_name&#34;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=na>description</span> = <span class=s2>&#34;The name of the function to provision&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=na>default</span> = <span class=s2>&#34;test_lambda_function&#34;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kr>
+</span></span></span><span class=line><span class=cl><span class=kr>resource</span> <span class=s2>&#34;aws_lambda_function&#34;</span> <span class=s2>&#34;lambda&#34;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=na>filename</span>         = <span class=nb>data</span><span class=p>.</span><span class=nx>archive_file</span><span class=p>.</span><span class=nx>zip</span><span class=p>.</span><span class=nx>output_path</span>
+</span></span><span class=line><span class=cl>  <span class=na>source_code_hash</span> = <span class=nb>data</span><span class=p>.</span><span class=nx>archive_file</span><span class=p>.</span><span class=nx>zip</span><span class=p>.</span><span class=nx>output_base64sha256</span>
+</span></span><span class=line><span class=cl>  <span class=na>function_name</span>    = <span class=nb>var</span><span class=p>.</span><span class=nx>function_name</span>
+</span></span><span class=line><span class=cl>  <span class=na>role</span>             = <span class=nx>aws_iam_role</span><span class=p>.</span><span class=nx>lambda</span><span class=p>.</span><span class=nx>arn</span>
+</span></span><span class=line><span class=cl>  <span class=na>handler</span>          = <span class=s2>&#34;handler&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=na>runtime</span>          = <span class=s2>&#34;go1.x&#34;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kr>
+</span></span></span><span class=line><span class=cl><span class=kr>resource</span> <span class=s2>&#34;aws_iam_role&#34;</span> <span class=s2>&#34;lambda&#34;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=na>name</span>               = <span class=nb>var</span><span class=p>.</span><span class=nx>function_name</span>
+</span></span><span class=line><span class=cl>  <span class=na>assume_role_policy</span> = <span class=nb>data</span><span class=p>.</span><span class=nx>aws_iam_policy_document</span><span class=p>.</span><span class=nx>policy</span><span class=p>.</span><span class=nx>json</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kr>
+</span></span></span><span class=line><span class=cl><span class=kr>data</span> <span class=s2>&#34;aws_iam_policy_document&#34;</span> <span class=s2>&#34;policy&#34;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nx>statement</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=na>actions</span> = <span class=p>[</span><span class=s2>&#34;sts:AssumeRole&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=nx>principals</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=na>type</span>        = <span class=s2>&#34;Service&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=na>identifiers</span> = <span class=p>[</span><span class=s2>&#34;lambda.amazonaws.com&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kr>
+</span></span></span><span class=line><span class=cl><span class=kr>output</span> <span class=s2>&#34;lambda_function&#34;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=na>value</span> = <span class=nx>aws_lambda_function</span><span class=p>.</span><span class=nx>lambda</span><span class=p>.</span><span class=nx>id</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>Here is the lambda script that we plan to deploy. It is a slightly modified version taken from terratest <a href=https://github.com/gruntwork-io/terratest/tree/master/examples/terraform-aws-lambda-example>examples</a> repo.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-golang data-lang=golang><span class=line><span class=cl><span class=kn>package</span> <span class=nx>main</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>	<span class=s>&#34;context&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=s>&#34;fmt&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=s>&#34;github.com/aws/aws-lambda-go/lambda&#34;</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>type</span> <span class=nx>Event</span> <span class=kd>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Name</span> <span class=kt>string</span> <span class=s>`json:&#34;Name&#34;`</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>func</span> <span class=nf>HandleRequest</span><span class=p>(</span><span class=nx>ctx</span> <span class=nx>context</span><span class=p>.</span><span class=nx>Context</span><span class=p>,</span> <span class=nx>evnt</span> <span class=nx>Event</span><span class=p>)</span> <span class=p>(</span><span class=kt>string</span><span class=p>,</span> <span class=kt>error</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;Hello %s!&#34;</span><span class=p>,</span> <span class=nx>evnt</span><span class=p>.</span><span class=nx>Name</span><span class=p>),</span> <span class=kc>nil</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>func</span> <span class=nf>main</span><span class=p>()</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>lambda</span><span class=p>.</span><span class=nf>Start</span><span class=p>(</span><span class=nx>HandleRequest</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=terratest-code>Terratest code</h3><p>To test this using Terratest, we need to write tests using Go&rsquo;s built-in package <a href=https://golang.org/pkg/testing/>testing</a>. This means that we create a file ending with <code>_test.go</code> which implements test cases in a function with name <code>TestXxxx</code>. In our case, the test script is called <code>main_test.go</code> and test function is called <code>TestTerraformAwsLambdaFunction</code>. Here is the folder structure:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>📁 lambda_basic
+</span></span><span class=line><span class=cl>   ├ 📁 src
+</span></span><span class=line><span class=cl>   │   ├ 📄 handler.go
+</span></span><span class=line><span class=cl>   ├ 📁 test
+</span></span><span class=line><span class=cl>   │   ├ 📄 main_test.go
+</span></span><span class=line><span class=cl>   ├ 📄 main.tf
+</span></span></code></pre></td></tr></table></div></div><p>The content of the test case is:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-golang data-lang=golang><span class=line><span class=cl><span class=kn>package</span> <span class=nx>test</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=p>(</span>
+</span></span><span class=line><span class=cl>	<span class=s>&#34;github.com/gruntwork-io/terratest/modules/aws&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=s>&#34;github.com/gruntwork-io/terratest/modules/terraform&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=s>&#34;github.com/stretchr/testify/assert&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=s>&#34;testing&#34;</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>type</span> <span class=nx>Payload</span> <span class=kd>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>Name</span> <span class=kt>string</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>func</span> <span class=nf>TestBasicLambdaFunction</span><span class=p>(</span><span class=nx>t</span> <span class=o>*</span><span class=nx>testing</span><span class=p>.</span><span class=nx>T</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>t</span><span class=p>.</span><span class=nf>Parallel</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nx>awsRegion</span> <span class=o>:=</span> <span class=s>&#34;us-east-1&#34;</span>
+</span></span><span class=line><span class=cl>	<span class=nx>terraformOptions</span> <span class=o>:=</span> <span class=nx>terraform</span><span class=p>.</span><span class=nf>WithDefaultRetryableErrors</span><span class=p>(</span><span class=nx>t</span><span class=p>,</span> <span class=o>&amp;</span><span class=nx>terraform</span><span class=p>.</span><span class=nx>Options</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=nx>TerraformDir</span><span class=p>:</span> <span class=s>&#34;..&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>		<span class=nx>EnvVars</span><span class=p>:</span> <span class=kd>map</span><span class=p>[</span><span class=kt>string</span><span class=p>]</span><span class=kt>string</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=s>&#34;AWS_DEFAULT_REGION&#34;</span><span class=p>:</span> <span class=nx>awsRegion</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>		<span class=p>},</span>
+</span></span><span class=line><span class=cl>	<span class=p>})</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=k>defer</span> <span class=nx>terraform</span><span class=p>.</span><span class=nf>Destroy</span><span class=p>(</span><span class=nx>t</span><span class=p>,</span> <span class=nx>terraformOptions</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nx>terraform</span><span class=p>.</span><span class=nf>InitAndApply</span><span class=p>(</span><span class=nx>t</span><span class=p>,</span> <span class=nx>terraformOptions</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=nx>functionName</span> <span class=o>:=</span> <span class=nx>terraform</span><span class=p>.</span><span class=nf>Output</span><span class=p>(</span><span class=nx>t</span><span class=p>,</span> <span class=nx>terraformOptions</span><span class=p>,</span> <span class=s>&#34;lambda_function&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nx>response</span> <span class=o>:=</span> <span class=nx>aws</span><span class=p>.</span><span class=nf>InvokeFunction</span><span class=p>(</span><span class=nx>t</span><span class=p>,</span> <span class=nx>awsRegion</span><span class=p>,</span> <span class=nx>functionName</span><span class=p>,</span> <span class=nx>Payload</span><span class=p>{</span><span class=nx>Name</span><span class=p>:</span> <span class=s>&#34;World&#34;</span><span class=p>})</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nx>assert</span><span class=p>.</span><span class=nf>Equal</span><span class=p>(</span><span class=nx>t</span><span class=p>,</span> <span class=s>`&#34;Hello World!&#34;`</span><span class=p>,</span> <span class=nb>string</span><span class=p>(</span><span class=nx>response</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>To test the module, simply run <code>go test</code> command under the test directory.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>cd test
+</span></span><span class=line><span class=cl>go test -v
+</span></span></code></pre></td></tr></table></div></div><p>This performs the following steps:</p><ol><li>Setup the root directory of the terraform code. This is specified using <code>TerraformDir</code> option.</li><li>Deploy Lambda function using <code>terraform init</code> and <code>terraform apply</code> code. This is done by calling <code>terraform.InitAndApply</code> function.</li><li>Retrieve the resources that have been deployed using <code>terraform.Output</code> method. This is handy when we need to use generated attributes such as resource arn in the subsequent test statements. These attributes have to be exported using <code>terraform output</code> resource for this to work.</li><li>Terratest provisions real resources and it will cost money. To avoid incurring cost, we always follow up the test cases by a deferred call to <code>terraform.Destroy</code> method. This statement executes last after all test cases and it cleans up the test resources.</li></ol><p>If you have multiple test functions, you can run a specific test as well.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>go test -run TestBasicLambdaFunction
+</span></span></code></pre></td></tr></table></div></div><p>You can get the complete code for this scenario <a href=https://github.com/tmzh/terratest-examples/tree/main/lambda_basic>here</a></p><h3 id=testing-multiple-behaviours>Testing multiple behaviours</h3><p>Now, it is possible to test more than one test scenarios simply by adding more lines or functions for test cases. For example, we can send an erraneous input to lambda function and expect that it fails with a particular error message.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=c1>// Invoke the function, this time causing it to error and capturing the error
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>response</span><span class=p>,</span> <span class=nx>err</span> <span class=o>:=</span> <span class=nx>aws</span><span class=p>.</span><span class=nf>InvokeFunctionE</span><span class=p>(</span><span class=nx>t</span><span class=p>,</span> <span class=nx>awsRegion</span><span class=p>,</span> <span class=nx>functionName</span><span class=p>,</span> <span class=nx>ExampleFunctionPayload</span><span class=p>{</span><span class=nx>ShouldFail</span><span class=p>:</span> <span class=kc>true</span><span class=p>,</span> <span class=nx>Echo</span><span class=p>:</span> <span class=s>&#34;hi!&#34;</span><span class=p>})</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1>// Function-specific errors have their own special return
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=nx>functionError</span><span class=p>,</span> <span class=nx>ok</span> <span class=o>:=</span> <span class=nx>err</span><span class=p>.(</span><span class=o>*</span><span class=nx>aws</span><span class=p>.</span><span class=nx>FunctionError</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=nx>require</span><span class=p>.</span><span class=nf>True</span><span class=p>(</span><span class=nx>t</span><span class=p>,</span> <span class=nx>ok</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>At some point of time, adding more test cases like this is going to become unwieldy. Later we will see how to make the test cases more readable and self-documenting by writing BDD style test cases.</p><h3 id=passing-other-terraform-options>Passing other terraform options</h3><p>We can also pass custom options to the test code. For example, if we want to override the <code>function_name</code> variable, we can pass it as a Vars parameter to terraform options.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>terraformOptions := terraform.WithDefaultRetryableErrors(t, &amp;terraform.Options{
+</span></span><span class=line><span class=cl>Vars: map[string]interface{}{
+</span></span><span class=line><span class=cl>	&#34;function_name&#34;: &#34;test_lambda_function_v2&#34;,
+</span></span><span class=line><span class=cl>},
+</span></span></code></pre></td></tr></table></div></div><p>This would be same as calling <code>terraform</code> command with <code>-var</code> options. This would take <a href=https://www.terraform.io/docs/language/values/variables.html#variable-definition-precedence>precedence</a> over any variable set in terraform code. These are the available <a href=https://pkg.go.dev/github.com/gruntwork-io/terratest/modules/terraform#Options>options</a> that can be used in terratest as of the time of writing:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span> <span class=nx>Options</span> <span class=kd>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>TerraformBinary</span> <span class=kt>string</span> <span class=c1>// Name of the binary that will be used
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=nx>TerraformDir</span>    <span class=kt>string</span> <span class=c1>// The path to the folder where the Terraform code is defined.
+</span></span></span><span class=line><span class=cl><span class=c1></span>
+</span></span><span class=line><span class=cl>	<span class=c1>// The vars to pass to Terraform commands using the -var option. Note that terraform does not support passing `null`
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=c1>// as a variable value through the command line. That is, if you use `map[string]interface{}{&#34;foo&#34;: nil}` as `Vars`,
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=c1>// this will translate to the string literal `&#34;null&#34;` being assigned to the variable `foo`. However, nulls in
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=c1>// lists and maps/objects are supported. E.g., the following var will be set as expected (`{ bar = null }`:
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=c1>// map[string]interface{}{
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=c1>//     &#34;foo&#34;: map[string]interface{}{&#34;bar&#34;: nil},
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=c1>// }
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=nx>Vars</span> <span class=kd>map</span><span class=p>[</span><span class=kt>string</span><span class=p>]</span><span class=kd>interface</span><span class=p>{}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nx>VarFiles</span>                 <span class=p>[]</span><span class=kt>string</span>               <span class=c1>// The var file paths to pass to Terraform commands using -var-file option.
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=nx>Targets</span>                  <span class=p>[]</span><span class=kt>string</span>               <span class=c1>// The target resources to pass to the terraform command with -target
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=nx>Lock</span>                     <span class=kt>bool</span>                   <span class=c1>// The lock option to pass to the terraform command with -lock
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=nx>LockTimeout</span>              <span class=kt>string</span>                 <span class=c1>// The lock timeout option to pass to the terraform command with -lock-timeout
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=nx>EnvVars</span>                  <span class=kd>map</span><span class=p>[</span><span class=kt>string</span><span class=p>]</span><span class=kt>string</span>      <span class=c1>// Environment variables to set when running Terraform
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=nx>BackendConfig</span>            <span class=kd>map</span><span class=p>[</span><span class=kt>string</span><span class=p>]</span><span class=kd>interface</span><span class=p>{}</span> <span class=c1>// The vars to pass to the terraform init command for extra configuration for the backend
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=nx>RetryableTerraformErrors</span> <span class=kd>map</span><span class=p>[</span><span class=kt>string</span><span class=p>]</span><span class=kt>string</span>      <span class=c1>// If Terraform apply fails with one of these (transient) errors, retry. The keys are a regexp to match against the error and the message is what to display to a user if that error is matched.
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=nx>MaxRetries</span>               <span class=kt>int</span>                    <span class=c1>// Maximum number of times to retry errors matching RetryableTerraformErrors
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=nx>TimeBetweenRetries</span>       <span class=nx>time</span><span class=p>.</span><span class=nx>Duration</span>          <span class=c1>// The amount of time to wait between retries
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=nx>Upgrade</span>                  <span class=kt>bool</span>                   <span class=c1>// Whether the -upgrade flag of the terraform init command should be set to true or not
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=nx>NoColor</span>                  <span class=kt>bool</span>                   <span class=c1>// Whether the -no-color flag will be set for any Terraform command or not
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=nx>SshAgent</span>                 <span class=o>*</span><span class=nx>ssh</span><span class=p>.</span><span class=nx>SshAgent</span>          <span class=c1>// Overrides local SSH agent with the given in-process agent
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=nx>NoStderr</span>                 <span class=kt>bool</span>                   <span class=c1>// Disable stderr redirection
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=nx>OutputMaxLineSize</span>        <span class=kt>int</span>                    <span class=c1>// The max size of one line in stdout and stderr (in bytes)
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=nx>Logger</span>                   <span class=o>*</span><span class=nx>logger</span><span class=p>.</span><span class=nx>Logger</span>         <span class=c1>// Set a non-default logger that should be used. See the logger package for more info.
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=nx>Parallelism</span>              <span class=kt>int</span>                    <span class=c1>// Set the parallelism setting for Terraform
+</span></span></span><span class=line><span class=cl><span class=c1></span>	<span class=nx>PlanFilePath</span>             <span class=kt>string</span>                 <span class=c1>// The path to output a plan file to (for the plan command) or read one from (for the apply command)
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=bdd-testing-using-godog>BDD Testing using GoDog</h2><p>Let us add more behaviors to our Terraform code. For instance, suppose we want to want to assign an IAM role to the lambda function that grants permission to log to Cloudwatch.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-terraform data-lang=terraform><span class=line><span class=cl><span class=kr>resource</span> <span class=s2>&#34;aws_lambda_function&#34;</span> <span class=s2>&#34;lambda&#34;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=na>filename</span>         = <span class=nb>data</span><span class=p>.</span><span class=nx>archive_file</span><span class=p>.</span><span class=nx>zip</span><span class=p>.</span><span class=nx>output_path</span>
+</span></span><span class=line><span class=cl>  <span class=na>source_code_hash</span> = <span class=nb>data</span><span class=p>.</span><span class=nx>archive_file</span><span class=p>.</span><span class=nx>zip</span><span class=p>.</span><span class=nx>output_base64sha256</span>
+</span></span><span class=line><span class=cl>  <span class=na>function_name</span>    = <span class=nb>var</span><span class=p>.</span><span class=nx>function_name</span>
+</span></span><span class=line><span class=cl>  <span class=na>role</span>             = <span class=nx>aws_iam_role</span><span class=p>.</span><span class=nx>lambda</span><span class=p>.</span><span class=nx>arn</span>
+</span></span><span class=line><span class=cl>  <span class=na>handler</span>          = <span class=s2>&#34;handler&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=na>runtime</span>          = <span class=s2>&#34;go1.x&#34;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kr>
+</span></span></span><span class=line><span class=cl><span class=kr>resource</span> <span class=s2>&#34;aws_iam_role&#34;</span> <span class=s2>&#34;lambda&#34;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=na>name</span>               = <span class=nb>var</span><span class=p>.</span><span class=nx>function_name</span>
+</span></span><span class=line><span class=cl>  <span class=na>assume_role_policy</span> = <span class=nb>data</span><span class=p>.</span><span class=nx>aws_iam_policy_document</span><span class=p>.</span><span class=nx>policy</span><span class=p>.</span><span class=nx>json</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kr>
+</span></span></span><span class=line><span class=cl><span class=kr>data</span> <span class=s2>&#34;aws_iam_policy_document&#34;</span> <span class=s2>&#34;policy&#34;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nx>statement</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=na>actions</span> = <span class=p>[</span><span class=s2>&#34;sts:AssumeRole&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=nx>principals</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=na>type</span>        = <span class=s2>&#34;Service&#34;</span>
+</span></span><span class=line><span class=cl>      <span class=na>identifiers</span> = <span class=p>[</span><span class=s2>&#34;lambda.amazonaws.com&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span><span class=c1>
+</span></span></span><span class=line><span class=cl><span class=c1>
+</span></span></span><span class=line><span class=cl><span class=c1># See also the following AWS managed policy: AWSLambdaBasicExecutionRole
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kr>resource</span> <span class=s2>&#34;aws_iam_policy&#34;</span> <span class=s2>&#34;lambda_logging&#34;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=na>name</span>        = <span class=s2>&#34;lambda_logging&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=na>path</span>        = <span class=s2>&#34;/&#34;</span>
+</span></span><span class=line><span class=cl>  <span class=na>description</span> = <span class=s2>&#34;IAM policy for logging from a lambda&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=na>policy</span> = <span class=o>&lt;&lt;EOF</span><span class=s>
+</span></span></span><span class=line><span class=cl><span class=s>{
+</span></span></span><span class=line><span class=cl><span class=s>  &#34;Version&#34;: &#34;2012-10-17&#34;,
+</span></span></span><span class=line><span class=cl><span class=s>  &#34;Statement&#34;: [
+</span></span></span><span class=line><span class=cl><span class=s>    {
+</span></span></span><span class=line><span class=cl><span class=s>      &#34;Action&#34;: [
+</span></span></span><span class=line><span class=cl><span class=s>        &#34;logs:CreateLogGroup&#34;,
+</span></span></span><span class=line><span class=cl><span class=s>        &#34;logs:CreateLogStream&#34;,
+</span></span></span><span class=line><span class=cl><span class=s>        &#34;logs:PutLogEvents&#34;
+</span></span></span><span class=line><span class=cl><span class=s>      ],
+</span></span></span><span class=line><span class=cl><span class=s>      &#34;Resource&#34;: &#34;arn:aws:logs:*:*:*&#34;,
+</span></span></span><span class=line><span class=cl><span class=s>      &#34;Effect&#34;: &#34;Allow&#34;
+</span></span></span><span class=line><span class=cl><span class=s>    }
+</span></span></span><span class=line><span class=cl><span class=s>  ]
+</span></span></span><span class=line><span class=cl><span class=s>}
+</span></span></span><span class=line><span class=cl><span class=s></span><span class=o>EOF</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=kr>
+</span></span></span><span class=line><span class=cl><span class=kr>resource</span> <span class=s2>&#34;aws_iam_role_policy_attachment&#34;</span> <span class=s2>&#34;lambda_logs&#34;</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=na>role</span>       = <span class=nx>aws_iam_role</span><span class=p>.</span><span class=nx>lambda</span><span class=p>.</span><span class=nx>name</span>
+</span></span><span class=line><span class=cl>  <span class=na>policy_arn</span> = <span class=nx>aws_iam_policy</span><span class=p>.</span><span class=nx>lambda_logging</span><span class=p>.</span><span class=nx>arn</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>Now, when we deploy this, not only do we need to assert that all resources are deployed properly (Lambda function, IAM role etc.,) but we also need to assert that the Lambda function can send logs to Cloudwatch. This is where BDD tests can be useful.</p><p>First we need to specify our expected behavior using a gherkin Feature file. Create a file called <code>features/Smoke.feature</code></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-gherkin data-lang=gherkin><span class=line><span class=cl><span class=k>Feature:</span><span class=nf> Simple test to confirm lambda function behavior
+</span></span></span><span class=line><span class=cl><span class=nf>	Confirms that given a valid terraform variable
+</span></span></span><span class=line><span class=cl><span class=nf>	Lambda resources are deployed
+</span></span></span><span class=line><span class=cl><span class=nf>	The Lambda function executes as intended
+</span></span></span><span class=line><span class=cl><span class=nf>	</span><span class=k>Scenario:</span><span class=nf> Deploy a Lambda function
+</span></span></span><span class=line><span class=cl><span class=nf></span><span class=k>		Given </span><span class=nf>Terraform code is deployed with these variables:
+</span></span></span><span class=line><span class=cl><span class=nf></span><span class=k>			|</span><span class=s>function_name</span><span class=k> |</span><span class=s> random_name</span><span class=k>|</span><span class=s>
+</span></span></span><span class=line><span class=cl><span class=s>		Then For given inputs Lambda function output is as expected:</span><span class=k>
+</span></span></span><span class=line><span class=cl><span class=k>			|</span><span class=s>world</span><span class=k> |</span><span class=s> &#34;Hello world!&#34;</span><span class=k>|</span><span class=s>
+</span></span></span><span class=line><span class=cl><span class=s>		Then Cloudwatch log stream is generated
+</span></span></span></code></pre></td></tr></table></div></div><p>To test this, we will use <a href=https://github.com/cucumber/godog>godog</a> BDD framework for Golang. Let us create a Godog test function and call it <code>bdd_test.go</code>.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=kd>type</span> <span class=nx>godogFeaturesScenario</span> <span class=kd>struct</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>testing</span>          <span class=o>*</span><span class=nx>testing</span><span class=p>.</span><span class=nx>T</span>
+</span></span><span class=line><span class=cl>	<span class=nx>terraformOptions</span> <span class=o>*</span><span class=nx>terraform</span><span class=p>.</span><span class=nx>Options</span>
+</span></span><span class=line><span class=cl>	<span class=nx>stepValues</span>       <span class=kd>map</span><span class=p>[</span><span class=kt>string</span><span class=p>]</span><span class=kt>string</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>func</span> <span class=nf>TestLambdaFunctionBDD</span><span class=p>(</span><span class=nx>t</span> <span class=o>*</span><span class=nx>testing</span><span class=p>.</span><span class=nx>T</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>t</span><span class=p>.</span><span class=nf>Parallel</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nx>opts</span> <span class=o>:=</span> <span class=nx>godog</span><span class=p>.</span><span class=nx>Options</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=nx>Format</span><span class=p>:</span>    <span class=s>&#34;progress&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>		<span class=nx>Paths</span><span class=p>:</span>     <span class=p>[]</span><span class=kt>string</span><span class=p>{</span><span class=s>&#34;features&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>		<span class=nx>Randomize</span><span class=p>:</span> <span class=nx>time</span><span class=p>.</span><span class=nf>Now</span><span class=p>().</span><span class=nf>UTC</span><span class=p>().</span><span class=nf>UnixNano</span><span class=p>(),</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nx>o</span> <span class=o>:=</span> <span class=o>&amp;</span><span class=nx>godogFeaturesScenario</span><span class=p>{}</span>
+</span></span><span class=line><span class=cl>	<span class=nx>o</span><span class=p>.</span><span class=nx>testing</span> <span class=p>=</span> <span class=nx>t</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nx>godog</span><span class=p>.</span><span class=nx>TestSuite</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=nx>Name</span><span class=p>:</span>                 <span class=s>&#34;LambdaTest&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>		<span class=nx>TestSuiteInitializer</span><span class=p>:</span> <span class=nx>InitializeTestSuite</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>		<span class=nx>ScenarioInitializer</span><span class=p>:</span>  <span class=nx>o</span><span class=p>.</span><span class=nx>InitializeScenario</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>		<span class=nx>Options</span><span class=p>:</span>              <span class=o>&amp;</span><span class=nx>opts</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>	<span class=p>}.</span><span class=nf>Run</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>Here we pass our Feature file location in the option <code>godog.Options{Paths: []string{"features"}}</code>. We also need to pass <code>TestSuiteInitializer</code> and <code>ScenarioInitializer</code> as part of the TestSuite specs. These functions allows us to hook to events such as <code>BeforeScenario</code>, <code>AfterScenario</code>.</p><p>Those coming from a BDD framework like Behave will notice that Godog doesn&rsquo;t support a mutable context object. So it cannot be used to pass values between each step. Instead we have to create a struct called <code>godogFeaturesScenario</code> on which we implement a <code>ScenarioInitializer</code> function.</p><p>This allows us to pass objects like <code>Testing.T</code>, <code>terraform.Options</code> which are shared across multiple steps. We have also added a <code>stepValues</code> parameter which can be used to capture values from intermediate steps (like getting resource ARN from <code>terraform.Output</code>)</p><p>Next step would be to map the Step definitions to go functions.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-golang data-lang=golang><span class=line><span class=cl><span class=kd>func</span> <span class=p>(</span><span class=nx>o</span> <span class=o>*</span><span class=nx>godogFeaturesScenario</span><span class=p>)</span> <span class=nf>InitializeScenario</span><span class=p>(</span><span class=nx>ctx</span> <span class=o>*</span><span class=nx>godog</span><span class=p>.</span><span class=nx>ScenarioContext</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>o</span><span class=p>.</span><span class=nx>stepValues</span> <span class=p>=</span> <span class=nb>make</span><span class=p>(</span><span class=kd>map</span><span class=p>[</span><span class=kt>string</span><span class=p>]</span><span class=kt>string</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nx>ctx</span><span class=p>.</span><span class=nf>Step</span><span class=p>(</span><span class=s>`^Terraform code is deployed with these variables:$`</span><span class=p>,</span> <span class=nx>o</span><span class=p>.</span><span class=nx>terraformIsDeployedWithVariables</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=nx>ctx</span><span class=p>.</span><span class=nf>Step</span><span class=p>(</span><span class=s>`^For given inputs Lambda function output is as expected:$`</span><span class=p>,</span> <span class=nx>o</span><span class=p>.</span><span class=nx>givenInputsLambdaReturnsValuesAsExpected</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=nx>ctx</span><span class=p>.</span><span class=nf>Step</span><span class=p>(</span><span class=s>`^Cloudwatch log stream is generated$`</span><span class=p>,</span> <span class=nx>o</span><span class=p>.</span><span class=nx>cloudwatchLogIsGenerated</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=nx>ctx</span><span class=p>.</span><span class=nf>AfterScenario</span><span class=p>(</span><span class=nx>o</span><span class=p>.</span><span class=nx>destroyTerraform</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>Here we also add an <code>AfterScenario</code> event hook which always makes sure that we destroy Terraform resources at the end of the test.</p><p>Next we implement the functions. Note that Terratest also provides us some helper functions like <code>github.com/gruntwork-io/terratest/modules/aws</code> which makes it simpler to perform actions like <code>aws.InvokeFunction</code>. In other case, we need to use AWS Go SDK to make calls such as <code>cloudwatch.DescribeLogGroups</code></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-golang data-lang=golang><span class=line><span class=cl><span class=kd>func</span> <span class=p>(</span><span class=nx>o</span> <span class=o>*</span><span class=nx>godogFeaturesScenario</span><span class=p>)</span> <span class=nf>terraformIsDeployedWithVariables</span><span class=p>(</span><span class=nx>tbl</span> <span class=o>*</span><span class=nx>godog</span><span class=p>.</span><span class=nx>Table</span><span class=p>)</span> <span class=kt>error</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>tfVars</span> <span class=o>:=</span> <span class=nb>make</span><span class=p>(</span><span class=kd>map</span><span class=p>[</span><span class=kt>string</span><span class=p>]</span><span class=kd>interface</span><span class=p>{})</span>
+</span></span><span class=line><span class=cl>	<span class=k>for</span> <span class=nx>_</span><span class=p>,</span> <span class=nx>row</span> <span class=o>:=</span> <span class=k>range</span> <span class=nx>tbl</span><span class=p>.</span><span class=nx>Rows</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=nx>tfVars</span><span class=p>[</span><span class=nx>row</span><span class=p>.</span><span class=nx>Cells</span><span class=p>[</span><span class=mi>0</span><span class=p>].</span><span class=nx>Value</span><span class=p>]</span> <span class=p>=</span> <span class=nx>row</span><span class=p>.</span><span class=nx>Cells</span><span class=p>[</span><span class=mi>1</span><span class=p>].</span><span class=nx>Value</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=nx>o</span><span class=p>.</span><span class=nx>stepValues</span><span class=p>[</span><span class=s>&#34;awsRegion&#34;</span><span class=p>]</span> <span class=p>=</span> <span class=s>&#34;us-east-1&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nx>terraformOptions</span> <span class=o>:=</span> <span class=nx>terraform</span><span class=p>.</span><span class=nf>WithDefaultRetryableErrors</span><span class=p>(</span><span class=nx>o</span><span class=p>.</span><span class=nx>testing</span><span class=p>,</span> <span class=o>&amp;</span><span class=nx>terraform</span><span class=p>.</span><span class=nx>Options</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=nx>TerraformDir</span><span class=p>:</span> <span class=s>&#34;..&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>		<span class=nx>EnvVars</span><span class=p>:</span> <span class=kd>map</span><span class=p>[</span><span class=kt>string</span><span class=p>]</span><span class=kt>string</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=s>&#34;AWS_DEFAULT_REGION&#34;</span><span class=p>:</span> <span class=nx>o</span><span class=p>.</span><span class=nx>stepValues</span><span class=p>[</span><span class=s>&#34;awsRegion&#34;</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>		<span class=p>},</span>
+</span></span><span class=line><span class=cl>	<span class=p>})</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>	<span class=nx>o</span><span class=p>.</span><span class=nx>terraformOptions</span> <span class=p>=</span> <span class=nx>terraformOptions</span>
+</span></span><span class=line><span class=cl>	<span class=nx>terraform</span><span class=p>.</span><span class=nf>InitAndApply</span><span class=p>(</span><span class=nx>o</span><span class=p>.</span><span class=nx>testing</span><span class=p>,</span> <span class=nx>terraformOptions</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=kc>nil</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>func</span> <span class=p>(</span><span class=nx>o</span> <span class=o>*</span><span class=nx>godogFeaturesScenario</span><span class=p>)</span> <span class=nf>givenInputsLambdaReturnsValuesAsExpected</span><span class=p>(</span><span class=nx>tbl</span> <span class=o>*</span><span class=nx>godog</span><span class=p>.</span><span class=nx>Table</span><span class=p>)</span> <span class=kt>error</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>o</span><span class=p>.</span><span class=nx>stepValues</span><span class=p>[</span><span class=s>&#34;functionName&#34;</span><span class=p>]</span> <span class=p>=</span> <span class=nx>terraform</span><span class=p>.</span><span class=nf>Output</span><span class=p>(</span><span class=nx>o</span><span class=p>.</span><span class=nx>testing</span><span class=p>,</span> <span class=nx>o</span><span class=p>.</span><span class=nx>terraformOptions</span><span class=p>,</span> <span class=s>&#34;lambda_function&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>	<span class=k>for</span> <span class=nx>_</span><span class=p>,</span> <span class=nx>row</span> <span class=o>:=</span> <span class=k>range</span> <span class=nx>tbl</span><span class=p>.</span><span class=nx>Rows</span><span class=p>[</span><span class=mi>1</span><span class=p>:]</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=nx>input</span> <span class=o>:=</span> <span class=nx>row</span><span class=p>.</span><span class=nx>Cells</span><span class=p>[</span><span class=mi>0</span><span class=p>].</span><span class=nx>Value</span>
+</span></span><span class=line><span class=cl>		<span class=nx>expected</span> <span class=o>:=</span> <span class=nx>row</span><span class=p>.</span><span class=nx>Cells</span><span class=p>[</span><span class=mi>1</span><span class=p>].</span><span class=nx>Value</span>
+</span></span><span class=line><span class=cl>		<span class=nx>response</span> <span class=o>:=</span> <span class=nx>aws</span><span class=p>.</span><span class=nf>InvokeFunction</span><span class=p>(</span><span class=nx>o</span><span class=p>.</span><span class=nx>testing</span><span class=p>,</span> <span class=nx>o</span><span class=p>.</span><span class=nx>stepValues</span><span class=p>[</span><span class=s>&#34;awsRegion&#34;</span><span class=p>],</span> <span class=nx>o</span><span class=p>.</span><span class=nx>stepValues</span><span class=p>[</span><span class=s>&#34;functionName&#34;</span><span class=p>],</span> <span class=nx>Payload</span><span class=p>{</span><span class=nx>Name</span><span class=p>:</span> <span class=nx>input</span><span class=p>})</span>
+</span></span><span class=line><span class=cl>		<span class=nx>actual</span> <span class=o>:=</span> <span class=nb>string</span><span class=p>(</span><span class=nx>response</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>		<span class=k>if</span> <span class=nx>expected</span> <span class=o>!=</span> <span class=nx>actual</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>			<span class=k>return</span> <span class=nx>fmt</span><span class=p>.</span><span class=nf>Errorf</span><span class=p>(</span><span class=s>&#34;Not equal: \n&#34;</span><span class=o>+</span>
+</span></span><span class=line><span class=cl>				<span class=s>&#34;expected: %s\n&#34;</span><span class=o>+</span>
+</span></span><span class=line><span class=cl>				<span class=s>&#34;actual  : %s&#34;</span><span class=p>,</span> <span class=nx>expected</span><span class=p>,</span> <span class=nx>actual</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>		<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=kc>nil</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>func</span> <span class=p>(</span><span class=nx>o</span> <span class=o>*</span><span class=nx>godogFeaturesScenario</span><span class=p>)</span> <span class=nf>cloudwatchLogIsGenerated</span><span class=p>()</span> <span class=kt>error</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>logGroupName</span> <span class=o>:=</span> <span class=nx>fmt</span><span class=p>.</span><span class=nf>Sprintf</span><span class=p>(</span><span class=s>&#34;/aws/lambda/%s&#34;</span><span class=p>,</span> <span class=nx>o</span><span class=p>.</span><span class=nx>stepValues</span><span class=p>[</span><span class=s>&#34;functionName&#34;</span><span class=p>])</span>
+</span></span><span class=line><span class=cl>	<span class=nx>client</span> <span class=o>:=</span> <span class=nx>aws</span><span class=p>.</span><span class=nf>NewCloudWatchLogsClient</span><span class=p>(</span><span class=nx>o</span><span class=p>.</span><span class=nx>testing</span><span class=p>,</span> <span class=nx>o</span><span class=p>.</span><span class=nx>stepValues</span><span class=p>[</span><span class=s>&#34;awsRegion&#34;</span><span class=p>])</span>
+</span></span><span class=line><span class=cl>	<span class=nx>output</span><span class=p>,</span> <span class=nx>_</span> <span class=o>:=</span> <span class=nx>client</span><span class=p>.</span><span class=nf>DescribeLogGroups</span><span class=p>(</span><span class=o>&amp;</span><span class=nx>cloudwatchlogs</span><span class=p>.</span><span class=nx>DescribeLogGroupsInput</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=nx>LogGroupNamePrefix</span><span class=p>:</span> <span class=o>&amp;</span><span class=nx>logGroupName</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>	<span class=p>})</span>
+</span></span><span class=line><span class=cl>	<span class=k>if</span> <span class=nb>len</span><span class=p>(</span><span class=nx>output</span><span class=p>.</span><span class=nx>LogGroups</span><span class=p>)</span> <span class=p>&lt;</span> <span class=mi>1</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=k>return</span> <span class=nx>fmt</span><span class=p>.</span><span class=nf>Errorf</span><span class=p>(</span><span class=s>&#34;Expected at least one log group. Found %d log groups&#34;</span><span class=p>,</span> <span class=nb>len</span><span class=p>(</span><span class=nx>output</span><span class=p>.</span><span class=nx>LogGroups</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl>	<span class=k>return</span> <span class=kc>nil</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kd>func</span> <span class=p>(</span><span class=nx>o</span> <span class=o>*</span><span class=nx>godogFeaturesScenario</span><span class=p>)</span> <span class=nf>destroyTerraform</span><span class=p>(</span><span class=nx>sc</span> <span class=o>*</span><span class=nx>godog</span><span class=p>.</span><span class=nx>Scenario</span><span class=p>,</span> <span class=nx>err</span> <span class=kt>error</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>terraform</span><span class=p>.</span><span class=nf>Destroy</span><span class=p>(</span><span class=nx>o</span><span class=p>.</span><span class=nx>testing</span><span class=p>,</span> <span class=nx>o</span><span class=p>.</span><span class=nx>terraformOptions</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>Now we are ready to run the test. You should see the below output indicating that 1 scenario was executed with 3 succesful steps.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>1 scenarios (1 passed)
+</span></span><span class=line><span class=cl>3 steps (3 passed)
+</span></span><span class=line><span class=cl>48.024014744s
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>Randomized with seed: 1614398736564936647
+</span></span></code></pre></td></tr></table></div></div><p>You can get the complete code for this scenario <a href=https://github.com/tmzh/terratest-examples/tree/main/lambda_bdd>here</a></p><h2 id=tips-for-testing-with-terratest>Tips for testing with terratest</h2><h3 id=testing-in-random-folder>Testing in random folder</h3><p>Terraform init and apply steps leaves behind a bunch of artifacts like state file and <code>.terraform</code> directory, even after performing a terraform destory. Sometimes it is a mild inconvenience, sometimes it can causes artifacts from past test runs leak into the current run.</p><p>To avoid this scenario, terratest can copy the terraform files to a random temp directory and execute the test cases from there. This ensures that each run of terratest test cases are independent of each other.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-golang data-lang=golang><span class=line><span class=cl><span class=nx>exampleFolder</span> <span class=o>:=</span> <span class=nx>test_structure</span><span class=p>.</span><span class=nf>CopyTerraformFolderToTemp</span><span class=p>(</span><span class=nx>t</span><span class=p>,</span> <span class=s>&#34;../&#34;</span><span class=p>,</span> <span class=s>&#34;temp_terraform_test_dir&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nx>terraformOptions</span> <span class=o>:=</span> <span class=nx>terraform</span><span class=p>.</span><span class=nf>WithDefaultRetryableErrors</span><span class=p>(</span><span class=nx>t</span><span class=p>,</span> <span class=o>&amp;</span><span class=nx>terraform</span><span class=p>.</span><span class=nx>Options</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=nx>TerraformDir</span><span class=p>:</span> <span class=nx>exampleFolder</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>})</span>
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>WARNING: If terratest fails abruptly during execution, either through uncaught exceptions or through errors lower down in the stack (os, network etc.,) this can leave behind resources. Executing test cases in random directory makes it trickier to hunt down these orphaned resourrces and clean them up.</p></blockquote><h3 id=testing-in-random-regions>Testing in random regions</h3><p>Sometimes it is better to run your test cases in random AWS regions to ensure that the test scenarios doesn&rsquo;t make any unknown assumptions about the pre-existing resources.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-go data-lang=go><span class=line><span class=cl><span class=nx>awsRegion</span> <span class=o>:=</span> <span class=nx>aws</span><span class=p>.</span><span class=nf>GetRandomStableRegion</span><span class=p>(</span><span class=nx>t</span><span class=p>,</span> <span class=kc>nil</span><span class=p>,</span> <span class=kc>nil</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=nx>terraformOptions</span> <span class=o>:=</span> <span class=nx>terraform</span><span class=p>.</span><span class=nf>WithDefaultRetryableErrors</span><span class=p>(</span><span class=nx>t</span><span class=p>,</span> <span class=o>&amp;</span><span class=nx>terraform</span><span class=p>.</span><span class=nx>Options</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>	<span class=nx>EnvVars</span><span class=p>:</span> <span class=kd>map</span><span class=p>[</span><span class=kt>string</span><span class=p>]</span><span class=kt>string</span><span class=p>{</span>
+</span></span><span class=line><span class=cl>		<span class=s>&#34;AWS_DEFAULT_REGION&#34;</span><span class=p>:</span> <span class=nx>awsRegion</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>	<span class=p>},</span>
+</span></span><span class=line><span class=cl><span class=p>})</span>
+</span></span></code></pre></td></tr></table></div></div></div><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
+<span class=item-content>tmzh</span></p><p class=copyright-item><span class=item-title>LastMod</span>
+<span class=item-content>2021-02-02</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/terraform/>terraform</a>
+<a href=/tags/iac/>iac</a></div><nav class=post-nav><a class=prev href=/post/2021-03-26-previewing-command-line-json-output-using-firefox/><i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">Previewing command line JSON output using firefox</span>
+<span class="prev-text nav-mobile">Prev</span></a>
+<a class=next href=/post/2020-09-20-gpt-3-and-prospects-of-artificial-general-intelligence/><span class="next-text nav-default">GPT-3 and prospects of Artificial General Intelligence</span>
+<span class="next-text nav-mobile">Next</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div></div></main><footer id=footer class=footer><div class=social-links><a href=https://github.com/tmzh/tmzh.github.io class="iconfont icon-github" title=github></a>
+<a href=https://tmzh.github.io/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>Powered by <a class=hexo-link href=https://gohugo.io>Hugo</a></span>
+<span class=division>|</span>
+<span class=theme-info>Theme -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span>
+<span class=copyright-year>&copy;
+2017 -
+2022<span class=heart><i class="iconfont icon-heart"></i></span><span>tmzh</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js></script></body></html>

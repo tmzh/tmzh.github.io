@@ -1,0 +1,103 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="IE=edge,chrome=1"><title>Previewing command line JSON output using firefox - Ephemeral Dance Of Electrons</title><meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=cache-control content="no-transform"><meta http-equiv=cache-control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="tmzh"><meta name=description content="Firefox, like other modern browsers, has an excellent in-built JSON viewer. It also supports Data URIs which allows you to load HTML resource from text in URL as if they were external resources. We can make use of these two features to have a handy JSON previewer which can be invoked from command line.
+For example, when you enter the below link into your browser, it opens a &amp;ldquo;Hello world&amp;rdquo; text document.
+1 data:,Hello%2C%20World! This content is not limited to plain text. It can even be an HTML document:
+1 data:text/html,%3Ch1%3EHello%2C%20World!%3C%2Fh1%3E "><meta name=keywords content="blog,code,recreational"><meta name=generator content="Hugo 0.101.0 with theme even"><link rel=canonical href=https://tmzh.github.io/post/2021-03-26-previewing-command-line-json-output-using-firefox/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.b5a744db6de49a86cadafb3b70f555ab443f83c307a483402259e94726b045ff.css rel=stylesheet><meta property="og:title" content="Previewing command line JSON output using firefox"><meta property="og:description" content="Firefox, like other modern browsers, has an excellent in-built JSON viewer. It also supports Data URIs which allows you to load HTML resource from text in URL as if they were external resources. We can make use of these two features to have a handy JSON previewer which can be invoked from command line.
+For example, when you enter the below link into your browser, it opens a &ldquo;Hello world&rdquo; text document.
+
+
+1
+
+
+data:,Hello%2C%20World!
+
+
+This content is not limited to plain text. It can even be an HTML document:
+
+
+1
+
+
+data:text/html,%3Ch1%3EHello%2C%20World!%3C%2Fh1%3E
+
+
+"><meta property="og:type" content="article"><meta property="og:url" content="https://tmzh.github.io/post/2021-03-26-previewing-command-line-json-output-using-firefox/"><meta property="article:section" content="post"><meta property="article:published_time" content="2021-03-26T12:00:00+00:00"><meta property="article:modified_time" content="2021-03-26T12:00:00+00:00"><meta itemprop=name content="Previewing command line JSON output using firefox"><meta itemprop=description content="Firefox, like other modern browsers, has an excellent in-built JSON viewer. It also supports Data URIs which allows you to load HTML resource from text in URL as if they were external resources. We can make use of these two features to have a handy JSON previewer which can be invoked from command line.
+For example, when you enter the below link into your browser, it opens a &ldquo;Hello world&rdquo; text document.
+
+
+1
+
+
+data:,Hello%2C%20World!
+
+
+This content is not limited to plain text. It can even be an HTML document:
+
+
+1
+
+
+data:text/html,%3Ch1%3EHello%2C%20World!%3C%2Fh1%3E
+
+
+"><meta itemprop=datePublished content="2021-03-26T12:00:00+00:00"><meta itemprop=dateModified content="2021-03-26T12:00:00+00:00"><meta itemprop=wordCount content="286"><meta itemprop=keywords content="command-line,json,"><meta name=twitter:card content="summary"><meta name=twitter:title content="Previewing command line JSON output using firefox"><meta name=twitter:description content="Firefox, like other modern browsers, has an excellent in-built JSON viewer. It also supports Data URIs which allows you to load HTML resource from text in URL as if they were external resources. We can make use of these two features to have a handy JSON previewer which can be invoked from command line.
+For example, when you enter the below link into your browser, it opens a &ldquo;Hello world&rdquo; text document.
+
+
+1
+
+
+data:,Hello%2C%20World!
+
+
+This content is not limited to plain text. It can even be an HTML document:
+
+
+1
+
+
+data:text/html,%3Ch1%3EHello%2C%20World!%3C%2Fh1%3E
+
+
+"><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script>
+<script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>Ephemeral Dance Of Electrons</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>Ephemeral Dance Of Electrons</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Previewing command line JSON output using firefox</h1><div class=post-meta><span class=post-time>2021-03-26</span><div class=post-category><a href=/categories/tips/>tips</a></div></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>Contents</h2><div class="post-toc-content always-active"><nav id=TableOfContents></nav></div></div><div class=post-content><p>Firefox, like other modern browsers, has an excellent in-built JSON viewer. It also supports <a href=https://en.wikipedia.org/wiki/Data_URI_scheme>Data URIs</a> which allows you to load HTML resource from text in URL as if they were external resources. We can make use of these two features to have a handy JSON previewer which can be invoked from command line.</p><p>For example, when you enter the below link into your browser, it opens a &ldquo;Hello world&rdquo; text document.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>data:,Hello%2C%20World!
+</span></span></code></pre></td></tr></table></div></div><p>This content is not limited to plain text. It can even be an HTML document:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>data:text/html,%3Ch1%3EHello%2C%20World!%3C%2Fh1%3E
+</span></span></code></pre></td></tr></table></div></div><p>Or any other supported MIME type:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAACYktHRAD/h4/MvwAAAAd0SU1FB+UDGxInJl2PylkAAABqdEVYdFJhdyBwcm9maWxlIHR5cGUgYXBwMQAKYXBwMQogICAgICAzNAo0OTQ5MmEwMDA4MDAwMDAwMDEwMDMxMDEwMjAwMDcwMDAwMDAxYTAwMDAwMDAwMDAwMDAwNDc2ZjZmNjc2YzY1MDAwMAqnX4qZAAAC5UlEQVR42u3ZX2iVZRwH8M/Z2dqa0zP/tNxATc2wYDJZDmnOiJoURRBWGiLRfRcVdFURQdFNeBGjLiqoQIhuizBvzCiFWMayJllghK6kUteYW27zdLOoi9jynIf33anf5+pcnOf3/L7nfZ/3fd73EEIIIYQQQgghhBBCCCGEEEKeChnP12i1laZ855e0heszDFHnNg+bdNSwy6mLFzMM8ohnfOBT7TZaYcxobQbp8qL3bXSfBuc1Welnv6Urn92pdbcWPQ56yogy6tRlNve/VucBT1g2xzcK9vvC1rwbnc8Gp5Tt0zBHkJ268m5zfve6pOycvvxaSHOeltRjqZ21HmRi9r6wbc51UgNBRlwEq7XXdpDvnQEt2qqsdJ2OPIP85MhstWrvS2u8anvmO8C/6Teq7IItVdYpGvCjRzXnFeQq+5R9kmCxb3bWJW9am1eUVnvcnKBOkwPKyobsuJJh6TaNk44bSVBnWp9uxwwp+tx0sv4yV7DfQR2yf+hLbLkjHrzyYQtvK73JlMP/hSA7HHI27yaq1+49myoZuNCOyB2+9VXeTVRvibf0VDZ0YR2RO502mHcT1WvzmhsrHbyQjsgeg07UfpDt1nkn+2kbXJt0C7HG63m8ZWn0nLc1Jqu3zCt2ZR+Du4w7aVWiaku97Mlq9+GVrZFtmq23N8kK6/CScQNm8ghSwgm32G1RlTG2eMOvXjCR4CepwLMOWWWJXg/pU6qwSqvHHPe0q/MJAet1zn5a7HaP2+uGOd77/pMl7nfYsN2p/g9IcQkt6XWrJkM+c8r4PN9utFa/XW7yoed9nSZGusfJJpvdo1vBSV/6xogLLpoyo6ygqEGL5dbp0qvbYkcNOJByZaS8qRW02apfj3aMOWfUhGlFzUpWuEYJZ3zkXR8bSzhz4iB/Vmx1vU6dNujQqknRjEnn/WDYoGNOV3upzSbIX+ot0qxR0WW/Gzdeyy93QgghhBBCCCGEEEII/wd/APMIkSFxtxhoAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIxLTAzLTI3VDEwOjQwOjA3KzA4OjAwvOJovAAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMS0wMy0yN1QxMDozOTozOCswODowMGBWmUMAAAAASUVORK5CYII=
+</span></span></code></pre></td></tr></table></div></div><p><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAQAAADa613fAAAAIGNIUk0AAHomAACAhAAA+gAAAIDoAAB1MAAA6mAAADqYAAAXcJy6UTwAAAACYktHRAD/h4/MvwAAAAd0SU1FB+UDGxInJl2PylkAAABqdEVYdFJhdyBwcm9maWxlIHR5cGUgYXBwMQAKYXBwMQogICAgICAzNAo0OTQ5MmEwMDA4MDAwMDAwMDEwMDMxMDEwMjAwMDcwMDAwMDAxYTAwMDAwMDAwMDAwMDAwNDc2ZjZmNjc2YzY1MDAwMAqnX4qZAAAC5UlEQVR42u3ZX2iVZRwH8M/Z2dqa0zP/tNxATc2wYDJZDmnOiJoURRBWGiLRfRcVdFURQdFNeBGjLiqoQIhuizBvzCiFWMayJllghK6kUteYW27zdLOoi9jynIf33anf5+pcnOf3/L7nfZ/3fd73EEIIIYQQQgghhBBCCCGEEEKeChnP12i1laZ855e0heszDFHnNg+bdNSwy6mLFzMM8ohnfOBT7TZaYcxobQbp8qL3bXSfBuc1Welnv6Urn92pdbcWPQ56yogy6tRlNve/VucBT1g2xzcK9vvC1rwbnc8Gp5Tt0zBHkJ268m5zfve6pOycvvxaSHOeltRjqZ21HmRi9r6wbc51UgNBRlwEq7XXdpDvnQEt2qqsdJ2OPIP85MhstWrvS2u8anvmO8C/6Teq7IItVdYpGvCjRzXnFeQq+5R9kmCxb3bWJW9am1eUVnvcnKBOkwPKyobsuJJh6TaNk44bSVBnWp9uxwwp+tx0sv4yV7DfQR2yf+hLbLkjHrzyYQtvK73JlMP/hSA7HHI27yaq1+49myoZuNCOyB2+9VXeTVRvibf0VDZ0YR2RO502mHcT1WvzmhsrHbyQjsgeg07UfpDt1nkn+2kbXJt0C7HG63m8ZWn0nLc1Jqu3zCt2ZR+Du4w7aVWiaku97Mlq9+GVrZFtmq23N8kK6/CScQNm8ghSwgm32G1RlTG2eMOvXjCR4CepwLMOWWWJXg/pU6qwSqvHHPe0q/MJAet1zn5a7HaP2+uGOd77/pMl7nfYsN2p/g9IcQkt6XWrJkM+c8r4PN9utFa/XW7yoed9nSZGusfJJpvdo1vBSV/6xogLLpoyo6ygqEGL5dbp0qvbYkcNOJByZaS8qRW02apfj3aMOWfUhGlFzUpWuEYJZ3zkXR8bSzhz4iB/Vmx1vU6dNujQqknRjEnn/WDYoGNOV3upzSbIX+ot0qxR0WW/Gzdeyy93QgghhBBCCCGEEEII/wd/APMIkSFxtxhoAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDIxLTAzLTI3VDEwOjQwOjA3KzA4OjAwvOJovAAAACV0RVh0ZGF0ZTptb2RpZnkAMjAyMS0wMy0yN1QxMDozOTozOCswODowMGBWmUMAAAAASUVORK5CYII=" alt=smiley></p><p>Here we are passing in base64-encoded version of the png image.</p><p>If you are on linux, it is easy to generate base64 encoded url:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>cat smiley.png | base64 | xargs -I % firefox &#34;data:application/png;base64,%&#34;
+</span></span></code></pre></td></tr></table></div></div><p>Firefox also ships with an inbuilt JSON viewer. The document rendered should be of MIME type <code>application/json</code>. We can use the same trick to pipe any JSON output to firefox:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>cat person.json | base64 | xargs -I % firefox &#34;data:application/json;base64,%&#34;
+</span></span></code></pre></td></tr></table></div></div><p>This is quite handy when trying to navigate long JSON responses from <code>awscli</code>. In <code>awscli</code> just disable the cli pager and pipe the base64 encoded result firefox.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>aws ec2-describe-subnets --no-cli-pager | base64 | xargs -I % &#34;data:application/json;base64,%&#34;
+</span></span></code></pre></td></tr></table></div></div><p>This gives us a nice visual interface to inspect the json document.</p><p><img src=../images/2021-03-26-aws-cli-json-output.png alt="aws cli output"></p><p>We can even drop it into a handy bash function and pipe json output to this function</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>json_viewer<span class=o>(){</span>
+</span></span><span class=line><span class=cl>    cat /dev/stdin <span class=p>|</span> base64 -w <span class=m>0</span> <span class=p>|</span> xargs -I % firefox <span class=s2>&#34;data:application/json;base64,%&#34;</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>aws ec2 describe-subnets --no-cli-pager <span class=p>|</span> json_viewer
+</span></span></code></pre></td></tr></table></div></div><p>Now when firefox starts <a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1244922">supporting intelligent filtering</a>, using either JMESPath or jq syntax, this can become even more useful.</p></div><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
+<span class=item-content>tmzh</span></p><p class=copyright-item><span class=item-title>LastMod</span>
+<span class=item-content>2021-03-26</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/command-line/>command-line</a>
+<a href=/tags/json/>json</a></div><nav class=post-nav><a class=prev href=/post/2021-09-16-using-hugging-face-transformers-on-aws-sagemaker/><i class="iconfont icon-left"></i>
+<span class="prev-text nav-default">Using Hugging Face Transformers on AWS Sagemaker</span>
+<span class="prev-text nav-mobile">Prev</span></a>
+<a class=next href=/post/2021-02-02-testing-terraform-code-using-terratest/><span class="next-text nav-default">Writing BDD tests for Terraform Code Using Terratest</span>
+<span class="next-text nav-mobile">Next</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div></div></main><footer id=footer class=footer><div class=social-links><a href=https://github.com/tmzh/tmzh.github.io class="iconfont icon-github" title=github></a>
+<a href=https://tmzh.github.io/index.xml type=application/rss+xml class="iconfont icon-rss" title=rss></a></div><div class=copyright><span class=power-by>Powered by <a class=hexo-link href=https://gohugo.io>Hugo</a></span>
+<span class=division>|</span>
+<span class=theme-info>Theme -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a></span>
+<span class=copyright-year>&copy;
+2017 -
+2022<span class=heart><i class="iconfont icon-heart"></i></span><span>tmzh</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script>
+<script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script>
+<script type=text/javascript src=/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js></script></body></html>
