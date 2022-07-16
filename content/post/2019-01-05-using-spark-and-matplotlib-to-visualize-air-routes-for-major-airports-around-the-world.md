@@ -1,16 +1,15 @@
 ---
 author: tmzh
-comments: true
-date: 2019-01-05 12:00:00+08:00
-layout: post
-slug: 2019-01-05-using-spark-and-matplotlib-to-visualize-air-routes-for-major-airports-around-the-world
-title: Visualizing air routes for major airports using Spark and Matplotlib
 categories:
 - Big Data
+comments: true
+date: "2019-01-05T12:00:00Z"
+slug: 2019-01-05-using-spark-and-matplotlib-to-visualize-air-routes-for-major-airports-around-the-world
 tags:
 - spark
 - matplotlib
 - pandas
+title: Visualizing air routes for major airports using Spark and Matplotlib
 ---
 In 2nd Century AD, Hellenic Cartographer Ptolemy was beset with an arbitrary choice of whether his maps should have north on the top or any other direction. Based in Alexandria, he reasoned that all population centers and places of importance lie to the north and would be convenient for study if they were in the upper right corner of the map. This arbitrary choice had long, unintended repercussions for mankind such as Australia being considered "Down under" or even our solar system to be perceived as rotating in counter-clockwise direction. Who would have thought that the stroke of a cartographer carried celestial importance!
 

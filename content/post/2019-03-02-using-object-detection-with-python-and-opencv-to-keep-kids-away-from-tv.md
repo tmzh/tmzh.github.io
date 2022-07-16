@@ -1,15 +1,14 @@
 ---
 author: tmzh
-comments: true
-date: 2019-03-02 12:00:00+08:00
-layout: post
-slug: 2019-03-02-using-opencv-object-detection-to-keep-kids-away-from-tv
-title: Using OpenCV object detection to keep kids away from TV
 categories:
 - Image recognition
+comments: true
+date: "2019-03-02T12:00:00Z"
+slug: 2019-03-02-using-opencv-object-detection-to-keep-kids-away-from-tv
 tags:
 - python
 - opencv
+title: Using OpenCV object detection to keep kids away from TV
 ---
 >Give me a dozen healthy infants, well formed, and my own specified world to bring them up in and I’ll guarantee to take any one at random and train him to become any type of specialist I might select—doctor, lawyer, artist, merchant-chief and yes, even beggar-man thief, regardless of his talents, penchants, tendencies, abilities, vocations, and race of his ancestors.
 

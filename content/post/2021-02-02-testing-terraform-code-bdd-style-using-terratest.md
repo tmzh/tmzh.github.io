@@ -1,16 +1,15 @@
 ---
 author: tmzh
-comments: true
-date: 2021-02-02 12:00:00+08:00
-layout: post
-slug: 2021-02-02-testing-terraform-code-using-terratest
-title: Writing BDD tests for Terraform Code Using Terratest
 categories:
 - Cloud Computing
+comments: true
+date: "2021-02-02T12:00:00Z"
+image: https://raw.githubusercontent.com/cucumber/godog/master/logo.png
+slug: 2021-02-02-testing-terraform-code-using-terratest
 tags:
 - terraform
 - iac
-image: https://raw.githubusercontent.com/cucumber/godog/master/logo.png
+title: Writing BDD tests for Terraform Code Using Terratest
 ---
 
 Terratest is a popular library for testing Terraform code. Testing Infrastructure As Code (IAC) is not as widespread as it should be. The reasons are multi-fold, ranging from developer's attitude towards testing to the difficulty of writing unit tests because of inherent side effects of IAC. Nevertheless, testing is no less important, in particular under these scenarios:

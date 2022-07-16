@@ -1,16 +1,15 @@
 ---
 author: tmzh
-comments: true
-date: 2018-04-23 12:00:00+08:00
-layout: post
-slug: 2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1
-title: Predicting the playing role of a cricketer using Machine Learning (Part 1)
 categories:
 - Machine Learning
+comments: true
+date: "2018-04-23T12:00:00Z"
+slug: 2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1
 tags:
 - python
 - Scrapy
 - web-scraping
+title: Predicting the playing role of a cricketer using Machine Learning (Part 1)
 ---
 
 In this project, we will apply Machine Learning techniques to predict whether a particular cricket player is a batsman or bowler based on his career stats. First we will use Deep Neural Networks (DNN) model and later compare the results with a simpler classifier algorithm such as Random Forest Classifier.

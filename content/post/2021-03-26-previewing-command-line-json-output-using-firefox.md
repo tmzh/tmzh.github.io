@@ -1,16 +1,15 @@
 ---
 author: tmzh
-comments: true
-date: 2021-03-26 12:00:00+08:00
-layout: post
-slug: 2021-03-26-previewing-command-line-json-output-using-firefox
-title: Previewing command line JSON output using firefox
 categories:
-- tips 
+- tips
+comments: true
+date: "2021-03-26T12:00:00Z"
+image: https://raw.githubusercontent.com/cucumber/godog/master/logo.png
+slug: 2021-03-26-previewing-command-line-json-output-using-firefox
 tags:
 - command-line
 - json
-image: https://raw.githubusercontent.com/cucumber/godog/master/logo.png 
+title: Previewing command line JSON output using firefox
 ---
 
 Firefox, like other modern browsers, has an excellent in-built JSON viewer. It also supports [Data URIs](https://en.wikipedia.org/wiki/Data_URI_scheme) which allows you to load HTML resource from text in URL as if they were external resources. We can make use of these two features to have a handy JSON previewer which can be invoked from command line. 

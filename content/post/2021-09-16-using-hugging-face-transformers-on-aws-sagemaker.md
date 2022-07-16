@@ -1,17 +1,16 @@
 ---
 author: tmzh
-comments: true
-date: 2021-09-16 12:00:00+08:00
-layout: post
-slug: 2021-09-16-using-hugging-face-transformers-on-aws-sagemaker
-title: Using Hugging Face Transformers on AWS Sagemaker
 categories:
 - Machine Learning
+comments: true
+date: "2021-09-16T12:00:00Z"
+image: https://huggingface.co/blog/assets/17_the_partnership_amazon_sagemaker_and_hugging_face/cover.png
+slug: 2021-09-16-using-hugging-face-transformers-on-aws-sagemaker
 tags:
-- aws 
+- aws
 - huggingface
 - transformers
-image: https://huggingface.co/blog/assets/17_the_partnership_amazon_sagemaker_and_hugging_face/cover.png 
+title: Using Hugging Face Transformers on AWS Sagemaker
 ---
 
 In July 2021, AWS and Hugging Face announced collaboration to make Hugging Face a first party framework within SageMaker. Earlier, you had to use PyTorch container and install packages manually to do this. With the new Hugging Face Deep Learning Containers (DLC) availabe in Amazon SageMaker, the process of training and deploying models is greatly simplified.

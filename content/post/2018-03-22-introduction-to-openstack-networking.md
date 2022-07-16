@@ -1,16 +1,15 @@
 ---
 author: tmzh
-comments: true
-date: 2018-03-22 12:00:00+08:00
-layout: post
-slug: 2018-03-22-introduction-to-openstack-networking-for-network-engineers
-title: Introduction to OpenStack Networking for Network Engineers
 categories:
 - Networking
+comments: true
+date: "2018-03-22T12:00:00Z"
+slug: 2018-03-22-introduction-to-openstack-networking-for-network-engineers
 tags:
 - openstack
 - software defined networking
 - networking
+title: Introduction to OpenStack Networking for Network Engineers
 ---
 
 This post is a gentle introduction to networking with Openstack using the Neutron module. Being an introduction, we will not focus on setting up OpenStack from scratch. Instead we will familiarize ourselves with core concepts of Neutron and common administrative tasks. We will use the latest release of Openstack, **Queens**. 

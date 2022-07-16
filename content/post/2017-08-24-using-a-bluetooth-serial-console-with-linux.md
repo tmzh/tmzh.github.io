@@ -1,16 +1,15 @@
 ---
 author: tmzh
-comments: true
-date: 2017-08-24 15:41:28+00:00
-layout: post
-slug: 2017-08-24-using-a-bluetooth-serial-console-with-linux
-title: Using a bluetooth serial console with linux
-wordpress_id: 182
 categories:
 - Notes
+comments: true
+date: "2017-08-24T15:41:28Z"
+slug: 2017-08-24-using-a-bluetooth-serial-console-with-linux
 tags:
 - bluetooth
 - Linux
+title: Using a bluetooth serial console with linux
+wordpress_id: 182
 ---
 
 Recently I bought a [bluetooth RS232 serial convertor](https://www.aliexpress.com/store/product/FREE-SHIPPING-Bt578-rs232-wireless-male-female-general-serial-port-bluetooth-adapter-bluetooth-module/719457_1271204185.html). I wasn't sure whether it would work with my Linux laptop. But it turned out to be quite simple to setup.

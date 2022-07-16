@@ -1,18 +1,17 @@
 ---
 author: tmzh
-comments: true
-date: 2017-12-09 12:00:00+08:00
-layout: post
-slug: 2017-12-09-using-constraint-programming-to-solve-an-ancient-chinese-math-puzzle
-title: Using Constraint Programming Tools to solve an ancient Chinese math puzzle
 categories:
-- Modelling
+- solver
+comments: true
+date: "2017-12-09T12:00:00Z"
+slug: 2017-12-09-using-constraint-programming-to-solve-an-ancient-chinese-math-puzzle
 tags:
 - or-tools
 - python
 - puzzle
 - operations research
 - constraint programming
+title: Using Constraint Programming Tools to solve an ancient Chinese math puzzle
 ---
 [Constraint programming (CP)](https://www.wikiwand.com/en/Constraint_programming) is a subset of Operations Research (OR) where our task is to identify all feasible solutions to a given problem that satisfies a set of constraints. This is different from an optimization problem, where an objective function is defined and we arrive at solutions that either maximizes or minimizes an objective function. 
 

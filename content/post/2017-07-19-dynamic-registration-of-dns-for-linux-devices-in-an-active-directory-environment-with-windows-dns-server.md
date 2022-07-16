@@ -1,19 +1,18 @@
 ---
 author: tmzh
-comments: true
-date: 2017-07-19 15:43:13+00:00
-layout: post
-slug: 2017-07-19-dynamic-registration-of-dns-for-linux-devices-in-an-active-directory-environment-with-windows-dns-server
-title: Dynamic registration of DNS for Linux devices in an Active Directory environment
-  with Windows DNS server
-wordpress_id: 16
 categories:
 - SysAdmin
+comments: true
+date: "2017-07-19T15:43:13Z"
+slug: 2017-07-19-dynamic-registration-of-dns-for-linux-devices-in-an-active-directory-environment-with-windows-dns-server
 tags:
 - DHCP
 - DNS
 - Dynamic DNS
 - Linux
+title: Dynamic registration of DNS for Linux devices in an Active Directory environment
+  with Windows DNS server
+wordpress_id: 16
 ---
 
 While Linux has proliferated extensively in the server arena in the recent past, Windows still dominates client networks. Things that we take for granted in a client environment such as DDNS (Dynamic DNS) are not as matured as they are in Windows environment. One may wonder whether the recent surge in Linux based clients such as IoT devices has changed this equation. 

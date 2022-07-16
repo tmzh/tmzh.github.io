@@ -1,18 +1,17 @@
 ---
 author: tmzh
-comments: true
-date: 2017-11-24 08:01:28+08:00
-layout: post
-slug: 2017-11-24-using-monte-carlo-simulation-to-model-ping-test-results
-title: Using Monte-Carlo Simulation to model ping test results
 categories:
 - Modelling
+comments: true
+date: "2017-11-24T08:01:28Z"
+slug: 2017-11-24-using-monte-carlo-simulation-to-model-ping-test-results
 tags:
 - network
 - python
 - numpy
 - probability
 - scripting
+title: Using Monte-Carlo Simulation to model ping test results
 ---
 Recently we had a cabling issue in our core infrastructure which caused around 3 to 12% packet loss across few IP streams. One of my colleagues made an interesting observation that when he tried to ping with large packet size (5000 bytes) the packet loss rose up as high as 40%. In his opinion, that meant some applications were experiencing up to 40% packet loss. I seldom do large packet ping tests unless I am troubleshooting MTU issues, so to me this observation was interesting. 
 

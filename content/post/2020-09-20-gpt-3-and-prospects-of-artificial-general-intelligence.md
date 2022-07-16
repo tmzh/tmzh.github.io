@@ -1,16 +1,15 @@
 ---
 author: tmzh
-comments: true
-date: 2020-09-20 12:00:00+08:00
-layout: post
-slug: 2020-09-20-gpt-3-and-prospects-of-artificial-general-intelligence
-title: GPT-3 and prospects of Artificial General Intelligence 
 categories:
-- Artificial Intelligence 
+- Artificial Intelligence
+comments: true
+date: "2020-09-20T12:00:00Z"
+image: /images/2020-09-26-meta-learning.png
+slug: 2020-09-20-gpt-3-and-prospects-of-artificial-general-intelligence
 tags:
 - gpt-3
-- philosophy 
-image: /images/2020-09-26-meta-learning.png
+- philosophy
+title: GPT-3 and prospects of Artificial General Intelligence
 ---
 
 Last year OpenAI released the Generative Pre-trained Transformer 2 (GPT-2) model. GPT-2 was a language model with 1.5 billion parameters, trained on 8 million web pages. It generated quite a buzz as it could generate coherent text, comprehend paragraphs, answer questions, and summarize text and do all sorts of smart stuff... all without any task-specific learning. OpenAI even deemed the model too dangerous to release but eventually ended up releasing them.

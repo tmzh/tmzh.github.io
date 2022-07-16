@@ -1,16 +1,15 @@
 ---
 author: tmzh
-comments: true
-date: 2018-05-20 12:00:00+08:00
-layout: post
-slug: 2018-05-20-book-review-security-automation-with-ansible-2
-title: Book Review - Security Automation with Ansible 2
 categories:
 - Security
+comments: true
+date: "2018-05-20T12:00:00Z"
+slug: 2018-05-20-book-review-security-automation-with-ansible-2
 tags:
 - review
 - ansible
 - automation
+title: Book Review - Security Automation with Ansible 2
 ---
 
 Security is a huge, complex, rapidly changing field. Advancements in infrastructue hosting, development methodologies has had the most impact on this domain. Thanks to automation, instances are spawned and deleted in a matter of second. Continuous development/Continuous Integration means that an average lifetime of a block of code is ever decreasing. Code review and vulnerability assessments based on static code and IP are hardly affordable at current rate of change. At the same time, the rate of proliferation of technology has seen comparable increase in risk vectors, vulnerabilities and attack methodologies. To keep up with this pace, automation in security operations has become more important than ever. 

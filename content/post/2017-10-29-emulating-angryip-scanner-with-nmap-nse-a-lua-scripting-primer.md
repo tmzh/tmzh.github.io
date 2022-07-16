@@ -1,16 +1,15 @@
 ---
 author: tmzh
-comments: true
-date: 2017-10-29 12:08:28+08:00
-layout: post
-slug: 2017-10-29-emulating-angryip-scanner-with-nmap-scripting-engine-a-lua-scripting-primer
-title: Emulating Angry IP Scanner with nmap scripting engine - A lua scripting primer
 categories:
 - Scripting
+comments: true
+date: "2017-10-29T12:08:28Z"
+slug: 2017-10-29-emulating-angryip-scanner-with-nmap-scripting-engine-a-lua-scripting-primer
 tags:
 - lua
 - nmap
 - network-discovery
+title: Emulating Angry IP Scanner with nmap scripting engine - A lua scripting primer
 ---
 Often we have to discover the devices on a network. I use a very simple nmap command for performing a pingsweep. 
 

@@ -1,17 +1,16 @@
 ---
 author: tmzh
-comments: true
-date: 2018-04-28 12:00:00+08:00
-layout: post
-slug: 2018-04-28-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2
-title: Predicting the playing role of a cricketer using Machine Learning (Part 2)
 categories:
 - Machine Learning
+comments: true
+date: "2018-04-28T12:00:00Z"
+slug: 2018-04-28-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2
 tags:
 - pandas
 - keras
 - machine learning
 - visualization
+title: Predicting the playing role of a cricketer using Machine Learning (Part 2)
 ---
 In the previous [post](https://tmzh.github.io/machine%20learning/2018/04/23/2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1/) we saw how to scrape raw data from a content rich webpage. In this post, we will explore how to process that raw data and use Machine Learning tools to predict the playing role of a cricket player just based on his career statistics.
 
