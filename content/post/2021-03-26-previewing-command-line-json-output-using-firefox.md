@@ -59,7 +59,7 @@ aws ec2-describe-subnets --no-cli-pager | base64 | xargs -I % "data:application/
 
 This gives us a nice visual interface to inspect the json document.
 
-![aws cli output](../images/2021-03-26-aws-cli-json-output.png)
+![aws cli output](/images/2021-03-26-aws-cli-json-output.png)
 
 
 We can even drop it into a handy bash function and pipe json output to this function
