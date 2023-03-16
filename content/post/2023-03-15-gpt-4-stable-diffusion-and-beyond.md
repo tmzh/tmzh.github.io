@@ -11,15 +11,16 @@ tags:
 - philosophy
 title: "GPT-4, Stable Diffusion, and Beyond: How Generative AI Will Shape Human Society"
 ---
-In 2021, I wrote about GPT-3 model. About a year later, OpenAI released ChatGPT which was based on GPT-3 but trained using Reinforcement Learning from Human Feedback (RLHF). Now that GPT-4 has only been out for a day, it is already seeing incredible applications being built with it. It can help [turn sketches](https://twitter.com/blader/status/1635792905628712960) into fully working apps and websites; help build [personal tutors](https://www.youtube.com/watch?v=yEgHrxvLsz0); convert a wikipedia article to a [tome](https://twitter.com/keithpeiris/status/1635744012081729536) and [more](https://twitter.com/rowancheung/status/1636017917136367617).
+In 2021, I wrote about GPT-3 model. About a year later, OpenAI released ChatGPT which was based on GPT-3 but trained using Reinforcement Learning from Human Feedback (RLHF). Now that GPT-4 has only been out for a day, it is already seeing incredible applications being built with it such as [turning sketches](https://twitter.com/blader/status/1635792905628712960) into functional apps, creating [personal tutors](https://www.youtube.com/watch?v=yEgHrxvLsz0), turning wikipedia articles into [tome](https://twitter.com/keithpeiris/status/1635744012081729536) and [more](https://twitter.com/rowancheung/status/1636017917136367617).
+
+And not just GPT based models, StableDiffusion and Dall-E are also pushing the boundaries of art, creating stunning visuals from mere textual descriptions. Professional ad agencies, too, are exploring how to use AI, as seen in this [Coca Cola ad](https://youtu.be/951q69P0La) and this [Crocs ad](https://twitter.com/nonmayorpete/status/163516240862815846) which apparently took only 28 minutes to create from scratch.
 
 <figure>
     <img src="/images/2023-03-15-gpt-4-performance.png"
-         alt="GPT-4 performance">
-    <figcaption>GPT-4 performance</figcaption>
+         alt="GPT-4 performance"
+         width="80%">
+    <figcaption><i>The newly released GPT-4 exhibits human-level performance on a variety of common and professional academic exams. Source: <a href="https://cdn.openai.com/papers/gpt-4.pdf">OpenAI GPT-4 Technical Report</a></i></figcaption>
 </figure>
-
-And not just GPT based models, StableDiffusion and Dall-E are also pushing the boundaries of art, creating stunning visuals from mere textual descriptions. Beyond hobby projects, even professional ad agencies are exploring how to use AI such as in this [Coca Cola ad](https://youtu.be/951q69P0La) and [Crocs ad](https://twitter.com/nonmayorpete/status/163516240862815846) which apparently took only 28 minutes from an empty canvas to final product.
 
 Suddenly the pace of advancements in AI has shifted from a slow trickle to a deluge. And some may even say out of control. A staple fear about hyper intelligence has been that a recursively self-improving AI would have no discernible limit to the extent of intelligence it could attain. However, I think these are speculations given how little we understand about the inner-workings of AI (more on this later). We tend to project our apprehensions and anthropocentric tendencies onto AI and assume that it would act as a sentient being would. Rather than worrying about future possibilities with superhuman intelligence, the immediate concern should be that AI models are already good enough to disrupt human society.
 
@@ -53,10 +54,13 @@ There is always a concern that the AI systems will replace human workers in a va
 ## Death of art or reincarnation of art?
 For AI generative art, the main concern is regarding the risk of plagiarism. This is kind of a Ship of theseus problem- at what point of does the art becomes something else? How do you distinguish between contribution that are uniquely yours? Irrespective of how we address the plagiarism problem, I don't see AI generated art diminishing the need or impact of artists. Art in its purest meaning, is a counterpoint to the current current society. If everyone is outputting StableDiffusion artwork, certain predictable patterns begins to emerge and it can quickly feel soulless. Same can be said of ChatGPT or any AI derived work. Folks have already [noted](https://twitter.com/bildoperationen/status/1633082030178050048) that in StableDiffusion "the default mode of these images is to shine and sparkle, as if illuminated from within". On the other hand, a mainstream art that mimics status quo will be under threat. Pop artists may be replaced by prompt engineers or there may be new generation of hybrid artists who would wield AI tools as a paintbrush to produce unique forms of artwork.
 
-
 <figure>
     <img src="/images/2023-03-15-surrealist-art-stable-diffusion.png"
          witdth="50%"
          alt="Surrealist art by Stable Diffusion">
     <figcaption>Surrealist art by Stable Diffusion</figcaption>
 </figure>
+
+
+## What do we need to do?
+In order to tackle the potential hazards of AI, we have to channel our innate ability to adapt. As much as we'd like to think we're in charge of the progress of AI, we can't possibly anticipate all the potential consequences and risks that come with AI and expect to control it with a set of rules and regulations. Therefore, it is imperative that we approach the development and integration of AI with humility, acknowledging the complexity and unpredictability of the technology, and actively seeking to examine, understand and manage its potential impact on society and individual lives.
