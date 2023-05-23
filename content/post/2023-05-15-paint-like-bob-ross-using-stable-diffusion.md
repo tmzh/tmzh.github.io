@@ -17,7 +17,7 @@ When it comes to creating artwork, there are many Generative AI tools, but my fa
 
 But one of my favorite use case is to render rough sketches into much prettier artwork. In this post we will see how to setup real-time rendering so that we have an interactive drawing experience. See below to see how quickly we can come up with a decent painting. 
 
-<video width=80% autoplay="true" loop="true" src="/images/2023-05-16-stable-diffusion-art.mp4"> </video>
+<video width=80% loop="true" src="/images/2023-05-16-stable-diffusion-art.mp4" autoplay> </video>
 
 This was just a rough  draft done in 2 minutes, with a bit more skill and persistence it is possible to extract a more beautiful artwork as per your want. 
 
