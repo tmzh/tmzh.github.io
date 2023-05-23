@@ -9,11 +9,11 @@ slug: 2023-05-16-paint-like-bob-ross-using-stable-diffusion
 tags:
 - stable-diffusion
 - art
-title: "Create beautiful paintings from rough sketches using Stable diffusion"
+title: "Create Beautiful Paintings From Rough Sketches Using Stable diffusion"
 ---
 
 ## Introduction
-When it comes to creating artwork, there are many Generative AI tools, but my favorite is [Stable Diffusion](https://github.com/CompVis/stable-diffusion). Since it is open source, a variety of tools and usecases have been built around Stable diffusion. With it, you can train your own model, fine-tune existing models, or use countless other models trained and hosted by others. 
+When it comes to creating artwork, there are many Generative AI tools, but my favorite one is the vanilla [Stable Diffusion](https://github.com/CompVis/stable-diffusion). Since it is open source, an ecosystem of tools and techniques have sprouted around it. With it, you can train your own model, fine-tune existing models, or use countless other models trained and hosted by others. 
 
 But one of my favorite use case is to render rough sketches into much prettier artwork. In this post we will see how to setup real-time rendering so that we have an interactive drawing experience. See below to see how quickly we can come up with a decent painting. 
 
@@ -26,22 +26,28 @@ This was just a rough  draft done in 2 minutes, with a bit more skill and persis
 What I like about this approach is that it is interactive - you don't go in with a pre-conceived notion. You take your artwork to where the canvas (Stable Diffusion in this case) leads you. Next we will seehow to set it up on your own.
 
 ## Instructions
-For this, I made use of the excellent [Stable Diffusion web UI](https://github.com/AUTOMATIC1111/stable-diffusion-webui) project by AUTOMATIC1111. The Web UI also supports an API mode which we will use to generate images using `img2img`  of Stable Diffusion. `img2img` uses the weights from Stable Diffusion to generate new images from an input image using [StableDiffusionImg2ImgPipeline](https://replicate.com/stability-ai/stable-diffusion-img2img) from diffusers. 
+For this, I made use of the excellent [Stable Diffusion web UI](https://github.com/AUTOMATIC1111/stable-diffusion-webui) project by AUTOMATIC1111. The Web UI also supports an API mode which we will use to generate images using `img2img` feature of Stable Diffusion. `img2img` uses the weights from Stable Diffusion to generate new images from an input image using [StableDiffusionImg2ImgPipeline](https://replicate.com/stability-ai/stable-diffusion-img2img). 
 
 ### Setup
 1. Install Stable Diffusion Web UI by following the [instructions](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Install-and-Run-on-NVidia-GPUs#windows-method-1) in the project page. If you are on Windows, I would recommend running this directly on Windows rather than on WSL2. Navigating CUDA runtime dependencies across Windows + linux is not worth the time.
 2. We would also need Jupyter notebook and webuiapi packages to call Stable Diffusion Web UI API. At launch, AUTOMATIC1111 always sets up a VirtualEnv and pip installs the packages from `requirements.txt`. So add the packages `notebook` and `webuiapi` to the bottom of `requirements.txt` present at the project root. Jupyter notebook package will get installed at the next launch. 
 3. Next we need to [enable](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/API) API support. For example, if you're using Windows, edit the `webui-user.bat` file and add --api --api-log to the COMMANDLINE_ARGS line:
 ```bat
-Rem Run jupyter notebook
-start jupyter notebook --no-browser
-
 Rem Stable diffusion webui
 call webui.bat
 ```
-4. Run the modified execution script. For example, on Windows, run `webui-user.bat`. It should launch two CMD windows, one to launch Stable diffusion web UI and one to launch Jupyter notebook
-5. Verify that Stable Diffusion Web UI is running by visiting http://localhost:7860/ in your browser.
-6. When you are done, remember to close both the CMD windows.
+4. Run the modified execution script. For example, on Windows, run `webui-user.bat`. It should launch Stable diffusion web UI
+5. In order to run Jupyter notebook, open a separate CMD shell, activate the venv and then launch jupyter notebook
+```bash
+## Activate venv
+venv\Scripts\activate.bat 
+
+## Run Jupyter notebook
+start jupyter notebook
+
+```
+6. Verify that Stable Diffusion Web UI is running by visiting http://localhost:7860/ in your browser.
+7. When you are done, remember to close both the CMD windows.
 
 ### Drawing
 1. Open a new notebook and add the following code:
@@ -97,4 +103,5 @@ while True:
             clear_output(wait=True)
             display(result2.image)
 ```
-5. If you are using a tool like Photoshop, turn on the autosave. If not remember to save your file periodically.
+5. Draw some rough strokes and watch stable-diffusion interpret and render it as a painting. Each rendering may take few seconds depending on the GPU configuration. 
+6. You will have to save the file periodically to trigger the `img2img` inference. If you are using a tool like Photoshop, you can turn on autosave.
