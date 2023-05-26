@@ -17,16 +17,18 @@ When it comes to creating artwork, there are many Generative AI tools, but my fa
 
 But one of my favorite use case is to render rough sketches into much prettier artwork. In this post we will see how to setup real-time rendering so that we have an interactive drawing experience. See below to see how quickly we can come up with a decent painting. 
 
-<video width=80% loop="true" src="/images/2023-05-16-stable-diffusion-art.mp4" autoplay> </video>
+![Interactive drawing](/images/2023-05-16-stable-diffusion-art.gif)
 
 This was just a rough  draft done in 2 minutes, with a bit more skill and persistence it is possible to extract a more beautiful artwork as per your want. 
 
 ![Mountain](/images/2023-05-16-stable-diffusion-art.png)
 
-What I like about this approach is that it is interactive - you don't go in with a pre-conceived notion. You take your artwork to where the canvas (Stable Diffusion in this case) leads you. Next we will seehow to set it up on your own.
+What I like about this approach is that it is interactive - you don't go in with a pre-conceived notion. You take your artwork to where the canvas (Stable Diffusion in this case) leads you. Next we will see how to set it up on your own.
 
 ## Instructions
 For this, I made use of the excellent [Stable Diffusion web UI](https://github.com/AUTOMATIC1111/stable-diffusion-webui) project by AUTOMATIC1111. The Web UI also supports an API mode which we will use to generate images using `img2img` feature of Stable Diffusion. `img2img` uses the weights from Stable Diffusion to generate new images from an input image using [StableDiffusionImg2ImgPipeline](https://replicate.com/stability-ai/stable-diffusion-img2img). 
+
+> Ideally you would require a GPU with more than 8GB VRAM. There are workarounds to run the model on lower end GPUs. Refer to AUTOMATIC1111 docs or wiki for more details.
 
 ### Setup
 1. Install Stable Diffusion Web UI by following the [instructions](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Install-and-Run-on-NVidia-GPUs#windows-method-1) in the project page. If you are on Windows, I would recommend running this directly on Windows rather than on WSL2. Navigating CUDA runtime dependencies across Windows + linux is not worth the time.
@@ -69,10 +71,9 @@ f_prompt_new = 0
 ```
 
 2. Add your desired prompt text to the file `prompt.txt`. In my example above, I used a very generic prompt like below:
-```
+```text
 an oil painting of a scenery by bob ross
 ```
-
 
 3. Create a PNG file called `base.png` using MS Paint or any of your favorite image editing tool and save it at the  base path.
 
@@ -92,7 +93,7 @@ while True:
             result2 = api.img2img(
                 images=[im], 
                 prompt=prompt_txt, 
-                negative_prompt = "poorly drawn, photorealistic, watermark, logo, text, bad anatomy, missing fingers,missing body part,mangled hands",
+                negative_prompt = "poorly drawn, photorealistic, watermark, logo, text, bad anatomy, missing fingers,missing body part,mangled hands, NSFW",
                 steps=40,
                 seed=-1,
                 styles=[],
