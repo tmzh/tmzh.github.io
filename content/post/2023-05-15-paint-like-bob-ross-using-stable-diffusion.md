@@ -71,7 +71,7 @@ f_prompt_new = 0
 ```
 
 2. Add your desired prompt text to the file `prompt.txt`. In my example above, I used a very generic prompt like below:
-```text
+```
 an oil painting of a scenery by bob ross
 ```
 
