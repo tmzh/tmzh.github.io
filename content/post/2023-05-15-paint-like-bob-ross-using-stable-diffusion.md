@@ -35,8 +35,7 @@ For this, I made use of the excellent [Stable Diffusion web UI](https://github.c
 2. We would also need Jupyter notebook and webuiapi packages to call Stable Diffusion Web UI API. At launch, AUTOMATIC1111 always sets up a VirtualEnv and pip installs the packages from `requirements.txt`. So add the packages `notebook` and `webuiapi` to the bottom of `requirements.txt` present at the project root. Jupyter notebook package will get installed at the next launch. 
 3. Next we need to [enable](https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/API) API support. For example, if you're using Windows, edit the `webui-user.bat` file and add --api --api-log to the COMMANDLINE_ARGS line:
 ```bat
-Rem Stable diffusion webui
-call webui.bat
+set COMMANDLINE_ARGS=--api
 ```
 4. Run the modified execution script. For example, on Windows, run `webui-user.bat`. It should launch Stable diffusion web UI
 5. In order to run Jupyter notebook, open a separate CMD shell, activate the venv and then launch jupyter notebook
