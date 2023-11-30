@@ -34,30 +34,33 @@ Finally, for knowledge-intensive tasks like chatbots, the ability of LLMs to mak
 </i></figcaption>
 </figure>
 
-### Advantages of RAG over LLM-based question answering
-1. RAG can answer based on facts not learned during the LLM training, without the need for fine-tuning. This is more relevant for specific knowledge domains such as internal company docs or for data outside the cut-off used for LLM training
-2. RAG can provide traceability to its answers, enabling users to identify the sources of information
-3. When passing source documents as prompts, LLMs are limited by context length. Even with newer models that supports longer contexts it is not performant to pass the entire knowledge base into the prompt 
-
-### Advantages of RAG over traditional chatbots
-1. LLMs handle out-of-distribution data better, so they perform better in situations where simple syntax parsing, pattern matching and database lookup are not adequate. And unlike traditional Chatbots, LLMs offer a more human-like interaction by understanding context, generating personalized responses.
-2. If the users query doesn't exactly match the question in our knowledge base, the response quality greatly suffers
-
-## How Retrieval Augmented Generation works
+# How Retrieval Augmented Generation works
 Retrieval augmented generation (RAG) works by combining two main components: a retrieval model and a generation model. 
 
 The retrieval model searches and retrieves relevant information from a database or collection of documents. It typically uses semantic similarity, representing words or documents as numerical embeddings and calculating the similarity between query embeddings and document embeddings to identify the most relevant information.
 
-Once the retrieval model has retrieved the relevant content, it serves as a knowledge base or reference for the generation model. The generation model is typically a large language model (LLM) that takes the retrieved information as input and generates new text based on it. The generation model uses the retrieved information to guide the text generation process. 
+Once the retrieval model has retrieved the relevant content, it serves as a knowledge base or reference for the generation model. The generation model is typically a large language model (LLM) that takes the retrieved information as input and generates new text based on it. The generation model uses the retrieved information to guide the text generation process.
 
 ![Retrieval Augmented Generation](/images/2023-06-25-retrieval-qa.svg)
+
+## Advantages of RAG over LLM-based question answering
+1. RAG can answer based on facts not learned during the LLM training, without the need for fine-tuning. This is more relevant for specific knowledge domains such as internal company docs or for data outside the cut-off used for LLM training
+2. RAG can provide traceability to its answers, enabling users to identify the sources of information
+3. When passing source documents as prompts, LLMs are limited by context length. Even with newer models that supports longer contexts it is not performant to pass the entire knowledge base into the prompt 
+
+## Advantages of RAG over traditional chatbots
+1. LLMs handle out-of-distribution data better, so they perform better in situations where simple syntax parsing, pattern matching and database lookup are not adequate. And unlike traditional Chatbots, LLMs offer a more human-like interaction by understanding context, generating personalized responses.
+2. If the users query doesn't exactly match the question in our knowledge base, the response quality greatly suffers
+
 
 The combination of the retrieval model and the generation model allows for a more targeted and accurate generation of text. The retrieval model ensures that the generated text is grounded in relevant and reliable information, while the generation model adds creativity and fluency to the text. While it is possible to use a large language model (LLM) for both embedding and text generation, processing long documents through an LLM for populating vector store can be computationally expensive. Embedding models, unlike LLMs, are not encumbered with extraneous details required for next token prediction. Overall, separating the retrieval and generation tasks improves efficiency and precision.
 
 
+# Implementation
 In this blog post, we will develop a retrieval augmented generation (RAG) based LLM application from scratch. We will be building a chatbot that answers questions based on a knowledge base. For the knowledge base, we will use [E-commerce FAQ dataset](https://www.kaggle.com/datasets/saadmakhdoom/ecommerce-faq-chatbot-dataset).
 
-## Implementation
+
+## Setup
 
 ### Load documents
 
@@ -76,7 +79,7 @@ metadatas = data['questions'] # retain QnA as dict in metadata
 ids = [str(uuid.uuid1()) for _ in documents] # unique identifier for the vectors
 ```
 
-###  Generate and store embeddings
+###  Prepare embeddings
 Next we will use an embedding model to generate vector representations of the chunks. Here we are using `BAAI/bge-small-en-v1.5` model.  This is a tiny model, less than 150 MB in size and uses 384 dimensions to store semantic information, but it is sufficient for retrieval. Since embedding model needs to process a lot more tokens than answering model which only needs to process the prompt, it is better to keep it lightweight. If we have enough memory, we can use a larger model to generate embeddings.
 
 ```python
@@ -105,7 +108,8 @@ Since our FAQ dataset is very small, and we have a light embedding model, it is 
 
 For more expensive embedding operations involving larger dataset or embedding model, we can use persistent store such one offered by ChromaDB itself or other options such as `pgVector`, `Pinecone` or `Weaviate`
 
-### Querying Index
+## Retrieval
+### Query Index
 We can now retrieve a documents closest to query:
 
 ```python
@@ -149,7 +153,8 @@ The top 3 responses are:
 Clearly just returning answer for the closest matched question will be incomplete and unsatisfactory for the user. The ideal answer need to incorporate all facts from the relevant document chunks. This is where generation model can help.
 
 
-**Loading a generative model**
+## Generation
+### Load a generative model
 
 LLMs are often trained and released as unaligned base models initially which simply take in text and predict next token. Bloom, Llama2, Mistral are examples of such base models. But for practical use we often require models that are further fine-tuned for the task. For RAG and generally speaking for chat agents we need `Instruct models` that are further fine-tuned on instruction-response pairs. 
 
@@ -184,7 +189,7 @@ Alternately you can use any of the other instruct models. I have had good result
 
 
 
-**Building a prompt**
+### Build a prompt
 
 Every instruct model works best when we provide it with prompts as per a specific template which it was trained on. Since this template can vary between models, to reliably apply model specific chat template, we can use [Transformers chat template](https://huggingface.co/docs/transformers/main/chat_templating), which allows us to format a list of messages as per model specific chat template.
 
@@ -230,7 +235,7 @@ This will insert a set of relevant question and answers as additional context wi
 
     How can I open an account? [/INST]
 
-**Generating a response**
+### Generate response
 
 Now we have everything needed to generate a user-friendly response from LLM. 
 
@@ -262,7 +267,7 @@ answer = tokenizer.batch_decode(generated_ids[:, model_inputs.shape[1]:])[0]
 ```
 
 
-**Building a Chat UI**
+### Build a Chat UI
 
 Now we have all the necessary ingredients to build a chatbot. Gradio library offers several ready-made components which simplifies the process of building a Chat UI. We need to wrap our token generation process as below:
 
@@ -359,7 +364,7 @@ chatbot.queue()
 chatbot.launch()
 ```
 
-## Conclusion
+# Conclusion
 With the above setup, we can build a chatbot which can provide truthful responses based on an organizations knowledge base. Since the model possesses the language understanding typical of all LLMs, it is able to respond to questions phrased in different manners. And since the responses are tailored to follow    a question and answer format, the user experience is not disruptive and they don't feel like talking to an impersonal bot.
 
 ![RAG Chatbot](/images/2023-06-25-rag.gif)
