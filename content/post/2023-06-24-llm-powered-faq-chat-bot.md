@@ -216,7 +216,7 @@ chat.append({"role": "user", "content": query})
 
 prompt = tokenizer.apply_chat_template(chat, tokenize=False)
 ```
-For our example the constructed prompt looks like this:
+This will insert a set of relevant question and answers as additional context within the prompt, so that the model can use this information to give an answer. For our example the constructed prompt looks like this:
 
     <s>[INST] <<SYS>>
     You are a helpful, respectful and honest support executive. Always be as helpfully as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information.
@@ -320,20 +320,21 @@ def respond(query):
     chat.append({"role": "system", "content": system_message})
     chat.append({"role": "user", "content": query})
 
-    prompt = tokenizer.apply_chat_template(chat, tokenize=False)
-
     encodeds = tokenizer.apply_chat_template(chat, return_tensors="pt")
 
     model_inputs = encodeds.to(model.device)
+    streamer = TextStreamer(tokenizer)
+
     model.to(model.device)
 
-    generated_ids = model.generate(model_inputs, max_new_tokens=100, do_sample=True)
+    generated_ids = model.generate(model_inputs, streamer=streamer, temperature=0.01, max_new_tokens=100, do_sample=True)
     answer = tokenizer.batch_decode(generated_ids[:, model_inputs.shape[1]:])[0]
     answer = answer.replace('</s>', '')
+    samples = related_questions
 
     related = gr.Dataset.update(samples=related_questions)
 
-    return [answer, references, related]
+    yield [answer, references, related]
 
 
 def load_example(example_id):
@@ -354,14 +355,17 @@ with gr.Blocks() as chatbot:
         examples.click(load_example, inputs=[examples], outputs=[question])
         generate.click(respond, inputs=question, outputs=[answer_block, references_block, examples])
 
+chatbot.queue()
 chatbot.launch()
 ```
+
+## Conclusion
+With the above setup, we can build a chatbot which can provide truthful responses based on an organizations knowledge base. Since the model possesses the language understanding typical of all LLMs, it is able to respond to questions phrased in different manners. And since the responses are tailored to follow    a question and answer format, the user experience is not disruptive and they don't feel like talking to an impersonal bot.
+
+![RAG Chatbot](/images/2023-06-24-rag.gif)
 
 
 # Reference
 * https://arxiv.org/abs/2005.11401
-* https://jxnl.github.io/instructor/blog/2023/09/17/rag-is-more-than-just-embedding-search/
-* https://docs.aws.amazon.com/sagemaker/latest/dg/jumpstart-foundation-models-customize-rag.html
-* https://scriv.ai/guides/retrieval-augmented-generation-overview/?utm_source=pocket_saves
-* https://github.com/aws-samples/amazon-bedrock-workshop/blob/main/03_QuestionAnswering/01_qa_w_rag_claude.ipynb
+* https://scriv.ai/guides/retrieval-augmented-generation-overview/
 * https://research.ibm.com/blog/retrieval-augmented-generation-RAG
