@@ -362,7 +362,7 @@ chatbot.launch()
 ## Conclusion
 With the above setup, we can build a chatbot which can provide truthful responses based on an organizations knowledge base. Since the model possesses the language understanding typical of all LLMs, it is able to respond to questions phrased in different manners. And since the responses are tailored to follow    a question and answer format, the user experience is not disruptive and they don't feel like talking to an impersonal bot.
 
-![RAG Chatbot](/images/2023-06-24-rag.gif)
+![RAG Chatbot](/images/2023-06-25-rag.gif)
 
 
 # Reference
