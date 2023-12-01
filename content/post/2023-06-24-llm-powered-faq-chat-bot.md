@@ -16,14 +16,9 @@ autoCollapseToc: true
 ---
 
 # Introduction
-In today's digital landscape, chatbots have become a familiar presence, seamlessly integrating into various applications and platforms, from customer service to virtual assistants. However, as widespread as they may be, these traditional conversational agents still face certain limitations. While they are excellent in generating conditioned responses, they struggle with out-of-distribution queries. For example, if the user asks an unexpected question or uses unusual patterns, they either revert to a standard response or fail to respond.
+While chatbots have grown common in applications like customer service, they have several shortcomings which disrupts user experience. Traditional chatbots rely on pattern matching and database lookups, which are ineffective when a user's question deviates from what was expected. Responses may feel impersonal and fail to address the true intent when questions deviate slightly from pattern matching rules. 
 
-This is where large language models (LLMs) can help, offering a promising solution to enhance chatbot performance. LLMs handle out-of-distribution data better, so they perform better in situations where simple syntax parsing, pattern matching and database lookup are not adequate. And unlike traditional Chatbots, LLMs offer a more human-like interaction by understanding context, generating personalized responses. 
-
-Conversely, Chatbots are also an excellent use case for LLMs where the strengths of an LLM shines. For examples, LLMs have a common weakness known as "hallucination," wherein they generate inaccurate or irrelevant responses. When in used in Chatbots, we can reduce LLM "hallucination" by  incorporating knowledge retrieval, and restricting the responses to authoritative information sourced from knowledge base. 
-
-Finally, for knowledge-intensive tasks like chatbots, the ability of LLMs to make predictions based on both input contexts and domain-specific knowledge, such as a company's documentation, proves invaluable. This integration enables chatbots to provide more informed and accurate responses, enhancing their overall performance as conversational agents.
-
+This is where large language models (LLMs) can provide value. LLMs are better equipped to handle out-of-scope questions due to their ability to understand context and previous exchanges. They can generate more personalized responses compared to typical rule-based chatbots. As such, chatbots represent a prime use case for generative AI in enterprises.
 
 <figure>
     <img src="/images/2023-06-25-decision-flow-for-chosing-llm.png"
@@ -34,27 +29,40 @@ Finally, for knowledge-intensive tasks like chatbots, the ability of LLMs to mak
 </i></figcaption>
 </figure>
 
+One approach utilizes LLMs via in-context learning— inserting knowledge corpora into the prompt along with user queries. However, responses generated without constraints risk factual inaccuracies or irrelevance, especially for topics beyond training data distributions.
+
+However, using LLMs in this manner can have certain limitations. Most importantly, they may produce inaccurate or irrelevant answers when deviating too far from their training data, a phenomenon known as "hallucination". 
+
+To address this, knowledge retrieval can be incorporated to ground the LLM's responses in factual information from curated sources. This is known as Retrieval Augmented Generation
+
 # How Retrieval Augmented Generation works
-Retrieval augmented generation (RAG) works by combining two main components: a retrieval model and a generation model. 
+Retrieval augmented generation (RAG) combines two main components: a retrieval model and a generation model. 
 
-The retrieval model searches and retrieves relevant information from a database or collection of documents. It typically uses semantic similarity, representing words or documents as numerical embeddings and calculating the similarity between query embeddings and document embeddings to identify the most relevant information.
+The retrieval model searches external knowledge bases to extract facts relevant to a user's query. It represents words and documents as embeddings, calculating similarity between query and document embeddings to retrieve top results.
 
-Once the retrieval model has retrieved the relevant content, it serves as a knowledge base or reference for the generation model. The generation model is typically a large language model (LLM) that takes the retrieved information as input and generates new text based on it. The generation model uses the retrieved information to guide the text generation process.
+The generation model—typically a large language model—accepts the retrieved information as input. It produces natural language responses guided by this context without direct access to the raw knowledge base. This anchoring to concrete facts mitigates generation of incorrect statements compared to relying solely on the LLM.
 
 ![Retrieval Augmented Generation](/images/2023-06-25-retrieval-qa.svg)
 
-## Advantages of RAG over LLM-based question answering
-1. RAG can answer based on facts not learned during the LLM training, without the need for fine-tuning. This is more relevant for specific knowledge domains such as internal company docs or for data outside the cut-off used for LLM training
-2. RAG can provide traceability to its answers, enabling users to identify the sources of information
-3. When passing source documents as prompts, LLMs are limited by context length. Even with newer models that supports longer contexts it is not performant to pass the entire knowledge base into the prompt 
+## Advantages of RAG
+RAG offers advantages over both LLM-based QA and traditional chatbots:
 
-## Advantages of RAG over traditional chatbots
-1. LLMs handle out-of-distribution data better, so they perform better in situations where simple syntax parsing, pattern matching and database lookup are not adequate. And unlike traditional Chatbots, LLMs offer a more human-like interaction by understanding context, generating personalized responses.
-2. If the users query doesn't exactly match the question in our knowledge base, the response quality greatly suffers
+**LLM QA:**
+* Answers from externally retrieved facts without expensive fine-tuning
+* Provides traceability to cited information sources
+* Avoids constraints of fitting knowledge bases entirely within LLM context windows
 
+**Chatbots:**
+* Handles ambiguous, out-of-scope queries better through contextual understanding
+* Generates more human-like, personalized responses than rule-based systems
 
-The combination of the retrieval model and the generation model allows for a more targeted and accurate generation of text. The retrieval model ensures that the generated text is grounded in relevant and reliable information, while the generation model adds creativity and fluency to the text. While it is possible to use a large language model (LLM) for both embedding and text generation, processing long documents through an LLM for populating vector store can be computationally expensive. Embedding models, unlike LLMs, are not encumbered with extraneous details required for next token prediction. Overall, separating the retrieval and generation tasks improves efficiency and precision.
+The hybrid approach also has computational benefits. Dividing tasks between specialized models allows for:
 
+* Faster embedding retrieval calculations due to operating in lower dimensional space than LLM.
+* Lighter embedding models focused solely on relevance over language modeling.
+* Efficient division of labor where retrieval grounds highly precise generation.
+
+Overall, RAG leverages the strengths of both retrieval and language models. By anchoring flexible conversational abilities to verifiable facts, it offers a more robust framework for open-domain dialogue than previous paradigms alone.
 
 # Implementation
 In this blog post, we will develop a retrieval augmented generation (RAG) based LLM application from scratch. We will be building a chatbot that answers questions based on a knowledge base. For the knowledge base, we will use [E-commerce FAQ dataset](https://www.kaggle.com/datasets/saadmakhdoom/ecommerce-faq-chatbot-dataset).
@@ -106,11 +114,11 @@ Since our FAQ dataset is very small, and we have a light embedding model, it is 
 | Inner product     | `ip`      | $$d = 1.0 - \sum\left(A_i \times B_i\right) $$                                                                          |
 | Cosine Similarity | `cosine`  | $$d = 1.0 - \frac{\sum\left(A_i \times B_i\right)}{\sqrt{\sum\left(A_i^2\right)} \cdot \sqrt{\sum\left(B_i^2\right)}}$$ |
 
-For more expensive embedding operations involving larger dataset or embedding model, we can use persistent store such one offered by ChromaDB itself or other options such as `pgVector`, `Pinecone` or `Weaviate`
+For more expensive embedding operations involving larger dataset or embedding models, we can use a persistent store such as the one offered by ChromaDB itself or other options such as `pgVector`, `Pinecone`, or `Weaviate`
 
 ## Retrieval
 ### Query Index
-We can now retrieve a documents closest to query:
+We can now retrieve a set of documents closest to the query:
 
 ```python
 query = "How can I open an account?"
@@ -150,15 +158,15 @@ The top 3 responses are:
 	   'answer':  "Our return policy allows you to return products within 30 days of purchase for a full refund, provided they are in their original condition and packaging. Please refer to our Returns page for detailed instructions."}
 	  ]]
 
-Clearly just returning answer for the closest matched question will be incomplete and unsatisfactory for the user. The ideal answer need to incorporate all facts from the relevant document chunks. This is where generation model can help.
+Clearly just returning the answer for the closest matched question will be incomplete and unsatisfactory for the user. The ideal answer needs to incorporate all facts from the relevant document chunks. This is where a generation model can help.
 
 
 ## Generation
 ### Load a generative model
 
-LLMs are often trained and released as unaligned base models initially which simply take in text and predict next token. Bloom, Llama2, Mistral are examples of such base models. But for practical use we often require models that are further fine-tuned for the task. For RAG and generally speaking for chat agents we need `Instruct models` that are further fine-tuned on instruction-response pairs. 
+LLMs are often trained and released as unaligned base models initially which simply take in text and predict the next token. Bloom, Llama2 and Mistral are examples of such base models. But for practical use, we often require models that are further fine-tuned for the task. For RAG and generally speaking for chat agents we need `Instruct models` that are further fine-tuned on instruction-response pairs. 
 
-For this demonstration I used an instruction fine-tuned model [`Mistral-7B-Instruct-v0.1`](https://docs.mistral.ai/llm/mistral-instruct-v0.1) from Mistral. The Mistral model is in particular impressive for the quality of its text generation given the relatively small model size (7B). This leads to quite performant prompt evaluation and response generation. I used `GPTQ` quantized version which further reduces the model size and improves the prompt evaluation and token generation throughput significantly.
+For this demonstration, I used an instruction fine-tuned model [`Mistral-7B-Instruct-v0.1`](https://docs.mistral.ai/llm/mistral-instruct-v0.1) from Mistral. The Mistral model is in particular impressive for the quality of its text generation given the relatively small model size (7B). This leads to quite performant prompt evaluation and response generation. I used the `GPTQ` quantized version which further reduces the model size and improves the prompt evaluation and token generation throughput significantly.
 
 > GPTQ models are quantized versions that reduces memory requirements with a slight [tradeoff](https://github.com/ggerganov/llama.cpp/pull/1684) of intelligence. Hugging Face transformers supports loading of GPTQ models since version `4.32.0` using AutoGPTQ library. You can learn more about this [here](https://huggingface.co/blog/gptq-integration)
 
@@ -185,13 +193,13 @@ model = AutoModelForCausalLM.from_pretrained(models[model_name],
                                              device_map="auto")
 ```
 
-Alternately you can use any of the other instruct models. I have had good results with `WizardLM-13B` as well. Note that the models we choose must fit the VRAM of your GPU. Often you can find the memory requirements of a model in their HuggingFace model card such as [here](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GPTQ).
+Alternatively, you can use any of the other instruct models. I have had good results with `WizardLM-13B` as well. Note that the models we choose must fit the VRAM of your GPU. Often you can find the memory requirements of a model in their HuggingFace model card such as [here](https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GPTQ).
 
 
 
 ### Build a prompt
 
-Every instruct model works best when we provide it with prompts as per a specific template which it was trained on. Since this template can vary between models, to reliably apply model specific chat template, we can use [Transformers chat template](https://huggingface.co/docs/transformers/main/chat_templating), which allows us to format a list of messages as per model specific chat template.
+Every instruct model works best when we provide it with prompts as per a specific template on which it was trained. Since this template can vary between models, to reliably apply model-specific chat template, we can use the [Transformers chat template](https://huggingface.co/docs/transformers/main/chat_templating), which allows us to format a list of messages as per the model-specific chat template.
 
 ```python
 chat = [
@@ -206,7 +214,7 @@ tokenizer.apply_chat_template(chat, tokenize=False)
 `<s>[INST] <<SYS>>\nYou are a helpful, respectful and honest support executive. Always answer as helpfully as possible, while being safe. While answering, use the information provided in the earlier conversations only. If the information is not present in the prior conversation, or If you don't know the answer to a question, please don't share false information. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. \n<</SYS>>\n\nHello, how are you? [/INST] I'm doing great. How can I help you today? </s><s>[INST] I'd like to show off how chat templating works! [/INST]`
 
 In our case, we want to customize the system prompt to pass the retrieved document chunks as a context for QnA. 
-This is done by disabling the default system prompt and configuring the tokenizer to use `default_chat_template`. This allows us to override the message for system role. 
+This is done by disabling the default system prompt and configuring the tokenizer to use `default_chat_template`. This allows us to override the message for the system role. 
 
 ```python
 chat = []
@@ -221,7 +229,7 @@ chat.append({"role": "user", "content": query})
 
 prompt = tokenizer.apply_chat_template(chat, tokenize=False)
 ```
-This will insert a set of relevant question and answers as additional context within the prompt, so that the model can use this information to give an answer. For our example the constructed prompt looks like this:
+This will insert a set of relevant questions and answers as additional context within the prompt so that the model can use this information to give an answer. For our example the constructed prompt looks like this:
 
     <s>[INST] <<SYS>>
     You are a helpful, respectful and honest support executive. Always be as helpfully as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information.
@@ -269,7 +277,7 @@ answer = tokenizer.batch_decode(generated_ids[:, model_inputs.shape[1]:])[0]
 
 ### Build a Chat UI
 
-Now we have all the necessary ingredients to build a chatbot. Gradio library offers several ready-made components which simplifies the process of building a Chat UI. We need to wrap our token generation process as below:
+Now we have all the necessary ingredients to build a chatbot. Gradio library offers several ready-made components that simplify the process of building a Chat UI. We need to wrap our token generation process as below:
 
 ```python
 import gradio as gr
@@ -283,7 +291,7 @@ with gr.Blocks() as chatbot:
 
 chatbot.launch()
 ```
-Along with generating a response, we can also give a list of references to let the user know the source of truth for responses. We can also suggest other relevant questions that the users can click to follow. With these additions, the code for chat component is as follows:
+Along with generating a response, we can also give a list of references to let the user know the source of truth for responses. We can also suggest other relevant questions that the users can click to follow. With these additions, the code for the chat component is as follows:
 
 ```python
 import gradio as gr
@@ -365,7 +373,7 @@ chatbot.launch()
 ```
 
 # Conclusion
-With the above setup, we can build a chatbot which can provide truthful responses based on an organizations knowledge base. Since the model possesses the language understanding typical of all LLMs, it is able to respond to questions phrased in different manners. And since the responses are tailored to follow    a question and answer format, the user experience is not disruptive and they don't feel like talking to an impersonal bot.
+With the above setup, we can build a chatbot that can provide truthful responses based on an organization's knowledge base. Since the model possesses the language understanding typical of all LLMs, it is able to respond to questions phrased in different manners. And since the responses are tailored to follow a question-and-answer format, the user experience is not disruptive and they don't feel like talking to an impersonal bot.
 
 ![RAG Chatbot](/images/2023-06-25-rag.gif)
 
