@@ -20,6 +20,8 @@ While chatbots have grown common in applications like customer service, they hav
 
 This is where large language models (LLMs) can provide value. LLMs are better equipped to handle out-of-scope questions due to their ability to understand context and previous exchanges. They can generate more personalized responses compared to typical rule-based chatbots. As such, chatbots represent a prime use case for generative AI in enterprises.
 
+When considering Generative AI use cases in an Enterprise context, it is hard to look past Chatbots utilizing Large Language Models (LLMs). Traditional chatbots can feel impersonal and inadequate due to their reliance on pattern matching and limited context understanding. In contrast, interacting with LLMs can feel natural since due to their improved understanding of context and personalized responses. This chatbot an ideal use case to explore Generate AI in enterprises.
+
 <figure>
     <img src="/images/2023-06-25-decision-flow-for-chosing-llm.png"
          alt="Decision Flow for choosing LLM"
@@ -29,9 +31,9 @@ This is where large language models (LLMs) can provide value. LLMs are better eq
 </i></figcaption>
 </figure>
 
-One approach utilizes LLMs via in-context learning— inserting knowledge corpora into the prompt along with user queries. However, responses generated without constraints risk factual inaccuracies or irrelevance, especially for topics beyond training data distributions.
+To help an LLM answer based on internal knowledge base, one approach utilizes prompting i.e., inserting knowledge corpora into the prompt along with user queries. 
 
-However, using LLMs in this manner can have certain limitations. Most importantly, they may produce inaccurate or irrelevant answers when deviating too far from their training data, a phenomenon known as "hallucination". 
+However, using LLMs in this manner can lead to responses that lack constraints, resulting in potential factual inaccuracies and irrelevance, especially when dealing with topics beyond the scope of the training data. This phenomenon is referred to as "hallucination." 
 
 To address this, knowledge retrieval can be incorporated to ground the LLM's responses in factual information from curated sources. This is known as Retrieval Augmented Generation
 
@@ -42,25 +44,23 @@ The retrieval model searches external knowledge bases to extract facts relevant 
 
 The generation model—typically a large language model—accepts the retrieved information as input. It produces natural language responses guided by this context without direct access to the raw knowledge base. This anchoring to concrete facts mitigates generation of incorrect statements compared to relying solely on the LLM.
 
-![Retrieval Augmented Generation](/images/2023-06-25-retrieval-qa.svg)
+<figure>
+    <img src="/images/2023-06-25-retrieval-qa.gif"
+         alt="Decision Flow for choosing LLM"
+         width="80%">
+    <figcaption><i>Source: <a href="https://www.newsletter.swirlai.com/p/sai-notes-08-llm-based-chatbots-to">LLM based Chatbots to query your Private Knowledge Base</a>
+</i></figcaption>
+</figure>
+
 
 ## Advantages of RAG
-RAG offers advantages over both LLM-based QA and traditional chatbots:
+RAG offers several advantages over both LLM-based question answering (QA) systems and traditional rule-based chatbots. 
 
-**LLM QA:**
-* Answers from externally retrieved facts without expensive fine-tuning
-* Provides traceability to cited information sources
-* Avoids constraints of fitting knowledge bases entirely within LLM context windows
+Compared to LLM QA, RAG can provide answers based on externally retrieved facts without the need for expensive fine-tuning. It also offers traceability to the cited information sources. 
 
-**Chatbots:**
-* Handles ambiguous, out-of-scope queries better through contextual understanding
-* Generates more human-like, personalized responses than rule-based systems
+In contrast to traditional chatbots, RAG excels in handling ambiguous and out-of-scope queries through its contextual understanding. It goes beyond simple rule-based responses and generates more human-like and personalized answers, improving the user experience.
 
-The hybrid approach also has computational benefits. Dividing tasks between specialized models allows for:
-
-* Faster embedding retrieval calculations due to operating in lower dimensional space than LLM.
-* Lighter embedding models focused solely on relevance over language modeling.
-* Efficient division of labor where retrieval grounds highly precise generation.
+The hybrid approach also has computational benefits as well. By employing lighter models specifically designed for retrieval tasks that prioritize semantic similarity over language modeling, RAG enables quicker retrievals. This efficiency is achieved by operating in a lower dimensional space compared to LLM, resulting in faster response times.
 
 Overall, RAG leverages the strengths of both retrieval and language models. By anchoring flexible conversational abilities to verifiable facts, it offers a more robust framework for open-domain dialogue than previous paradigms alone.
 
