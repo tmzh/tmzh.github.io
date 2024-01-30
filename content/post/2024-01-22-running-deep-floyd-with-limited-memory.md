@@ -15,8 +15,10 @@ mathjax: true
 autoCollapseToc: true
 ---
 
-````# Introduction
+# Introduction
 Recently I came across a very interesting project called Visual Anagrams. In it, the authors proposes a very clever approach to generate multi-view optical illusions by utilizing text-to-image diffusion models that changes appearance under various transformations such as flips, rotations, and pixel permutations. 
+
+Optical illusions such as images that show different subjects under different orientation, ambigrams, etc., Naturally I was quite excited to come across a project called `Visual Anagrams` that can generate illusions using generative AI. The project introduces a clever method for generating multi-view optical illusions using text-to-image diffusion models. The generated images changes in appearance under different transformations such as flips, rotations, and pixel permutations.
 
 It uses a generative model called DeepFloyd IF. IF is a pixel-based text-to-image generation model and was released in late April 2023 by DeepFloyd. This takes a different approach to Stable diffusion, by operating in pixel space rather than performing denoising in a latent space. This approach allows IF to generate images with high-frequency details, as well as things like generating legible text, where Stable Diffusion struggles.
 
@@ -35,8 +37,7 @@ Stage 2 UNet: 4.97 GB
 </i></figcaption>
 </figure>
 
-Fortunately, it is possible to run this on a consumer hardware or even Google colab free. The Diffusers API from HuggingFace allows us to load individual components modularly. By instantiating the model components separately we can choose when to load each component into memory, thereby reducing the amount of memory required.
-
+Fortunately, it is possible to run this model on consumer hardware or even on Google Colab for free. The Diffusers API from HuggingFace allows us to load individual components modularly, reducing the memory requirements by loading components selectively.
 
 # Inference process
 
@@ -44,7 +45,7 @@ Fortunately, it is possible to run this on a consumer hardware or even Google co
 
 
 ## Load TextEncoder Model
-We will load `T5` model in half-precision (`fp16`). We will also use the `device_map` flag to allow transformers to offload model layers to the CPU or disk. Transformers big modeling supports arbitrary device maps, which can be used to separately load model parameters directly to available devices. Passing `"auto"` will automatically create a device map. See the `transformers` [docs](https://huggingface.co/docs/accelerate/usage_guides/big_modeling#designing-a-device-map) for more information.
+The TextEncoder model used in DeepFloyd-IF is `T5`. To begin, we load this `T5` model in half-precision (fp16) and utilize the `device_map` flag to enable transformers to offload model layers to either CPU or disk. This reduces the memory requirements by more than half. For more information on device_map, refer to the transformers [documentation](https://huggingface.co/docs/accelerate/usage_guides/big_modeling#designing-a-device-map).
 
 ```python
 from transformers import T5EncoderModel
@@ -59,14 +60,10 @@ text_encoder = T5EncoderModel.from_pretrained(
 ```
 
 ### Addendum
-To further reduce memory utilization we can also load `T5` using `8bit` quantization. Transformers directly supports [bitsandbytes](https://huggingface.co/docs/transformers/main/en/main_classes/quantization#load-a-large-model-in-8bit) through the `load_in_8bit` flag. The flag `variant="8bit"` needs to be set download pre-quantized weights. For example, this should allow loading `T5` checkpoint in as little as 8GB memory.
-
+To further reduce memory utilization, we can also load the same `T5` model using 8-bit quantization. Transformers directly supports bitsandbytes through the load_in_8bit flag. Set the variant="8bit" flag to download pre-quantized weights. This allows loading the text encoders in as little as 8GB of memory.
 
 ## Create text embeddings
-We need to generate the embeddings for the two prompts that describes the visual illusions.
-The Diffusers API for accessing diffusion models is the `DiffusionPipeline` class and its subclasses. Each instance of `DiffusionPipeline` is a fully self-contained set of methods and models for running diffusion networks. We can override the models it uses by passing alternative instances as keyword arguments to `from_pretrained`.
-
-In this case, we pass None for the unet argument, so no UNet will be loaded. This allows us to run the text embedding portion of the diffusion process without loading the UNet into memory.
+Next, we need to generate embeddings for the two prompts that describe the visual illusions. DiffusionPipeline from HuggingFace Diffusers library contains methods to load models necessary for running diffusion networks. We can override the individual models used by changing the keyword arguments to `from_pretrained`. In this case, we pass the previously instantiated `text_encoder` for the text_encoder argument and `None` for the unet argument to avoid loading the UNet into memory, enabling us to load only the necessary models to run the text embedding portion of the diffusion process.
 
 ```python
 from diffusers import DiffusionPipeline
@@ -77,7 +74,7 @@ pipe = DiffusionPipeline.from_pretrained(
     unet=None
 )
 ```
-We can now use this pipe to encode the two prompts. The prompts need to be concatenated for the illusion
+We can now use this pipeline to encode the two prompts. The prompts need to be concatenated for the illusion.
 
 ```python
 # Feel free to change me:
@@ -92,7 +89,8 @@ prompt_embeds, negative_prompt_embeds = zip(*prompt_embeds)
 prompt_embeds = torch.cat(prompt_embeds)
 negative_prompt_embeds = torch.cat(negative_prompt_embeds)  # These are just null embeds
 ``` 
-Flush to free memory for the next stages
+
+Flush to free memory for the next stages.
 
 ```python
 import gc
@@ -105,12 +103,9 @@ del text_encoder
 del pipe
 flush()
 ```
-````
 
 ## Main Diffusion Process
-With our now available GPU memory, we can re-load the DiffusionPipeline with only the UNet to run the main diffusion process.
-
-The variant and torch_dtype flags are used by Diffusers to download and load the weights in 16 bit floating point format.
+With the available GPU memory, we can reload the DiffusionPipeline using only the UNet to execute the main diffusion process. Note that once again we are loading the weights in 16-bit floating point format using the variant and torch_dtype keyword arguments.
 
 ```python
 from diffusers import DiffusionPipeline
@@ -138,7 +133,7 @@ stage_2.to('cuda')
 ```
 
 ## Generate Image
-*Choose* one of the view transformations supported by Visual Anagrams repo
+Choose one of the view transformations supported by the Visual Anagrams repository.
 
 ```python
 # UNCOMMENT ONE OF THESE
@@ -156,8 +151,7 @@ views = get_views(['identity', 'negate'])
 
 
 ## Results
-Now, we can sample illusions by denoising all views at once. The `sample_stage_1` function does this and generates a $64 \times 64$ image. The `sample_stage_2` function upsamples the resulting image while denoising all views, and generates a $256 \times 256$ image.
-
+Now, we can generate illusions by denoising all views simultaneously. The `sample_stage_1` function accomplishes this and produces a $64 \times 64$ image. The `sample_stage_2` function upsamples the resulting image while denoising all views, generating a $256 \times 256$ image. 
 
 ```python
 image_64 = sample_stage_1(stage_1,
@@ -185,7 +179,7 @@ image = sample_stage_2(stage_2,
                        generator=None)
 mp.show_images([im_to_np(view.view(image[0])) for view in views])
 ```
-
+````
 
 # Conclusion
 
