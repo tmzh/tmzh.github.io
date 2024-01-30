@@ -46,9 +46,9 @@ The generation model—typically a large language model—accepts the retrieved 
 
 <figure>
     <img src="/images/2023-06-25-retrieval-qa.gif"
-         alt="Decision Flow for choosing LLM"
+         alt="decision flow for choosing llm"
          width="80%">
-    <figcaption><i>Source: <a href="https://www.newsletter.swirlai.com/p/sai-notes-08-llm-based-chatbots-to">LLM based Chatbots to query your Private Knowledge Base</a>
+    <figcaption><i>source: <a href="https://www.newsletter.swirlai.com/p/sai-notes-08-llm-based-chatbots-to">llm based chatbots to query your private knowledge base</a>
 </i></figcaption>
 </figure>
 
