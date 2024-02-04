@@ -1,0 +1,209 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1"><title>Generating Visual Illusions Using Generative AI - Ephemeral Dance Of Electrons</title>
+<meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=Cache-Control content="no-transform"><meta http-equiv=Cache-Control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="tmzh"><meta name=description content="Introduction Recently I came across a very interesting project called Visual Anagrams. In it, the authors proposes a very clever approach to generate multi-view optical illusions by utilizing text-to-image diffusion models that changes appearance under various transformations such as flips, rotations, and pixel permutations.
+Optical illusions such as images that show different subjects under different orientation, ambigrams, etc., Naturally I was quite excited to come across a project called Visual Anagrams that can generate illusions using generative AI."><meta name=keywords content="blog,code,recreational"><meta name=generator content="Hugo 0.122.0 with theme even"><link rel=canonical href=https://tmzh.github.io/post/2024-01-22-generating-visual-illusions-using-generative-ai-in-memory-constrained-hardware/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css rel=stylesheet><meta property="og:title" content="Generating Visual Illusions Using Generative AI"><meta property="og:description" content="Introduction Recently I came across a very interesting project called Visual Anagrams. In it, the authors proposes a very clever approach to generate multi-view optical illusions by utilizing text-to-image diffusion models that changes appearance under various transformations such as flips, rotations, and pixel permutations.
+Optical illusions such as images that show different subjects under different orientation, ambigrams, etc., Naturally I was quite excited to come across a project called Visual Anagrams that can generate illusions using generative AI."><meta property="og:type" content="article"><meta property="og:url" content="https://tmzh.github.io/post/2024-01-22-generating-visual-illusions-using-generative-ai-in-memory-constrained-hardware/"><meta property="article:section" content="post"><meta property="article:published_time" content="2024-01-22T12:00:00+00:00"><meta property="article:modified_time" content="2024-01-22T12:00:00+00:00"><meta itemprop=name content="Generating Visual Illusions Using Generative AI"><meta itemprop=description content="Introduction Recently I came across a very interesting project called Visual Anagrams. In it, the authors proposes a very clever approach to generate multi-view optical illusions by utilizing text-to-image diffusion models that changes appearance under various transformations such as flips, rotations, and pixel permutations.
+Optical illusions such as images that show different subjects under different orientation, ambigrams, etc., Naturally I was quite excited to come across a project called Visual Anagrams that can generate illusions using generative AI."><meta itemprop=datePublished content="2024-01-22T12:00:00+00:00"><meta itemprop=dateModified content="2024-01-22T12:00:00+00:00"><meta itemprop=wordCount content="927"><meta itemprop=keywords content="deep_floyd,generative_ai,"><meta name=twitter:card content="summary"><meta name=twitter:title content="Generating Visual Illusions Using Generative AI"><meta name=twitter:description content="Introduction Recently I came across a very interesting project called Visual Anagrams. In it, the authors proposes a very clever approach to generate multi-view optical illusions by utilizing text-to-image diffusion models that changes appearance under various transformations such as flips, rotations, and pixel permutations.
+Optical illusions such as images that show different subjects under different orientation, ambigrams, etc., Naturally I was quite excited to come across a project called Visual Anagrams that can generate illusions using generative AI."><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>Ephemeral Dance Of Electrons</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>Ephemeral Dance Of Electrons</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Generating Visual Illusions Using Generative AI</h1><div class=post-meta><span class=post-time>2024-01-22</span><div class=post-category><a href=/categories/generative-ai/>Generative AI</a></div></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>Contents</h2><div class=post-toc-content><nav id=TableOfContents><ul><li><a href=#introduction>Introduction</a></li><li><a href=#inference-process>Inference process</a><ul><li><a href=#import-and-setup-what-we-need>Import and setup what we need</a></li><li><a href=#load-textencoder-model>Load TextEncoder Model</a><ul><li><a href=#addendum>Addendum</a></li></ul></li><li><a href=#create-text-embeddings>Create text embeddings</a></li><li><a href=#main-diffusion-process>Main Diffusion Process</a></li><li><a href=#generate-image>Generate Image</a></li><li><a href=#results>Results</a></li></ul></li></ul></nav></div></div><div class=post-content><h1 id=introduction>Introduction</h1><p>Recently I came across a very interesting project called Visual Anagrams. In it, the authors proposes a very clever approach to generate multi-view optical illusions by utilizing text-to-image diffusion models that changes appearance under various transformations such as flips, rotations, and pixel permutations.</p><p>Optical illusions such as images that show different subjects under different orientation, ambigrams, etc., Naturally I was quite excited to come across a project called <code>Visual Anagrams</code> that can generate illusions using generative AI. The project introduces a clever method for generating multi-view optical illusions using text-to-image diffusion models. The generated images changes in appearance under different transformations such as flips, rotations, and pixel permutations.</p><p>It uses a generative model called DeepFloyd IF. IF is a pixel-based text-to-image generation model and was released in late April 2023 by DeepFloyd. This takes a different approach to Stable diffusion, by operating in pixel space rather than performing denoising in a latent space. This approach allows IF to generate images with high-frequency details, as well as things like generating legible text, where Stable Diffusion struggles.</p><p>However, these advantages come at the cost of a significantly higher number of parameters. The text encoder, IF&rsquo;s text-to-image UNet, and IF&rsquo;s upscaler UNet have 4.5 billion, 4.3 billion, and 1.2 billion parameters, respectively. In contrast, Stable Diffusion 2.1 has only 400 million parameters for the text encoder and 900 million parameters for the UNet. Running this model in full float32 precision would require at least 37GB memory.</p><p>T5-XXL Text Encoder: 19GB
+Stage 1 UNet: 17.2 GB
+Stage 2 UNet: 4.97 GB</p><figure><img src=/images/2024-01-28-deep-floyd-if-scheme.jpg alt="DeepFloyd-IF model card" width=80%><figcaption><i>source: <a href=https://huggingface.co/DeepFloyd/IF-I-XL-v1.0>DeepFloyd-IF model card</a></i></figcaption></figure><p>Fortunately, it is possible to run this model on consumer hardware or even on Google Colab for free. The Diffusers API from HuggingFace allows us to load individual components modularly, reducing the memory requirements by loading components selectively.</p><h1 id=inference-process>Inference process</h1><h2 id=import-and-setup-what-we-need>Import and setup what we need</h2><h2 id=load-textencoder-model>Load TextEncoder Model</h2><p>The TextEncoder model used in DeepFloyd-IF is <code>T5</code>. To begin, we load this <code>T5</code> model in half-precision (fp16) and utilize the <code>device_map</code> flag to enable transformers to offload model layers to either CPU or disk. This reduces the memory requirements by more than half. For more information on device_map, refer to the transformers <a href=https://huggingface.co/docs/accelerate/usage_guides/big_modeling#designing-a-device-map>documentation</a>.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>transformers</span> <span class=kn>import</span> <span class=n>T5EncoderModel</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>text_encoder</span> <span class=o>=</span> <span class=n>T5EncoderModel</span><span class=o>.</span><span class=n>from_pretrained</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;DeepFloyd/IF-I-L-v1.0&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>subfolder</span><span class=o>=</span><span class=s2>&#34;text_encoder&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>device_map</span><span class=o>=</span><span class=s2>&#34;auto&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>variant</span><span class=o>=</span><span class=s2>&#34;fp16&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>torch_dtype</span><span class=o>=</span><span class=n>torch</span><span class=o>.</span><span class=n>float16</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=addendum>Addendum</h3><p>To further reduce memory utilization, we can also load the same <code>T5</code> model using 8-bit quantization. Transformers directly supports bitsandbytes through the load_in_8bit flag. Set the variant=&ldquo;8bit&rdquo; flag to download pre-quantized weights. This allows loading the text encoders in as little as 8GB of memory.</p><h2 id=create-text-embeddings>Create text embeddings</h2><p>Next, we need to generate embeddings for the two prompts that describe the visual illusions. DiffusionPipeline from HuggingFace Diffusers library contains methods to load models necessary for running diffusion networks. We can override the individual models used by changing the keyword arguments to <code>from_pretrained</code>. In this case, we pass the previously instantiated <code>text_encoder</code> for the text_encoder argument and <code>None</code> for the unet argument to avoid loading the UNet into memory, enabling us to load only the necessary models to run the text embedding portion of the diffusion process.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>diffusers</span> <span class=kn>import</span> <span class=n>DiffusionPipeline</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>pipe</span> <span class=o>=</span> <span class=n>DiffusionPipeline</span><span class=o>.</span><span class=n>from_pretrained</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;DeepFloyd/IF-I-L-v1.0&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>text_encoder</span><span class=o>=</span><span class=n>text_encoder</span><span class=p>,</span> <span class=c1># pass the previously instantiated text encoder</span>
+</span></span><span class=line><span class=cl>    <span class=n>unet</span><span class=o>=</span><span class=kc>None</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>We can now use this pipeline to encode the two prompts. The prompts need to be concatenated for the illusion.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=c1># Feel free to change me:</span>
+</span></span><span class=line><span class=cl><span class=n>prompts</span> <span class=o>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>      <span class=s1>&#39;an oil painting of a deer&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>      <span class=s1>&#39;an oil painting of a waterfall&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Embed prompts using the T5 model</span>
+</span></span><span class=line><span class=cl><span class=n>prompt_embeds</span> <span class=o>=</span> <span class=p>[</span><span class=n>pipe</span><span class=o>.</span><span class=n>encode_prompt</span><span class=p>(</span><span class=n>prompt</span><span class=p>)</span> <span class=k>for</span> <span class=n>prompt</span> <span class=ow>in</span> <span class=n>prompts</span><span class=p>]</span>
+</span></span><span class=line><span class=cl><span class=n>prompt_embeds</span><span class=p>,</span> <span class=n>negative_prompt_embeds</span> <span class=o>=</span> <span class=nb>zip</span><span class=p>(</span><span class=o>*</span><span class=n>prompt_embeds</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>prompt_embeds</span> <span class=o>=</span> <span class=n>torch</span><span class=o>.</span><span class=n>cat</span><span class=p>(</span><span class=n>prompt_embeds</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>negative_prompt_embeds</span> <span class=o>=</span> <span class=n>torch</span><span class=o>.</span><span class=n>cat</span><span class=p>(</span><span class=n>negative_prompt_embeds</span><span class=p>)</span>  <span class=c1># These are just null embeds</span>
+</span></span></code></pre></td></tr></table></div></div><p>Flush to free memory for the next stages.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>gc</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>flush</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>    <span class=n>gc</span><span class=o>.</span><span class=n>collect</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=n>torch</span><span class=o>.</span><span class=n>cuda</span><span class=o>.</span><span class=n>empty_cache</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>del</span> <span class=n>text_encoder</span>
+</span></span><span class=line><span class=cl><span class=k>del</span> <span class=n>pipe</span>
+</span></span><span class=line><span class=cl><span class=n>flush</span><span class=p>()</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=main-diffusion-process>Main Diffusion Process</h2><p>With the available GPU memory, we can reload the DiffusionPipeline using only the UNet to execute the main diffusion process. Note that once again we are loading the weights in 16-bit floating point format using the variant and torch_dtype keyword arguments.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>from</span> <span class=nn>diffusers</span> <span class=kn>import</span> <span class=n>DiffusionPipeline</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>stage_1</span> <span class=o>=</span> <span class=n>DiffusionPipeline</span><span class=o>.</span><span class=n>from_pretrained</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;DeepFloyd/IF-I-L-v1.0&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>text_encoder</span><span class=o>=</span><span class=kc>None</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>variant</span><span class=o>=</span><span class=s2>&#34;fp16&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>torch_dtype</span><span class=o>=</span><span class=n>torch</span><span class=o>.</span><span class=n>float16</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>stage_1</span><span class=o>.</span><span class=n>enable_model_cpu_offload</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=n>stage_1</span><span class=o>.</span><span class=n>to</span><span class=p>(</span><span class=s1>&#39;cuda&#39;</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>stage_2</span> <span class=o>=</span> <span class=n>DiffusionPipeline</span><span class=o>.</span><span class=n>from_pretrained</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>                <span class=s2>&#34;DeepFloyd/IF-II-L-v1.0&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=n>text_encoder</span><span class=o>=</span><span class=kc>None</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=n>variant</span><span class=o>=</span><span class=s2>&#34;fp16&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=n>torch_dtype</span><span class=o>=</span><span class=n>torch</span><span class=o>.</span><span class=n>float16</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>              <span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>stage_2</span><span class=o>.</span><span class=n>enable_model_cpu_offload</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=n>stage_2</span><span class=o>.</span><span class=n>to</span><span class=p>(</span><span class=s1>&#39;cuda&#39;</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=generate-image>Generate Image</h2><p>Choose one of the view transformations supported by the Visual Anagrams repository.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=c1># UNCOMMENT ONE OF THESE</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># views = get_views([&#39;identity&#39;, &#39;rotate_180&#39;])</span>
+</span></span><span class=line><span class=cl><span class=c1># views = get_views([&#39;identity&#39;, &#39;rotate_cw&#39;])</span>
+</span></span><span class=line><span class=cl><span class=c1># views = get_views([&#39;identity&#39;, &#39;flip&#39;])</span>
+</span></span><span class=line><span class=cl><span class=c1># views = get_views([&#39;identity&#39;, &#39;jigsaw&#39;])</span>
+</span></span><span class=line><span class=cl><span class=n>views</span> <span class=o>=</span> <span class=n>get_views</span><span class=p>([</span><span class=s1>&#39;identity&#39;</span><span class=p>,</span> <span class=s1>&#39;negate&#39;</span><span class=p>])</span>
+</span></span><span class=line><span class=cl><span class=c1># views = get_views([&#39;identity&#39;, &#39;skew&#39;])</span>
+</span></span><span class=line><span class=cl><span class=c1># views = get_views([&#39;identity&#39;, &#39;patch_permute&#39;])</span>
+</span></span><span class=line><span class=cl><span class=c1># views = get_views([&#39;identity&#39;, &#39;pixel_permute&#39;])</span>
+</span></span><span class=line><span class=cl><span class=c1># views = get_views([&#39;identity&#39;, &#39;inner_circle&#39;])</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=results>Results</h2><p>Now, we can generate illusions by denoising all views simultaneously. The <code>sample_stage_1</code> function accomplishes this and produces a $64 \times 64$ image. The <code>sample_stage_2</code> function upsamples the resulting image while denoising all views, generating a $256 \times 256$ image.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>image_64</span> <span class=o>=</span> <span class=n>sample_stage_1</span><span class=p>(</span><span class=n>stage_1</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                          <span class=n>prompt_embeds</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                          <span class=n>negative_prompt_embeds</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                          <span class=n>views</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                          <span class=n>num_inference_steps</span><span class=o>=</span><span class=mi>40</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                          <span class=n>guidance_scale</span><span class=o>=</span><span class=mf>10.0</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                          <span class=n>reduction</span><span class=o>=</span><span class=s1>&#39;mean&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                          <span class=n>generator</span><span class=o>=</span><span class=kc>None</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>mp</span><span class=o>.</span><span class=n>show_images</span><span class=p>([</span><span class=n>im_to_np</span><span class=p>(</span><span class=n>view</span><span class=o>.</span><span class=n>view</span><span class=p>(</span><span class=n>image_64</span><span class=p>[</span><span class=mi>0</span><span class=p>]))</span> <span class=k>for</span> <span class=n>view</span> <span class=ow>in</span> <span class=n>views</span><span class=p>])</span>
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>image</span> <span class=o>=</span> <span class=n>sample_stage_2</span><span class=p>(</span><span class=n>stage_2</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=n>image_64</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=n>prompt_embeds</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=n>negative_prompt_embeds</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=n>views</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=n>num_inference_steps</span><span class=o>=</span><span class=mi>30</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=n>guidance_scale</span><span class=o>=</span><span class=mf>10.0</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=n>reduction</span><span class=o>=</span><span class=s1>&#39;mean&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=n>noise_level</span><span class=o>=</span><span class=mi>50</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                       <span class=n>generator</span><span class=o>=</span><span class=kc>None</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>mp</span><span class=o>.</span><span class=n>show_images</span><span class=p>([</span><span class=n>im_to_np</span><span class=p>(</span><span class=n>view</span><span class=o>.</span><span class=n>view</span><span class=p>(</span><span class=n>image</span><span class=p>[</span><span class=mi>0</span><span class=p>]))</span> <span class=k>for</span> <span class=n>view</span> <span class=ow>in</span> <span class=n>views</span><span class=p>])</span>
+</span></span></code></pre></td></tr></table></div></div><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># Conclusion
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>![animation](/images/2024-01-28-waterfall.deer.mp4-output.gif)
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl># References
+</span></span><span class=line><span class=cl>https://colab.research.google.com/github/huggingface/notebooks/blob/main/diffusers/deepfloyd_if_free_tier_google_colab.ipynb#scrollTo=YVmG9-a8-XyI
+</span></span></code></pre></td></tr></table></div></div></div><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
+<span class=item-content>tmzh</span></p><p class=copyright-item><span class=item-title>LastMod</span>
+<span class=item-content>2024-01-22</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/deep_floyd/>deep_floyd</a>
+<a href=/tags/generative_ai/>generative_ai</a></div><nav class=post-nav><a class=next href=/post/2023-06-24-llm-powered-faq-chat-bot/><span class="next-text nav-default">Exploring Retrieval-Augmentated Generation with Open Source Large Language Models</span>
+<span class="next-text nav-mobile">Next</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div></div></main><footer id=footer class=footer><div class=social-links><a href=https://github.com/tmzh/tmzh.github.io class="iconfont icon-github" title=github></a></div><div class=copyright><span class=power-by>Powered by <a class=hexo-link href=https://gohugo.io>Hugo</a>
+</span><span class=division>|</span>
+<span class=theme-info>Theme -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a>
+</span><span class=copyright-year>&copy;
+2017 -
+2024<span class=heart><i class="iconfont icon-heart"></i></span><span>tmzh</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script><script type=text/javascript src=/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js></script><script type=text/javascript>window.MathJax={tex:{}}</script><script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script></body></html>
