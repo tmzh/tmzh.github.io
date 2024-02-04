@@ -20,7 +20,11 @@ autoCollapseToc: true
 By now, many of us may be familiar with text-to-image models like Midjourney, DALL·E 3, StableDiffusion etc., Recently, I came across an interesting project called Visual Anagrams that utilizes text-to-image model to generate picture illusions. This project enables us to input two different text prompts, and the model generates pictures that match the prompts under various transformations, such as flips, rotations, or pixel permutations. Growing up, I had a nerdy fascination with illusions and ambigrams, so I was thrilled to give this a try.
 
 
-![illusions](/images/2024-01-029-visual_anagrams-loop.gif)
+|                                                            |   |   |
+|------------------------------------------------------------|---|---|
+| ![animation](/images/2024-01-28-waterfall.deer.mp4-output.gif) |  ![animation](/images/2024-01-29-rotate_cw.oil.painting.houses.medieval.village.ship.ocean.gif) |  ![animation](/images/2024-01-28-rotate_180.pop.art.wolverine.joker.gif) |
+| ![animation](/images/2024-01-28-line-drawing-old-man-girl.gif) |  ![animation](/images/2024-01-28-square_hinge.oil.painting.Medieval.village.scene.with.busy.gif) |  ![animation](/images/2024-01-29-negate.photo.woman.man.gif) |
+| ![animation](/images/2024-01-28-jigsaw.oil.painting.classroom.playground.gif) |  ![animation](/images/2024-01-28-rotate_180.line.drawing.cat.bunny.gif) |  ![animation](/images/2024-01-29-rotate_180.oil.painting.forest.fire.truck.gif) |
 
 Behind the scenes, Visual Anagrams utilizes the DeepFloyd IF model, which takes a unique approach to Stable diffusion. Unlike StableDiffusion which performs denoising in a latent space, DeepFloyd IF operates directly in the pixel space. This approach enables the model to better align with text and generate legible images, addressing a challenge faced by Stable Diffusion.
 
