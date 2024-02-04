@@ -4,6 +4,7 @@ categories:
 - Generative AI 
 comments: true
 date: "2024-01-22T12:00:00Z"
+image: /images/2024-01-029-visual_anagrams-loop.gif
 slug: 2024-01-22-generating-visual-illusions-using-generative-ai-in-memory-constrained-hardware
 tags:
 - deep_floyd
@@ -16,18 +17,18 @@ autoCollapseToc: true
 ---
 
 # Introduction
-Recently I came across a very interesting project called Visual Anagrams. In it, the authors proposes a very clever approach to generate multi-view optical illusions by utilizing text-to-image diffusion models that changes appearance under various transformations such as flips, rotations, and pixel permutations. 
+By now, many of us may be familiar with text-to-image models like Midjourney, DALL·E 3, StableDiffusion etc., Recently, I came across an interesting project called Visual Anagrams that utilizes text-to-image model to generate picture illusions. This project enables us to input two different text prompts, and the model generates pictures that match the prompts under various transformations, such as flips, rotations, or pixel permutations. Growing up, I had a nerdy fascination with illusions and ambigrams, so I was thrilled to give this a try.
 
-Optical illusions such as images that show different subjects under different orientation, ambigrams, etc., Naturally I was quite excited to come across a project called `Visual Anagrams` that can generate illusions using generative AI. The project introduces a clever method for generating multi-view optical illusions using text-to-image diffusion models. The generated images changes in appearance under different transformations such as flips, rotations, and pixel permutations.
 
-It uses a generative model called DeepFloyd IF. IF is a pixel-based text-to-image generation model and was released in late April 2023 by DeepFloyd. This takes a different approach to Stable diffusion, by operating in pixel space rather than performing denoising in a latent space. This approach allows IF to generate images with high-frequency details, as well as things like generating legible text, where Stable Diffusion struggles.
+|                                                            |   |   |
+|------------------------------------------------------------|---|---|
+| ![animation](/images/2024-01-29-rotate_cw.oil.painting.houses.medieval.village.ship.ocean.gif) |  ![animation](/images/2024-01-29-rotate_180.oil.painting.forest.fire.truck.gif) |  ![animation](/images/2024-01-28-waterfall.deer.mp4-output.gif) |
+| ![animation](/images/2024-01-28-line-drawing-old-man-girl.gif) |  ![animation](/images/2024-01-28-square_hinge.oil.painting.Medieval.village.scene.with.busy.gif) |  ![animation](/images/2024-01-29-negate.photo.woman.man.gif) |
+| ![animation](/images/2024-01-28-jigsaw.oil.painting.classroom.playground.gif) |  ![animation](/images/2024-01-28-rotate_180.line.drawing.cat.bunny.gif) |  ![animation](/images/2024-01-28-rotate_180.pop.art.wolverine.joker.gif) |
 
-However, these advantages come at the cost of a significantly higher number of parameters. The text encoder, IF's text-to-image UNet, and IF's upscaler UNet have 4.5 billion, 4.3 billion, and 1.2 billion parameters, respectively. In contrast, Stable Diffusion 2.1 has only 400 million parameters for the text encoder and 900 million parameters for the UNet. Running this model in full float32 precision would require at least 37GB memory. 
+Behind the scenes, Visual Anagrams utilizes the DeepFloyd IF model, which takes a unique approach to Stable diffusion. Unlike StableDiffusion which performs denoising in a latent space, DeepFloyd IF operates directly in the pixel space. This approach enables the model to better align with text and generate legible images, addressing a challenge faced by Stable Diffusion.
 
-T5-XXL Text Encoder: 19GB
-Stage 1 UNet: 17.2 GB
-Stage 2 UNet: 4.97 GB
-
+However, these advantages come at a cost of significantly higher memory requirements. DeepFloyd IF is a modular model composed of a frozen text encoder and three cascaded pixel diffusion modules. Running the model in full float32 precision would require at least 37GB of memory.
 
 <figure>
     <img src="/images/2024-01-28-deep-floyd-if-scheme.jpg"
@@ -37,12 +38,27 @@ Stage 2 UNet: 4.97 GB
 </i></figcaption>
 </figure>
 
-Fortunately, it is possible to run this model on consumer hardware or even on Google Colab for free. The Diffusers API from HuggingFace allows us to load individual components modularly, reducing the memory requirements by loading components selectively.
+Fortunately, it is possible to run this model on Google Colab or even on consumer hardware for free. The Diffusers API from HuggingFace allows us to load individual components modularly, reducing the memory requirements by loading components selectively.
 
 # Inference process
 
 ## Import and setup what we need
+First let us install the dependencies and a copy of visual anagrams repo.
 
+```python
+! pip install -q
+    diffusers
+    transformers
+    safetensors
+    sentencepiece
+    accelerate
+    bitsandbytes
+    einops
+    mediapy
+    accelerate
+
+!pip install -q git+https://github.com/dangeng/visual_anagrams.git
+```
 
 ## Load TextEncoder Model
 The TextEncoder model used in DeepFloyd-IF is `T5`. To begin, we load this `T5` model in half-precision (fp16) and utilize the `device_map` flag to enable transformers to offload model layers to either CPU or disk. This reduces the memory requirements by more than half. For more information on device_map, refer to the transformers [documentation](https://huggingface.co/docs/accelerate/usage_guides/big_modeling#designing-a-device-map).
@@ -136,6 +152,7 @@ stage_2.to('cuda')
 Choose one of the view transformations supported by the Visual Anagrams repository.
 
 ```python
+from visual_anagrams.views import get_views
 # UNCOMMENT ONE OF THESE
 
 # views = get_views(['identity', 'rotate_180'])
@@ -151,9 +168,11 @@ views = get_views(['identity', 'negate'])
 
 
 ## Results
-Now, we can generate illusions by denoising all views simultaneously. The `sample_stage_1` function accomplishes this and produces a $64 \times 64$ image. The `sample_stage_2` function upsamples the resulting image while denoising all views, generating a $256 \times 256$ image. 
+Now, we can generate illusions by denoising all views simultaneously. The `sample_stage_1` function from visual anagrams repo accomplishes this and produces a $64 \times 64$ image. Similarly, the `sample_stage_2` function upsamples the resulting image while denoising all views, generating a $256 \times 256$ image. 
 
 ```python
+from visual_anagrams.samplers import sample_stage_1, sample_stage_2
+from visual_anagrams.utils import add_args, save_illusion, save_metadata
 image_64 = sample_stage_1(stage_1,
                           prompt_embeds,
                           negative_prompt_embeds,
@@ -179,9 +198,13 @@ image = sample_stage_2(stage_2,
                        generator=None)
 mp.show_images([im_to_np(view.view(image[0])) for view in views])
 ```
-````
 
 # Conclusion
+With this, we get a pretty impressive image of a waterfall which when inverted looks like a deer. I have a notebook version of the same code, you can give it a try in colab and try different transformation views. It is fascinating to observe how details from different objects or scens gets embedded into a picture and how our visual apparatus end up seeing what we want to see.
+
+<a target="_blank" href="https://colab.research.google.com/github/tmzh/visual_anagrams/blob/main/notebooks/visual_anagrams_colab_free.ipynb">
+<img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
+</a>
 
 ![animation](/images/2024-01-28-waterfall.deer.mp4-output.gif)
 
