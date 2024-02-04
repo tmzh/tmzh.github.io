@@ -2,10 +2,12 @@
 author: tmzh
 categories:
 - Generative AI 
-comments: true
-date: "2024-01-22T12:00:00Z"
-image: /images/2024-01-029-visual_anagrams-loop.gif
-slug: 2024-01-22-generating-visual-illusions-using-generative-ai-in-memory-constrained-hardware
+date: 
+- "2024-01-22T12:00:00Z"
+images: 
+- /images/2024-01-029-visual_anagrams-loop.gif
+slug: 
+- 2024-01-22-generating-visual-illusions-using-generative-ai-in-memory-constrained-hardware
 tags:
 - deep_floyd
 - generative_ai
