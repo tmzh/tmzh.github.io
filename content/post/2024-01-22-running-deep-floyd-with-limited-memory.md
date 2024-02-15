@@ -4,7 +4,7 @@ categories:
 - Generative AI 
 date: 2024-01-22T12:00:00Z
 images: 
-- /images/2024-01-029-visual_anagrams-loop.gif
+- /images/2024-01-29-visual_anagrams-loop.gif
 slug: 
 - 2024-01-22-running-deep-floyd-with-limited-memory
 
@@ -21,12 +21,13 @@ autoCollapseToc: true
 # Introduction
 By now, many of us may be familiar with text-to-image models like Midjourney, DALL·E 3, StableDiffusion etc., Recently, I came across an interesting project called Visual Anagrams that utilizes text-to-image model to generate picture illusions. This project enables us to input two different text prompts, and the model generates pictures that match the prompts under various transformations, such as flips, rotations, or pixel permutations. Growing up, I had a nerdy fascination with illusions and ambigrams, so I was thrilled to give this a try.
 
-
 |                                                            |   |   |
 |------------------------------------------------------------|---|---|
 | ![animation](/images/2024-01-28-waterfall.deer.mp4-output.gif) |  ![animation](/images/2024-01-29-rotate_cw.oil.painting.houses.medieval.village.ship.ocean.gif) |  ![animation](/images/2024-01-28-rotate_180.pop.art.wolverine.joker.gif) |
 | ![animation](/images/2024-01-28-line-drawing-old-man-girl.gif) |  ![animation](/images/2024-01-28-square_hinge.oil.painting.Medieval.village.scene.with.busy.gif) |  ![animation](/images/2024-01-29-negate.photo.woman.man.gif) |
 | ![animation](/images/2024-01-28-jigsaw.oil.painting.classroom.playground.gif) |  ![animation](/images/2024-01-28-rotate_180.line.drawing.cat.bunny.gif) |  ![animation](/images/2024-01-29-rotate_180.oil.painting.forest.fire.truck.gif) |
+
+##  DeepFloyd IF Model: Memory Requirements and Optimization
 
 Behind the scenes, Visual Anagrams utilizes the DeepFloyd IF model, which takes a unique approach to Stable diffusion. Unlike StableDiffusion which performs denoising in a latent space, DeepFloyd IF operates directly in the pixel space. This approach enables the model to better align with text and generate legible images, addressing a challenge faced by Stable Diffusion.
 
@@ -170,7 +171,7 @@ views = get_views(['identity', 'negate'])
 
 
 ## Results
-Now, we can generate illusions by denoising all views simultaneously. The `sample_stage_1` function from visual anagrams repo accomplishes this and produces a $64 \times 64$ image. Similarly, the `sample_stage_2` function upsamples the resulting image while denoising all views, generating a $256 \times 256$ image. 
+Now, we are ready to generate the visual illusions. The `sample_stage_1` function from visual anagrams repo accomplishes this and produces a $64 \times 64$ image. Similarly, the `sample_stage_2` function upsamples the resulting image while denoising all views, generating a $256 \times 256$ image. 
 
 ```python
 from visual_anagrams.samplers import sample_stage_1, sample_stage_2
@@ -199,10 +200,23 @@ image = sample_stage_2(stage_2,
                        noise_level=50,
                        generator=None)
 mp.show_images([im_to_np(view.view(image[0])) for view in views])
+
+
 ```
 
+## More Examples
+![animation](/images/2024-01-28-waterfall.deer.mp4-output.gif) 
+![animation](/images/2024-01-29-rotate_cw.oil.painting.houses.medieval.village.ship.ocean.gif) 
+![animation](/images/2024-01-28-rotate_180.pop.art.wolverine.joker.gif) 
+![animation](/images/2024-01-28-line-drawing-old-man-girl.gif) 
+![animation](/images/2024-01-28-square_hinge.oil.painting.Medieval.village.scene.with.busy.gif) 
+![animation](/images/2024-01-29-negate.photo.woman.man.gif) 
+![animation](/images/2024-01-28-jigsaw.oil.painting.classroom.playground.gif) 
+![animation](/images/2024-01-28-rotate_180.line.drawing.cat.bunny.gif) 
+![animation](/images/2024-01-29-rotate_180.oil.painting.forest.fire.truck.gif) |
+
 # Conclusion
-With this, we get a pretty impressive image of a waterfall which when inverted looks like a deer. I have a notebook version of the same code, you can give it a try in colab and try different transformation views. It is fascinating to observe how details from different objects or scens gets embedded into a picture and how our visual apparatus end up seeing what we want to see.
+With this, we get a pretty impressive image of a waterfall which when inverted looks like a deer. I have a notebook version of the same code, you can give it a try in colab and try different transformation views. It is fascinating to observe how details from different objects and scenes can be embedded into a picture and how our visual apparatus end up seeing what we want to see.
 
 <a target="_blank" href="https://colab.research.google.com/github/tmzh/visual_anagrams/blob/main/notebooks/visual_anagrams_colab_free.ipynb">
 <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
