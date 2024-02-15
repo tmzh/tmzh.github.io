@@ -12,7 +12,7 @@ tags:
 - deep_floyd
 - generative_ai
 
-title: "Generating Visual Illusions Using Diffusion models"
+title: "Generating Visual Illusions Using Diffusion Models On Low VRAM"
 
 mathjax: true
 autoCollapseToc: true
