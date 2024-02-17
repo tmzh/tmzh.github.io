@@ -14,6 +14,7 @@ tags:
 
 title: "Generating Visual Illusions Using Diffusion Models On Low VRAM"
 
+mathjaxEnableSingleDollar: true
 mathjax: true
 autoCollapseToc: true
 ---
