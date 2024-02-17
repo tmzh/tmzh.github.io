@@ -203,9 +203,11 @@ mp.show_images([im_to_np(view.view(image[0])) for view in views])
 
 
 ```
+![animation](/images/2024-01-28-waterfall.deer.mp4-output.gif)
 
 ## More Examples
-![animation](/images/2024-01-28-waterfall.deer.mp4-output.gif) 
+Here are few more examples of illusions generated using this model. 
+
 ![animation](/images/2024-01-29-rotate_cw.oil.painting.houses.medieval.village.ship.ocean.gif) 
 ![animation](/images/2024-01-28-rotate_180.pop.art.wolverine.joker.gif) 
 ![animation](/images/2024-01-28-line-drawing-old-man-girl.gif) 
@@ -222,7 +224,6 @@ With this, we get a pretty impressive image of a waterfall which when inverted l
 <img src="https://colab.research.google.com/assets/colab-badge.svg" alt="Open In Colab"/>
 </a>
 
-![animation](/images/2024-01-28-waterfall.deer.mp4-output.gif)
 
 
 # References
