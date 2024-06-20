@@ -228,4 +228,6 @@ With this, we get a pretty impressive image of a waterfall which when inverted l
 
 
 # References
-https://colab.research.google.com/github/huggingface/notebooks/blob/main/diffusers/deepfloyd_if_free_tier_google_colab.ipynb#scrollTo=YVmG9-a8-XyI
+- https://huggingface.co/docs/diffusers/main/en/api/pipelines/deepfloyd_if
+- https://huggingface.co/DeepFloyd/IF-I-XL-v1.0
+- https://colab.research.google.com/github/huggingface/notebooks/blob/main/diffusers/deepfloyd_if_free_tier_google_colab.ipynb
