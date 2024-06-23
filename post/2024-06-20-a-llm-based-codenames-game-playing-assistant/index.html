@@ -1,0 +1,271 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta http-equiv=X-UA-Compatible content="IE=edge,chrome=1"><title>Building a Codenames AI Assistant with Multi-Modal LLMs - Ephemeral Dance Of Electrons</title>
+<meta name=renderer content="webkit"><meta name=viewport content="width=device-width,initial-scale=1,maximum-scale=1"><meta http-equiv=Cache-Control content="no-transform"><meta http-equiv=Cache-Control content="no-siteapp"><meta name=theme-color content="#f8f5ec"><meta name=msapplication-navbutton-color content="#f8f5ec"><meta name=apple-mobile-web-app-capable content="yes"><meta name=apple-mobile-web-app-status-bar-style content="#f8f5ec"><meta name=author content="tmzh"><meta name=description content="Introduction Codenames is a word association game where two teams guess secret words based on one-word clues. The game involves a 25-word grid, with each team identifying their words while avoiding the opposing team&amp;rsquo;s words and the &amp;ldquo;assassin&amp;rdquo; word.
+I knew that word embeddings could be used to group words based on their semantic similarity. This seemed like a good way to cluster words on the board and generate clues. I was largely successful in getting this to work along with few surprises and learnings along the way."><meta name=keywords content="blog,code,recreational"><meta name=generator content="Hugo 0.127.0 with theme even"><link rel=canonical href=https://tmzh.github.io/post/2024-06-20-a-llm-based-codenames-game-playing-assistant/><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=manifest href=/manifest.json><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link href=/sass/main.min.f92fd13721ddf72129410fd8250e73152cc6f2438082b6c0208dc24ee7c13fc4.css rel=stylesheet><meta property="og:url" content="https://tmzh.github.io/post/2024-06-20-a-llm-based-codenames-game-playing-assistant/"><meta property="og:site_name" content="Ephemeral Dance Of Electrons"><meta property="og:title" content="Building a Codenames AI Assistant with Multi-Modal LLMs"><meta property="og:description" content="Introduction Codenames is a word association game where two teams guess secret words based on one-word clues. The game involves a 25-word grid, with each team identifying their words while avoiding the opposing team’s words and the “assassin” word.
+I knew that word embeddings could be used to group words based on their semantic similarity. This seemed like a good way to cluster words on the board and generate clues. I was largely successful in getting this to work along with few surprises and learnings along the way."><meta property="og:locale" content="en"><meta property="og:type" content="article"><meta property="article:section" content="post"><meta property="article:published_time" content="2024-06-20T12:00:00+00:00"><meta property="article:modified_time" content="2024-06-20T12:00:00+00:00"><meta property="article:tag" content="Llm"><meta property="article:tag" content="Generative_ai"><meta property="og:image" content="https://tmzh.github.io/images/2024-01-29-visual_anagrams-loop.gif"><meta itemprop=name content="Building a Codenames AI Assistant with Multi-Modal LLMs"><meta itemprop=description content="Introduction Codenames is a word association game where two teams guess secret words based on one-word clues. The game involves a 25-word grid, with each team identifying their words while avoiding the opposing team’s words and the “assassin” word.
+I knew that word embeddings could be used to group words based on their semantic similarity. This seemed like a good way to cluster words on the board and generate clues. I was largely successful in getting this to work along with few surprises and learnings along the way."><meta itemprop=datePublished content="2024-06-20T12:00:00+00:00"><meta itemprop=dateModified content="2024-06-20T12:00:00+00:00"><meta itemprop=wordCount content="1382"><meta itemprop=image content="https://tmzh.github.io/images/2024-01-29-visual_anagrams-loop.gif"><meta itemprop=keywords content="Llm,Generative_ai"><meta name=twitter:card content="summary_large_image"><meta name=twitter:image content="https://tmzh.github.io/images/2024-01-29-visual_anagrams-loop.gif"><meta name=twitter:title content="Building a Codenames AI Assistant with Multi-Modal LLMs"><meta name=twitter:description content="Introduction Codenames is a word association game where two teams guess secret words based on one-word clues. The game involves a 25-word grid, with each team identifying their words while avoiding the opposing team’s words and the “assassin” word.
+I knew that word embeddings could be used to group words based on their semantic similarity. This seemed like a good way to cluster words on the board and generate clues. I was largely successful in getting this to work along with few surprises and learnings along the way."><!--[if lte IE 9]><script src=https://cdnjs.cloudflare.com/ajax/libs/classlist/1.1.20170427/classList.min.js></script><![endif]--><!--[if lt IE 9]><script src=https://cdn.jsdelivr.net/npm/html5shiv@3.7.3/dist/html5shiv.min.js></script><script src=https://cdn.jsdelivr.net/npm/respond.js@1.4.2/dest/respond.min.js></script><![endif]--></head><body><div id=mobile-navbar class=mobile-navbar><div class=mobile-header-logo><a href=/ class=logo>Ephemeral Dance Of Electrons</a></div><div class=mobile-navbar-icon><span></span>
+<span></span>
+<span></span></div></div><nav id=mobile-menu class="mobile-menu slideout-menu"><ul class=mobile-menu-list><a href=/><li class=mobile-menu-item>Home</li></a><a href=/post/><li class=mobile-menu-item>Archives</li></a><a href=/tags/><li class=mobile-menu-item>Tags</li></a><a href=/categories/><li class=mobile-menu-item>Categories</li></a></ul></nav><div class=container id=mobile-panel><header id=header class=header><div class=logo-wrapper><a href=/ class=logo>Ephemeral Dance Of Electrons</a></div><nav class=site-navbar><ul id=menu class=menu><li class=menu-item><a class=menu-item-link href=/>Home</a></li><li class=menu-item><a class=menu-item-link href=/post/>Archives</a></li><li class=menu-item><a class=menu-item-link href=/tags/>Tags</a></li><li class=menu-item><a class=menu-item-link href=/categories/>Categories</a></li></ul></nav></header><main id=main class=main><div class=content-wrapper><div id=content class=content><article class=post><header class=post-header><h1 class=post-title>Building a Codenames AI Assistant with Multi-Modal LLMs</h1><div class=post-meta><span class=post-time>2024-06-20</span><div class=post-category><a href=/categories/generative-ai/>Generative AI</a></div></div></header><div class=post-toc id=post-toc><h2 class=post-toc-title>Contents</h2><div class=post-toc-content><nav id=TableOfContents><ul><li><a href=#introduction>Introduction</a></li><li><a href=#initial-attempts>Initial attempts</a></li><li><a href=#multi-modal-llm-solution>Multi-Modal LLM Solution</a><ul><li><a href=#ocr-for-text-extraction>OCR for text extraction</a></li><li><a href=#grouping-of-words>Grouping of words</a></li><li><a href=#generation-of-clues>Generation of Clues</a></li><li><a href=#outlines>Outlines</a></li></ul></li><li><a href=#reflections-and-the-road-ahead>Reflections and the Road Ahead</a></li></ul></nav></div></div><div class=post-content><h1 id=introduction>Introduction</h1><p>Codenames is a word association game where two teams guess secret words based on one-word clues. The game involves a 25-word grid, with each team identifying their words while avoiding the opposing team&rsquo;s words and the &ldquo;assassin&rdquo; word.</p><p>I knew that word embeddings could be used to group words based on their semantic similarity. This seemed like a good way to cluster words on the board and generate clues. I was largely successful in getting this to work along with few surprises and learnings along the way.</p><p><img src=/images/2024-06-20-game-clues.png alt="Game play"></p><p>I have published a demo of this Gradio app along with its code in <a href=https://huggingface.co/spaces/tmzh/codenames-phi3>HF Spaces</a>.</p><h1 id=initial-attempts>Initial attempts</h1><p>My initial experiments with sentence embedding models did not yield satisfactory results. These models required a more context beyond individual words to deliver precise outcomes. Transitioning to word embedding models proved to be more effective; however, I still encountered challenges in filtering out undesired outputs such as foreign language terms and compound words. Additionally, employing similarity search techniques like kNN and Cosine similarity did not yield optimal results.</p><p>I switched to word embedding models, which were better, but I still had to filter out unwanted outputs like foreign language words and compound words. Similarity search methods like kNN and Cosine similarity also didn&rsquo;t give me the best results.</p><p>Extracting the game words using OpenCV also turned out to be more involved than I expected. I had to deal with shadows, uneven exposure, grid detection, and draw bounding boxes. The upside-down clue words also caused problems for the character recognition model.</p><h1 id=multi-modal-llm-solution>Multi-Modal LLM Solution</h1><p>This is when I decided to try a small local Large Language Model (LLM) for this. I used <a href=https://huggingface.co/microsoft/Phi-3-mini-4k-instruct>microsoft/Phi-3-Mini-4K-Instruct</a> which is a 3.8B parameters, lightweight LLM by Microsoft. Surprisingly this model consistently produced high-quality results with minimal effort. I split the task into 3 sections:</p><ol><li>Identifying words in the game using OCR</li><li>Grouping of words</li><li>Generating clues for each groups</li></ol><h2 id=ocr-for-text-extraction>OCR for text extraction</h2><p>The Phi-3 model family also has a multimodal version called <a href=https://huggingface.co/microsoft/Phi-3-vision-128k-instruct>microsoft/Phi-3-vision-128k-instruct</a> with a focus on very high-quality, reasoning dense data both on text and vision. I used this model for OCR. It worked like a charm, eliminating the need for complex image processing techniques. Unfortunately the structured output generation library I used (Outlines, explained later) doesn&rsquo;t yet support Vision models so I couldn&rsquo;t use this as a single model for both OCR and text generation. So I leveraged Nvidia hosted LLM service (NIM) to perform the OCR task.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>process_image</span><span class=p>(</span><span class=n>img</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=c1># Resize the image</span>
+</span></span><span class=line><span class=cl>    <span class=n>max_size</span> <span class=o>=</span> <span class=p>(</span><span class=mi>1024</span><span class=p>,</span> <span class=mi>1024</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>img</span><span class=o>.</span><span class=n>thumbnail</span><span class=p>(</span><span class=n>max_size</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>image_byte_array</span> <span class=o>=</span> <span class=n>jpeg_with_target_size</span><span class=p>(</span><span class=n>img</span><span class=p>,</span> <span class=mi>180_000</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>image_b64</span> <span class=o>=</span> <span class=n>base64</span><span class=o>.</span><span class=n>b64encode</span><span class=p>(</span><span class=n>image_byte_array</span><span class=p>)</span><span class=o>.</span><span class=n>decode</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>invoke_url</span> <span class=o>=</span> <span class=s2>&#34;https://ai.api.nvidia.com/v1/vlm/microsoft/phi-3-vision-128k-instruct&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=n>stream</span> <span class=o>=</span> <span class=kc>False</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>os</span><span class=o>.</span><span class=n>environ</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s2>&#34;NVIDIA_API_KEY&#34;</span><span class=p>,</span> <span class=s2>&#34;&#34;</span><span class=p>)</span><span class=o>.</span><span class=n>startswith</span><span class=p>(</span><span class=s2>&#34;nvapi-&#34;</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;Valid NVIDIA_API_KEY already in the environment. Delete to reset&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>headers</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Authorization&#34;</span><span class=p>:</span> <span class=sa>f</span><span class=s2>&#34;Bearer </span><span class=si>{</span><span class=n>os</span><span class=o>.</span><span class=n>environ</span><span class=o>.</span><span class=n>get</span><span class=p>(</span><span class=s1>&#39;NVIDIA_API_KEY&#39;</span><span class=p>,</span> <span class=s1>&#39;&#39;</span><span class=p>)</span><span class=si>}</span><span class=s2>&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;Accept&#34;</span><span class=p>:</span> <span class=s2>&#34;text/event-stream&#34;</span> <span class=k>if</span> <span class=n>stream</span> <span class=k>else</span> <span class=s2>&#34;application/json&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>payload</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;messages&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>            <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;user&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=sa>f</span><span class=s1>&#39;Identify the words in this game of Codenames. Provide only a list of words. Provide the &#39;</span>
+</span></span><span class=line><span class=cl>                           <span class=sa>f</span><span class=s1>&#39;words in capital letters only. &lt;img src=&#34;data:image/png;base64,</span><span class=si>{</span><span class=n>image_b64</span><span class=si>}</span><span class=s1>&#34; /&gt;&#39;</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>],</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;max_tokens&#34;</span><span class=p>:</span> <span class=mi>512</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;temperature&#34;</span><span class=p>:</span> <span class=mf>0.1</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;top_p&#34;</span><span class=p>:</span> <span class=mf>0.70</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;stream&#34;</span><span class=p>:</span> <span class=n>stream</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>response</span> <span class=o>=</span> <span class=n>requests</span><span class=o>.</span><span class=n>post</span><span class=p>(</span><span class=n>invoke_url</span><span class=p>,</span> <span class=n>headers</span><span class=o>=</span><span class=n>headers</span><span class=p>,</span> <span class=n>json</span><span class=o>=</span><span class=n>payload</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>response</span><span class=o>.</span><span class=n>ok</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=nb>print</span><span class=p>(</span><span class=n>response</span><span class=o>.</span><span class=n>json</span><span class=p>())</span>
+</span></span><span class=line><span class=cl>        <span class=c1># Define the pattern to match uppercase words separated by commas</span>
+</span></span><span class=line><span class=cl>        <span class=n>pattern</span> <span class=o>=</span> <span class=sa>r</span><span class=s1>&#39;[A-Z]+(?:\s+[A-Z]+)?&#39;</span>
+</span></span><span class=line><span class=cl>        <span class=n>words</span> <span class=o>=</span> <span class=n>re</span><span class=o>.</span><span class=n>findall</span><span class=p>(</span><span class=n>pattern</span><span class=p>,</span> <span class=n>response</span><span class=o>.</span><span class=n>json</span><span class=p>()[</span><span class=s1>&#39;choices&#39;</span><span class=p>][</span><span class=mi>0</span><span class=p>][</span><span class=s1>&#39;message&#39;</span><span class=p>][</span><span class=s1>&#39;content&#39;</span><span class=p>])</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=k>return</span> <span class=n>gr</span><span class=o>.</span><span class=n>update</span><span class=p>(</span><span class=n>choices</span><span class=o>=</span><span class=n>words</span><span class=p>,</span> <span class=n>value</span><span class=o>=</span><span class=n>words</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=grouping-of-words>Grouping of words</h2><p>I employed few-shot prompting technique along with a custom system prompt to cluster words that share common characteristics. I observed that when we instruct the Language Model (LLM) to group words, the resulting clusters are often random, regardless of the initial instructions. However, prompting the LLM to group words and then explain the rationale behind the grouping led to more coherent and meaningful word groupings.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=c1># Grouping the words</span>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>group_words</span><span class=p>(</span><span class=n>words</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=nd>@outlines.prompt</span>
+</span></span><span class=line><span class=cl>    <span class=k>def</span> <span class=nf>chat_group_template</span><span class=p>(</span><span class=n>system_prompt</span><span class=p>,</span> <span class=n>query</span><span class=p>,</span> <span class=n>history</span><span class=o>=</span><span class=p>[]):</span>
+</span></span><span class=line><span class=cl>        <span class=s1>&#39;&#39;&#39;&lt;s&gt;&lt;|system|&gt;
+</span></span></span><span class=line><span class=cl><span class=s1>        {{ system_prompt }}
+</span></span></span><span class=line><span class=cl><span class=s1>        {</span><span class=si>% f</span><span class=s1>or example in history %}
+</span></span></span><span class=line><span class=cl><span class=s1>        &lt;|user|&gt;
+</span></span></span><span class=line><span class=cl><span class=s1>        {{ example[0] }}&lt;|end|&gt;
+</span></span></span><span class=line><span class=cl><span class=s1>        &lt;|assistant|&gt;
+</span></span></span><span class=line><span class=cl><span class=s1>        {{ example[1] }}&lt;|end|&gt;
+</span></span></span><span class=line><span class=cl><span class=s1>        {</span><span class=si>% e</span><span class=s1>ndfor %}
+</span></span></span><span class=line><span class=cl><span class=s1>        &lt;|user|&gt;
+</span></span></span><span class=line><span class=cl><span class=s1>        {{ query }}&lt;|end|&gt;
+</span></span></span><span class=line><span class=cl><span class=s1>        &lt;|assistant|&gt;
+</span></span></span><span class=line><span class=cl><span class=s1>        &#39;&#39;&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>grouping_system_prompt</span> <span class=o>=</span> <span class=p>(</span><span class=s2>&#34;You are an assistant for the game Codenames. Your task is to help players by grouping a &#34;</span>
+</span></span><span class=line><span class=cl>                              <span class=s2>&#34;given group of secrets into 3 to 4 groups. Each group should consist of secrets that &#34;</span>
+</span></span><span class=line><span class=cl>                              <span class=s2>&#34;share a common theme or other word connections such as homonym, hypernyms or synonyms&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>prompt</span> <span class=o>=</span> <span class=n>chat_group_template</span><span class=p>(</span><span class=n>grouping_system_prompt</span><span class=p>,</span> <span class=n>words</span><span class=p>,</span> <span class=n>example_groupings</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl>    <span class=c1># Greedy sampling is sufficient since the objective is to generate grouping of existing words rather than </span>
+</span></span><span class=line><span class=cl>    <span class=c1># generating interesting new tokens</span>
+</span></span><span class=line><span class=cl>    <span class=n>sampler</span> <span class=o>=</span> <span class=n>samplers</span><span class=o>.</span><span class=n>greedy</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=n>generator</span> <span class=o>=</span> <span class=n>generate</span><span class=o>.</span><span class=n>json</span><span class=p>(</span><span class=n>model</span><span class=p>,</span> <span class=n>Groups</span><span class=p>,</span> <span class=n>sampler</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;Grouping words:&#34;</span><span class=p>,</span> <span class=n>words</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>generations</span> <span class=o>=</span> <span class=n>generator</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>prompt</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>max_tokens</span><span class=o>=</span><span class=mi>500</span>
+</span></span><span class=line><span class=cl>    <span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;Got groupings: &#34;</span><span class=p>,</span> <span class=n>generations</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=p>[</span><span class=n>group</span><span class=o>.</span><span class=n>words</span> <span class=k>for</span> <span class=n>group</span> <span class=ow>in</span> <span class=n>generations</span><span class=o>.</span><span class=n>groups</span><span class=p>]</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=generation-of-clues>Generation of Clues</h2><p>I split the clue generation logic separately even though LLMs could generate them at the time of grouping the words together. This is because I wanted to be able to regenerate better clues for individual groups without having to regroup the entire word list every time.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>generate_clues</span><span class=p>(</span><span class=n>group</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=n>template</span> <span class=o>=</span> <span class=s1>&#39;&#39;&#39;
+</span></span></span><span class=line><span class=cl><span class=s1>    {</span><span class=si>% f</span><span class=s1>or example in history %}
+</span></span></span><span class=line><span class=cl><span class=s1>    INPUT:
+</span></span></span><span class=line><span class=cl><span class=s1>    {{ example[0] }}
+</span></span></span><span class=line><span class=cl><span class=s1>    OUTPUT:
+</span></span></span><span class=line><span class=cl><span class=s1>    { &#39;clue&#39;:{{ example[1] }}, &#39;explanation&#39;:{{ example[2] }} }
+</span></span></span><span class=line><span class=cl><span class=s1>    {</span><span class=si>% e</span><span class=s1>ndfor %}
+</span></span></span><span class=line><span class=cl><span class=s1>    INPUT:
+</span></span></span><span class=line><span class=cl><span class=s1>    {{ query }}
+</span></span></span><span class=line><span class=cl><span class=s1>    OUTPUT:
+</span></span></span><span class=line><span class=cl><span class=s1>
+</span></span></span><span class=line><span class=cl><span class=s1>
+</span></span></span><span class=line><span class=cl><span class=s1>    {{ system }}
+</span></span></span><span class=line><span class=cl><span class=s1>
+</span></span></span><span class=line><span class=cl><span class=s1>    Clue = {&#39;clue&#39;: str, &#39;explanation&#39;: str}
+</span></span></span><span class=line><span class=cl><span class=s1>    Return: Clue
+</span></span></span><span class=line><span class=cl><span class=s1>    &#39;&#39;&#39;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>clue_system_prompt</span> <span class=o>=</span> <span class=p>(</span><span class=s2>&#34;You are a codenames game companion. Your task is to give a single word clue related to &#34;</span>
+</span></span><span class=line><span class=cl>                          <span class=s2>&#34;a given group of words. You will only respond with a single word clue. The clue can be a common theme or other word connections such as homonym, hypernyms or synonyms. Avoid clues that are not too generic or not unique enough to be guessed easily&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>prompt</span> <span class=o>=</span> <span class=n>render_jinja2_template</span><span class=p>(</span><span class=n>template</span><span class=p>,</span> <span class=n>clue_system_prompt</span><span class=p>,</span> <span class=n>example_clues</span><span class=p>,</span> <span class=n>group</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>raw_response</span> <span class=o>=</span> <span class=n>model</span><span class=o>.</span><span class=n>generate_content</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>        <span class=n>prompt</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=n>generation_config</span><span class=o>=</span><span class=p>{</span><span class=s1>&#39;top_k&#39;</span><span class=p>:</span> <span class=mi>3</span><span class=p>,</span> <span class=s1>&#39;temperature&#39;</span><span class=p>:</span> <span class=mf>1.1</span><span class=p>})</span>
+</span></span><span class=line><span class=cl>    <span class=n>response</span> <span class=o>=</span> <span class=n>json</span><span class=o>.</span><span class=n>loads</span><span class=p>(</span><span class=n>raw_response</span><span class=o>.</span><span class=n>text</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;Generating clues for: &#34;</span><span class=p>,</span> <span class=n>group</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=nb>print</span><span class=p>(</span><span class=s2>&#34;Got clue: &#34;</span><span class=p>,</span> <span class=n>json</span><span class=o>.</span><span class=n>dumps</span><span class=p>(</span><span class=n>response</span><span class=p>,</span> <span class=n>indent</span><span class=o>=</span><span class=mi>4</span><span class=p>))</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>response</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=outlines>Outlines</h2><p>One reason why I tried other options before LLMs because LLMs generations are stochastic and I needed parsable output for my web page i.e, I need guarantee that the output text will have a certain format. That&rsquo;s when I came across the Outlines library which is one among the many popular guided generations libraries. It helped me generate structured text consistently, making it easy to integrate with my app&rsquo;s interface.</p><p>The basic idea of Outlines is simple: in each state, it gets a list of symbols that correspond to completions that partially match the regular expression. It masks the other symbols in the logits returned by a large language model, so we derive a new FSM whose alphabet is the model&rsquo;s vocabulary. We can do this in only one pass over the vocabulary.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=c1># Load LLM model using Outlines library </span>
+</span></span><span class=line><span class=cl><span class=n>model</span> <span class=o>=</span> <span class=n>models</span><span class=o>.</span><span class=n>transformers</span><span class=p>(</span><span class=s2>&#34;microsoft/Phi-3-mini-4k-instruct&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                            <span class=n>model_kwargs</span><span class=o>=</span><span class=p>{</span><span class=s1>&#39;device_map&#39;</span><span class=p>:</span> <span class=s2>&#34;cuda&#34;</span><span class=p>,</span> <span class=s1>&#39;torch_dtype&#39;</span><span class=p>:</span> <span class=s2>&#34;auto&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                          <span class=s1>&#39;trust_remote_code&#39;</span><span class=p>:</span> <span class=kc>True</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                                          <span class=s1>&#39;attn_implementation&#39;</span><span class=p>:</span> <span class=s2>&#34;flash_attention_2&#34;</span><span class=p>})</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=c1># Generating structured output using Outlines</span>
+</span></span><span class=line><span class=cl><span class=k>class</span> <span class=nc>Clue</span><span class=p>(</span><span class=n>BaseModel</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=n>word</span><span class=p>:</span> <span class=nb>str</span>
+</span></span><span class=line><span class=cl>    <span class=n>explanation</span><span class=p>:</span> <span class=nb>str</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>clue_system_prompt</span> <span class=o>=</span> <span class=p>(</span><span class=s2>&#34;You are a codenames game companion. Your task is to give a single word clue related to &#34;</span>
+</span></span><span class=line><span class=cl>                      <span class=s2>&#34;a given group of words. You will only respond with a single word clue. Compound words are &#34;</span>
+</span></span><span class=line><span class=cl>                      <span class=s2>&#34;allowed. Do not include the word &#39;Clue&#39;. Do not provide explanations or notes.&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>prompt</span> <span class=o>=</span> <span class=n>chat_clue_template</span><span class=p>(</span><span class=n>clue_system_prompt</span><span class=p>,</span> <span class=n>group</span><span class=p>,</span> <span class=n>example_clues</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>generator</span> <span class=o>=</span> <span class=n>generate</span><span class=o>.</span><span class=n>json</span><span class=p>(</span><span class=n>model</span><span class=p>,</span> <span class=n>Clue</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>generator</span><span class=p>(</span><span class=n>prompt</span><span class=p>,</span> <span class=n>max_tokens</span><span class=o>=</span><span class=mi>100</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><h1 id=reflections-and-the-road-ahead>Reflections and the Road Ahead</h1><p>Initially, I underestimated the LLM approach, considering it excessive for what seemed like a straightforward issue. However, I was mistaken. Leveraging LLM significantly expedited the generation of usable outcomes, saving considerable time. Over time, despite its substantial size and computational demands, this ease of use aspect will boost its acceptance. As momentum builds, further research and optimization will ensue, resulting in more compact, effective, and intelligent models. Although optimized algorithms and specialized models will retain significance in particular domains, LLMs are positioned to transform numerous sectors with their adaptability and potency.</p></div><div class=post-copyright><p class=copyright-item><span class=item-title>Author</span>
+<span class=item-content>tmzh</span></p><p class=copyright-item><span class=item-title>LastMod</span>
+<span class=item-content>2024-06-20</span></p></div><footer class=post-footer><div class=post-tags><a href=/tags/llm/>llm</a>
+<a href=/tags/generative_ai/>generative_ai</a></div><nav class=post-nav><a class=next href=/post/2024-01-22-running-deep-floyd-with-limited-memory/><span class="next-text nav-default">Generating Visual Illusions Using Diffusion Models On Low VRAM</span>
+<span class="next-text nav-mobile">Next</span>
+<i class="iconfont icon-right"></i></a></nav></footer></article></div></div></main><footer id=footer class=footer><div class=social-links><a href=https://github.com/tmzh/tmzh.github.io class="iconfont icon-github" title=github></a></div><div class=copyright><span class=power-by>Powered by <a class=hexo-link href=https://gohugo.io>Hugo</a>
+</span><span class=division>|</span>
+<span class=theme-info>Theme -
+<a class=theme-link href=https://github.com/olOwOlo/hugo-theme-even>Even</a>
+</span><span class=copyright-year>&copy;
+2017 -
+2024<span class=heart><i class="iconfont icon-heart"></i></span><span>tmzh</span></span></div></footer><div class=back-to-top id=back-to-top><i class="iconfont icon-up"></i></div></div><script src=https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin=anonymous></script><script src=https://cdn.jsdelivr.net/npm/slideout@1.0.1/dist/slideout.min.js integrity="sha256-t+zJ/g8/KXIJMjSVQdnibt4dlaDxc9zXr/9oNPeWqdg=" crossorigin=anonymous></script><script type=text/javascript src=/js/main.min.4ae89da218555efa0e7093a20b92017d2e1202b66fff9fc2edf4cb8d44b44c6e.js></script><script type=text/javascript>window.MathJax={tex:{inlineMath:[["$","$"],["\\(","\\)"]]}}</script><script async src=https://cdn.jsdelivr.net/npm/mathjax@3.0.5/es5/tex-mml-chtml.js integrity="sha256-HGLuEfFcsUJGhvB8cQ8nr0gai9EucOOaIxFw7qxmd+w=" crossorigin=anonymous></script></body></html>
