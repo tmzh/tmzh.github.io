@@ -2,25 +2,20 @@
 author: tmzh
 categories:
 - Generative AI 
+- Games
 date: 2024-06-20T12:00:00Z
 images: 
-- /images/2024-01-29-visual_anagrams-loop.gif
+- /images/2024-06-20-game-clues.png
 slug: 
 - 2024-06-20-llm-based-codenames-game-playing-assistant
-
 tags:
 - llm
 - generative_ai
 
 title: "Building a Codenames AI Assistant with Multi-Modal LLMs"
-
-mathjaxEnableSingleDollar: true
-mathjax: true
-autoCollapseToc: true
 ---
 
 # Introduction
-
 
 Codenames is a word association game where two teams guess secret words based on one-word clues. The game involves a 25-word grid, with each team identifying their words while avoiding the opposing team's words and the "assassin" word. 
 
