@@ -52,8 +52,8 @@ params:
         subtitle: Lorem ipsum dolor sit amet, consectetur adipiscing elit.
         avatar:
             enabled: true
-            local: false
-            src: images/ars_longa.png
+            local: true
+            src: img/ars_longa.png
 
     article:
         math: false

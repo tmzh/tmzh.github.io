@@ -2,7 +2,7 @@
 layout: post
 title: "Building Natural Language Interfaces with LLM Function Calling"
 date: 2024-10-27
-categories: [Gen AI, Machine Learning]
+categories: [Generative AI, Machine Learning]
 tags: [LLM, Function Calling, Natural Language Interface]
 slug: building-natural-language-interfaces-with-llm-function-calling
 ---
