@@ -1,0 +1,384 @@
+<!doctype html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="Introduction While chatbots have grown common in applications like customer service, they have several shortcomings which disrupts user experience. Traditional chatbots rely on pattern matching and database lookups, which are ineffective when a user&rsquo;s question deviates from what was expected. Responses may feel impersonal and fail to address the true intent when questions deviate slightly from pattern matching rules.\nThis is where large language models (LLMs) can provide value. LLMs are better equipped to handle out-of-scope questions due to their ability to understand context and previous exchanges. They can generate more personalized responses compared to typical rule-based chatbots. As such, chatbots represent a prime use case for generative AI in enterprises.\n"><title>Exploring Retrieval-Augmentated Generation with Open Source Large Language Models</title>
+<link rel=canonical href=https://example.com/p/2023-06-24-llm-powered-faq-chat-bot/><link rel=stylesheet href=/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css><meta property='og:title' content="Exploring Retrieval-Augmentated Generation with Open Source Large Language Models"><meta property='og:description' content="Introduction While chatbots have grown common in applications like customer service, they have several shortcomings which disrupts user experience. Traditional chatbots rely on pattern matching and database lookups, which are ineffective when a user&rsquo;s question deviates from what was expected. Responses may feel impersonal and fail to address the true intent when questions deviate slightly from pattern matching rules.\nThis is where large language models (LLMs) can provide value. LLMs are better equipped to handle out-of-scope questions due to their ability to understand context and previous exchanges. They can generate more personalized responses compared to typical rule-based chatbots. As such, chatbots represent a prime use case for generative AI in enterprises.\n"><meta property='og:url' content='https://example.com/p/2023-06-24-llm-powered-faq-chat-bot/'><meta property='og:site_name' content='Ephemeral Dance Of Electrons'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='llama'><meta property='article:tag' content='langchain'><meta property='article:published_time' content='2023-06-24T12:00:00+00:00'><meta property='article:modified_time' content='2023-06-24T12:00:00+00:00'><meta name=twitter:title content="Exploring Retrieval-Augmentated Generation with Open Source Large Language Models"><meta name=twitter:description content="Introduction While chatbots have grown common in applications like customer service, they have several shortcomings which disrupts user experience. Traditional chatbots rely on pattern matching and database lookups, which are ineffective when a user&rsquo;s question deviates from what was expected. Responses may feel impersonal and fail to address the true intent when questions deviate slightly from pattern matching rules.\nThis is where large language models (LLMs) can provide value. LLMs are better equipped to handle out-of-scope questions due to their ability to understand context and previous exchanges. They can generate more personalized responses compared to typical rule-based chatbots. As such, chatbots represent a prime use case for generative AI in enterprises.\n"></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"light")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=images/ars_longa.png width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🎓</span></figure><div class=site-meta><h1 class=site-name><a href=/>Ephemeral Dance Of Electrons</a></h1><h2 class=site-description>Ars Longa, vita brevis</h2></div></header><ol class=menu-social><li><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Dark Mode</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">Table of contents</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#advantages-of-rag>Advantages of RAG</a></li></ol><ol><li><a href=#setup>Setup</a><ol><li><a href=#load-documents>Load documents</a></li><li><a href=#prepare-embeddings>Prepare embeddings</a></li></ol></li><li><a href=#retrieval>Retrieval</a><ol><li><a href=#query-index>Query Index</a></li></ol></li><li><a href=#generation>Generation</a><ol><li><a href=#load-a-generative-model>Load a generative model</a></li><li><a href=#build-a-prompt>Build a prompt</a></li><li><a href=#generate-response>Generate response</a></li><li><a href=#build-a-chat-ui>Build a Chat UI</a></li></ol></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/generative-ai/>Generative AI</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/p/2023-06-24-llm-powered-faq-chat-bot/>Exploring Retrieval-Augmentated Generation with Open Source Large Language Models</a></h2></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>2023-06-24</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>15 minute read</time></div></footer></div></header><section class=article-content><h1 id=introduction>Introduction</h1><p>While chatbots have grown common in applications like customer service, they have several shortcomings which disrupts user experience. Traditional chatbots rely on pattern matching and database lookups, which are ineffective when a user&rsquo;s question deviates from what was expected. Responses may feel impersonal and fail to address the true intent when questions deviate slightly from pattern matching rules.</p><p>This is where large language models (LLMs) can provide value. LLMs are better equipped to handle out-of-scope questions due to their ability to understand context and previous exchanges. They can generate more personalized responses compared to typical rule-based chatbots. As such, chatbots represent a prime use case for generative AI in enterprises.</p><p>When considering Generative AI use cases in an Enterprise context, it is hard to look past Chatbots utilizing Large Language Models (LLMs). Traditional chatbots can feel impersonal and inadequate due to their reliance on pattern matching and limited context understanding. In contrast, interacting with LLMs can feel natural since due to their improved understanding of context and personalized responses. This chatbot an ideal use case to explore Generate AI in enterprises.</p><figure><img src=/images/2023-06-25-decision-flow-for-chosing-llm.png alt="Decision Flow for choosing LLM" width=80%><figcaption><i>Source: Harnessing the Power of LLMs in Practice: A Survey on ChatGPT and Beyond
+(<a href=https://arxiv.org/pdf/2304.13712.pdf>arXiv:2304.13712</a>)</i></figcaption></figure><p>To help an LLM answer based on internal knowledge base, one approach utilizes prompting i.e., inserting knowledge corpora into the prompt along with user queries.</p><p>However, using LLMs in this manner can lead to responses that lack constraints, resulting in potential factual inaccuracies and irrelevance, especially when dealing with topics beyond the scope of the training data. This phenomenon is referred to as &ldquo;hallucination.&rdquo;</p><p>To address this, knowledge retrieval can be incorporated to ground the LLM&rsquo;s responses in factual information from curated sources. This is known as Retrieval Augmented Generation</p><h1 id=how-retrieval-augmented-generation-works>How Retrieval Augmented Generation works</h1><p>Retrieval augmented generation (RAG) combines two main components: a retrieval model and a generation model.</p><p>The retrieval model searches external knowledge bases to extract facts relevant to a user&rsquo;s query. It represents words and documents as embeddings, calculating similarity between query and document embeddings to retrieve top results.</p><p>The generation model—typically a large language model—accepts the retrieved information as input. It produces natural language responses guided by this context without direct access to the raw knowledge base. This anchoring to concrete facts mitigates generation of incorrect statements compared to relying solely on the LLM.</p><figure><img src=/images/2023-06-25-retrieval-qa.gif alt="decision flow for choosing llm" width=80%><figcaption><i>source: <a href=https://www.newsletter.swirlai.com/p/sai-notes-08-llm-based-chatbots-to>llm based chatbots to query your private knowledge base</a></i></figcaption></figure><h2 id=advantages-of-rag>Advantages of RAG</h2><p>RAG offers several advantages over both LLM-based question answering (QA) systems and traditional rule-based chatbots.</p><p>Compared to LLM QA, RAG can provide answers based on externally retrieved facts without the need for expensive fine-tuning. It also offers traceability to the cited information sources.</p><p>In contrast to traditional chatbots, RAG excels in handling ambiguous and out-of-scope queries through its contextual understanding. It goes beyond simple rule-based responses and generates more human-like and personalized answers, improving the user experience.</p><p>The hybrid approach also has computational benefits as well. By employing lighter models specifically designed for retrieval tasks that prioritize semantic similarity over language modeling, RAG enables quicker retrievals. This efficiency is achieved by operating in a lower dimensional space compared to LLM, resulting in faster response times.</p><p>Overall, RAG leverages the strengths of both retrieval and language models. By anchoring flexible conversational abilities to verifiable facts, it offers a more robust framework for open-domain dialogue than previous paradigms alone.</p><h1 id=implementation>Implementation</h1><p>In this blog post, we will develop a retrieval augmented generation (RAG) based LLM application from scratch. We will be building a chatbot that answers questions based on a knowledge base. For the knowledge base, we will use <a class=link href=https://www.kaggle.com/datasets/saadmakhdoom/ecommerce-faq-chatbot-dataset target=_blank rel=noopener>E-commerce FAQ dataset</a>.</p><h2 id=setup>Setup</h2><h3 id=load-documents>Load documents</h3><p>The chat dataset used for this project, is in a JSON format as an array of key-value pairs. We will split it into chunks of <code>n</code> characters but to retain the information within each chunk, we will ensure that each QnA pair is loaded as an individual chunk.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>json</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>pathlib</span> <span class=kn>import</span> <span class=n>Path</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>uuid</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>file_path</span><span class=o>=</span><span class=s1>&#39;./data/faq_dataset.json&#39;</span>
+</span></span><span class=line><span class=cl><span class=n>data</span> <span class=o>=</span> <span class=n>json</span><span class=o>.</span><span class=n>loads</span><span class=p>(</span><span class=n>Path</span><span class=p>(</span><span class=n>file_path</span><span class=p>)</span><span class=o>.</span><span class=n>read_text</span><span class=p>())</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>documents</span> <span class=o>=</span> <span class=p>[</span><span class=n>json</span><span class=o>.</span><span class=n>dumps</span><span class=p>(</span><span class=n>q</span><span class=p>)</span> <span class=k>for</span> <span class=n>q</span> <span class=ow>in</span> <span class=n>data</span><span class=p>[</span><span class=s1>&#39;questions&#39;</span><span class=p>]]</span> <span class=c1># encode QnA as json strings for generating embeddings</span>
+</span></span><span class=line><span class=cl><span class=n>metadatas</span> <span class=o>=</span> <span class=n>data</span><span class=p>[</span><span class=s1>&#39;questions&#39;</span><span class=p>]</span> <span class=c1># retain QnA as dict in metadata</span>
+</span></span><span class=line><span class=cl><span class=n>ids</span> <span class=o>=</span> <span class=p>[</span><span class=nb>str</span><span class=p>(</span><span class=n>uuid</span><span class=o>.</span><span class=n>uuid1</span><span class=p>())</span> <span class=k>for</span> <span class=n>_</span> <span class=ow>in</span> <span class=n>documents</span><span class=p>]</span> <span class=c1># unique identifier for the vectors</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=prepare-embeddings>Prepare embeddings</h3><p>Next we will use an embedding model to generate vector representations of the chunks. Here we are using <code>BAAI/bge-small-en-v1.5</code> model. This is a tiny model, less than 150 MB in size and uses 384 dimensions to store semantic information, but it is sufficient for retrieval. Since embedding model needs to process a lot more tokens than answering model which only needs to process the prompt, it is better to keep it lightweight. If we have enough memory, we can use a larger model to generate embeddings.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>chromadb</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>chromadb.utils</span> <span class=kn>import</span> <span class=n>embedding_functions</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>client</span> <span class=o>=</span> <span class=n>chromadb</span><span class=o>.</span><span class=n>Client</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=n>emb_fn</span> <span class=o>=</span> <span class=n>embedding_functions</span><span class=o>.</span><span class=n>SentenceTransformerEmbeddingFunction</span><span class=p>(</span><span class=n>model_name</span><span class=o>=</span><span class=s2>&#34;BAAI/bge-small-en-v1.5&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>collection</span> <span class=o>=</span> <span class=n>client</span><span class=o>.</span><span class=n>create_collection</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=n>name</span><span class=o>=</span><span class=s2>&#34;retrieval_qa&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>embedding_function</span><span class=o>=</span><span class=n>emb_fn</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>metadata</span><span class=o>=</span><span class=p>{</span><span class=s2>&#34;hnsw:space&#34;</span><span class=p>:</span> <span class=s2>&#34;cosine&#34;</span><span class=p>}</span> <span class=c1># l2 is the default</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>Since our FAQ dataset is very small, and we have a light embedding model, it is quite inexpensive to calculate the embeddings. So we will use in-memory non-persistent Chroma client as a Vector store. Vector stores is a data structure or database that specialize in storing and retrieving embeddings. They also provide methods for performing similarity search and Nearest neighbour search. Note that in ChromaDB, the default index type is <a class=link href=https://zilliz.com/learn/hierarchical-navigable-small-worlds-HNSW target=_blank rel=noopener>Hierarchical Navigable Small Worlds</a> (<code>hnsw</code>) and distance function is <code>l2</code>. However other distance functions are also available:</p><div class=table-wrapper><table><thead><tr><th>Distance</th><th>Parameter</th><th>Equation</th></tr></thead><tbody><tr><td>Squared L2</td><td><code>l2</code></td><td>$$ d = \sum\left(A_i-B_i\right)^2 $$</td></tr><tr><td>Inner product</td><td><code>ip</code></td><td>$$d = 1.0 - \sum\left(A_i \times B_i\right) $$</td></tr><tr><td>Cosine Similarity</td><td><code>cosine</code></td><td>$$d = 1.0 - \frac{\sum\left(A_i \times B_i\right)}{\sqrt{\sum\left(A_i^2\right)} \cdot \sqrt{\sum\left(B_i^2\right)}}$$</td></tr></tbody></table></div><p>For more expensive embedding operations involving larger dataset or embedding models, we can use a persistent store such as the one offered by ChromaDB itself or other options such as <code>pgVector</code>, <code>Pinecone</code>, or <code>Weaviate</code></p><h2 id=retrieval>Retrieval</h2><h3 id=query-index>Query Index</h3><p>We can now retrieve a set of documents closest to the query:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>query</span> <span class=o>=</span> <span class=s2>&#34;How can I open an account?&#34;</span>
+</span></span><span class=line><span class=cl><span class=n>docs</span> <span class=o>=</span> <span class=n>collection</span><span class=o>.</span><span class=n>query</span><span class=p>(</span><span class=n>query_texts</span><span class=o>=</span><span class=p>[</span><span class=n>query</span><span class=p>],</span> 
+</span></span><span class=line><span class=cl>                        <span class=n>n_results</span><span class=o>=</span><span class=mi>3</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><pre><code>{'ids': [['d9b8bc80-7093-11ee-a189-00155d07b3f4',
+   'd9b8bee2-7093-11ee-a189-00155d07b3f4',
+   'd9b8bece-7093-11ee-a189-00155d07b3f4']],
+ 'embeddings': None,
+ 'documents': [['{&quot;question&quot;: &quot;How can I create an account?&quot;, &quot;answer&quot;: &quot;To create an account, click on the \'Sign Up\' button on the top right corner of our website and follow the instructions to complete the registration process.&quot;}',
+   '{&quot;question&quot;: &quot;Can I order without creating an account?&quot;, &quot;answer&quot;: &quot;Yes, you can place an order as a guest without creating an account. However, creating an account offers benefits such as order tracking and easier future purchases.&quot;}',
+   '{&quot;question&quot;: &quot;Do you have a loyalty program?&quot;, &quot;answer&quot;: &quot;Yes, we have a loyalty program where you can earn points for every purchase. These points can be redeemed for discounts on future orders. Please visit our website to learn more and join the program.&quot;}']],
+ 'metadatas': [[{'question': 'How can I create an account?',
+	'answer': &quot;To create an account, click on the 'Sign Up' button on the top right corner of our website and follow the instructions to complete the registration process.&quot;},
+   {'question': 'Can I order without creating an account?',
+	'answer': 'Yes, you can place an order as a guest without creating an account. However, creating an account offers benefits such as order tracking and easier future purchases.'},
+   {'question': 'Do you have a loyalty program?',
+	'answer': 'Yes, we have a loyalty program where you can earn points for every purchase. These points can be redeemed for discounts on future orders. Please visit our website to learn more and join the program.'}]],
+ 'distances': [[0.19405025243759155, 0.3536655902862549, 0.3666747808456421]]}
+</code></pre><p>For simple and straightforward user queries, it may be sufficient to return the top match. But consider a question like below:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>query</span> <span class=o>=</span> <span class=s2>&#34;What are the conditions for requesting a refund? Do I need to keep the receipt?&#34;</span>
+</span></span><span class=line><span class=cl><span class=n>docs</span> <span class=o>=</span> <span class=n>collection</span><span class=o>.</span><span class=n>query</span><span class=p>(</span><span class=n>query_texts</span><span class=o>=</span><span class=p>[</span><span class=n>query</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>                        <span class=n>n_results</span><span class=o>=</span><span class=mi>3</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>The top 3 responses are:</p><pre><code>[[{'question': &quot;Can I return a product without a receipt?&quot;,
+   'answer':  &quot;A receipt or proof of purchase is usually required for returns. Please refer to our return policy or contact our customer support team for assistance.&quot;},
+  {'question': &quot;Can I return a product if I no longer have the original receipt?&quot;,
+   'answer':  &quot;While a receipt is preferred for returns, we may be able to assist you without it. Please contact our customer support team for further guidance.&quot;},
+  {'question': &quot;What is your return policy?&quot;,
+   'answer':  &quot;Our return policy allows you to return products within 30 days of purchase for a full refund, provided they are in their original condition and packaging. Please refer to our Returns page for detailed instructions.&quot;}
+  ]]
+</code></pre><p>Clearly just returning the answer for the closest matched question will be incomplete and unsatisfactory for the user. The ideal answer needs to incorporate all facts from the relevant document chunks. This is where a generation model can help.</p><h2 id=generation>Generation</h2><h3 id=load-a-generative-model>Load a generative model</h3><p>LLMs are often trained and released as unaligned base models initially which simply take in text and predict the next token. Bloom, Llama2 and Mistral are examples of such base models. But for practical use, we often require models that are further fine-tuned for the task. For RAG and generally speaking for chat agents we need <code>Instruct models</code> that are further fine-tuned on instruction-response pairs.</p><p>For this demonstration, I used an instruction fine-tuned model <a class=link href=https://docs.mistral.ai/llm/mistral-instruct-v0.1 target=_blank rel=noopener><code>Mistral-7B-Instruct-v0.1</code></a> from Mistral. The Mistral model is in particular impressive for the quality of its text generation given the relatively small model size (7B). This leads to quite performant prompt evaluation and response generation. I used the <code>GPTQ</code> quantized version which further reduces the model size and improves the prompt evaluation and token generation throughput significantly.</p><blockquote><p>GPTQ models are quantized versions that reduces memory requirements with a slight <a class=link href=https://github.com/ggerganov/llama.cpp/pull/1684 target=_blank rel=noopener>tradeoff</a> of intelligence. Hugging Face transformers supports loading of GPTQ models since version <code>4.32.0</code> using AutoGPTQ library. You can learn more about this <a class=link href=https://huggingface.co/blog/gptq-integration target=_blank rel=noopener>here</a></p></blockquote><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>torch</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>transformers</span>
+</span></span><span class=line><span class=cl><span class=kn>from</span> <span class=nn>transformers</span> <span class=kn>import</span> <span class=n>AutoModelForCausalLM</span><span class=p>,</span> <span class=n>AutoTokenizer</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>models</span> <span class=o>=</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;wizardLM-7B-HF&#34;</span> <span class=p>:</span> <span class=s2>&#34;TheBloke/wizardLM-7B-HF&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;wizard-vicuna-13B-GPTQ&#34;</span> <span class=p>:</span> <span class=s2>&#34;TheBloke/wizard-vicuna-13B-GPTQ&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;WizardLM-13B&#34;</span> <span class=p>:</span> <span class=s2>&#34;TheBloke/WizardLM-13B-V1.0-Uncensored-GPTQ&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;Llama-2-7B&#34;</span> <span class=p>:</span> <span class=s2>&#34;TheBloke/Llama-2-7b-Chat-GPTQ&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;Vicuna-13B&#34;</span> <span class=p>:</span> <span class=s2>&#34;TheBloke/vicuna-13B-v1.5-GPTQ&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;WizardLM-13B-V1.2&#34;</span> <span class=p>:</span> <span class=s2>&#34;TheBloke/WizardLM-13B-V1.2-GPTQ&#34;</span><span class=p>,</span> 
+</span></span><span class=line><span class=cl>    <span class=s2>&#34;Mistral-7B&#34;</span> <span class=p>:</span> <span class=s2>&#34;TheBloke/Mistral-7B-Instruct-v0.1-GPTQ&#34;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>model_name</span> <span class=o>=</span> <span class=s2>&#34;Mistral-7B&#34;</span>
+</span></span><span class=line><span class=cl><span class=n>tokenizer</span> <span class=o>=</span> <span class=n>AutoTokenizer</span><span class=o>.</span><span class=n>from_pretrained</span><span class=p>(</span><span class=n>models</span><span class=p>[</span><span class=n>model_name</span><span class=p>])</span>
+</span></span><span class=line><span class=cl><span class=n>model</span> <span class=o>=</span> <span class=n>AutoModelForCausalLM</span><span class=o>.</span><span class=n>from_pretrained</span><span class=p>(</span><span class=n>models</span><span class=p>[</span><span class=n>model_name</span><span class=p>],</span> 
+</span></span><span class=line><span class=cl>                                             <span class=n>torch_dtype</span><span class=o>=</span><span class=n>torch</span><span class=o>.</span><span class=n>float16</span><span class=p>,</span> 
+</span></span><span class=line><span class=cl>                                             <span class=n>device_map</span><span class=o>=</span><span class=s2>&#34;auto&#34;</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>Alternatively, you can use any of the other instruct models. I have had good results with <code>WizardLM-13B</code> as well. Note that the models we choose must fit the VRAM of your GPU. Often you can find the memory requirements of a model in their HuggingFace model card such as <a class=link href=https://huggingface.co/TheBloke/Mistral-7B-Instruct-v0.1-GPTQ target=_blank rel=noopener>here</a>.</p><h3 id=build-a-prompt>Build a prompt</h3><p>Every instruct model works best when we provide it with prompts as per a specific template on which it was trained. Since this template can vary between models, to reliably apply model-specific chat template, we can use the <a class=link href=https://huggingface.co/docs/transformers/main/chat_templating target=_blank rel=noopener>Transformers chat template</a>, which allows us to format a list of messages as per the model-specific chat template.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>chat</span> <span class=o>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;user&#34;</span><span class=p>,</span> <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=s2>&#34;Hello, how are you?&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;assistant&#34;</span><span class=p>,</span> <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=s2>&#34;I&#39;m doing great. How can I help you today?&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span><span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;user&#34;</span><span class=p>,</span> <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=s2>&#34;I&#39;d like to show off how chat templating works!&#34;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>tokenizer</span><span class=o>.</span><span class=n>use_default_system_prompt</span> <span class=o>=</span> <span class=kc>True</span>
+</span></span><span class=line><span class=cl><span class=n>tokenizer</span><span class=o>.</span><span class=n>apply_chat_template</span><span class=p>(</span><span class=n>chat</span><span class=p>,</span> <span class=n>tokenize</span><span class=o>=</span><span class=kc>False</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p><code>&lt;s>[INST] &lt;&lt;SYS>>\nYou are a helpful, respectful and honest support executive. Always answer as helpfully as possible, while being safe. While answering, use the information provided in the earlier conversations only. If the information is not present in the prior conversation, or If you don't know the answer to a question, please don't share false information. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. \n&lt;&lt;/SYS>>\n\nHello, how are you? [/INST] I'm doing great. How can I help you today? &lt;/s>&lt;s>[INST] I'd like to show off how chat templating works! [/INST]</code></p><p>In our case, we want to customize the system prompt to pass the retrieved document chunks as a context for QnA.
+This is done by disabling the default system prompt and configuring the tokenizer to use <code>default_chat_template</code>. This allows us to override the message for the system role.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>chat</span> <span class=o>=</span> <span class=p>[]</span>
+</span></span><span class=line><span class=cl><span class=n>system_message</span> <span class=o>=</span> <span class=s2>&#34;You are a helpful, respectful and honest support executive. Always be as helpfully as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don&#39;t know. Please don&#39;t share false information.&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>for</span> <span class=n>d</span> <span class=ow>in</span> <span class=n>docs</span><span class=p>[</span><span class=s1>&#39;metadatas&#39;</span><span class=p>][</span><span class=mi>0</span><span class=p>]:</span>
+</span></span><span class=line><span class=cl>    <span class=c1># append context to system message</span>
+</span></span><span class=line><span class=cl>    <span class=n>system_message</span> <span class=o>+=</span> <span class=sa>f</span><span class=s2>&#34;</span><span class=se>\n</span><span class=s2> Question: </span><span class=si>{</span><span class=n>d</span><span class=p>[</span><span class=s1>&#39;question&#39;</span><span class=p>]</span><span class=si>}</span><span class=s2> </span><span class=se>\n</span><span class=s2> Answer: </span><span class=si>{</span><span class=n>d</span><span class=p>[</span><span class=s1>&#39;answer&#39;</span><span class=p>]</span><span class=si>}</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>    
+</span></span><span class=line><span class=cl><span class=n>chat</span><span class=o>.</span><span class=n>append</span><span class=p>({</span><span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;system&#34;</span><span class=p>,</span> <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=n>system_message</span><span class=p>})</span>
+</span></span><span class=line><span class=cl><span class=n>chat</span><span class=o>.</span><span class=n>append</span><span class=p>({</span><span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;user&#34;</span><span class=p>,</span> <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=n>query</span><span class=p>})</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>prompt</span> <span class=o>=</span> <span class=n>tokenizer</span><span class=o>.</span><span class=n>apply_chat_template</span><span class=p>(</span><span class=n>chat</span><span class=p>,</span> <span class=n>tokenize</span><span class=o>=</span><span class=kc>False</span><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>This will insert a set of relevant questions and answers as additional context within the prompt so that the model can use this information to give an answer. For our example the constructed prompt looks like this:</p><pre><code>&lt;s&gt;[INST] &lt;&lt;SYS&gt;&gt;
+You are a helpful, respectful and honest support executive. Always be as helpfully as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information.
+Question: How can I create an account?
+Answer: To create an account, click on the 'Sign Up' button on the top right corner of our website and follow the instructions to complete the registration process.
+Question: Can I order without creating an account?
+Answer: Yes, you can place an order as a guest without creating an account. However, creating an account offers benefits such as order tracking and easier future purchases.
+Question: Do you have a loyalty program?
+Answer: Yes, we have a loyalty program where you can earn points for every purchase. These points can be redeemed for discounts on future orders. Please visit our website to learn more and join the program.
+&lt;&lt;/SYS&gt;&gt;
+
+How can I open an account? [/INST]
+</code></pre><h3 id=generate-response>Generate response</h3><p>Now we have everything needed to generate a user-friendly response from LLM.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>encodeds</span> <span class=o>=</span> <span class=n>tokenizer</span><span class=o>.</span><span class=n>apply_chat_template</span><span class=p>(</span><span class=n>chat</span><span class=p>,</span> <span class=n>return_tensors</span><span class=o>=</span><span class=s2>&#34;pt&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>model_inputs</span> <span class=o>=</span> <span class=n>encodeds</span><span class=o>.</span><span class=n>to</span><span class=p>(</span><span class=n>model</span><span class=o>.</span><span class=n>device</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>model</span><span class=o>.</span><span class=n>to</span><span class=p>(</span><span class=n>model</span><span class=o>.</span><span class=n>device</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>generated_ids</span> <span class=o>=</span> <span class=n>model</span><span class=o>.</span><span class=n>generate</span><span class=p>(</span><span class=n>model_inputs</span><span class=p>,</span> <span class=n>max_new_tokens</span><span class=o>=</span><span class=mi>100</span><span class=p>,</span> <span class=n>do_sample</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=n>answer</span> <span class=o>=</span> <span class=n>tokenizer</span><span class=o>.</span><span class=n>batch_decode</span><span class=p>(</span><span class=n>generated_ids</span><span class=p>[:,</span> <span class=n>model_inputs</span><span class=o>.</span><span class=n>shape</span><span class=p>[</span><span class=mi>1</span><span class=p>]:])[</span><span class=mi>0</span><span class=p>]</span>
+</span></span></code></pre></td></tr></table></div></div><pre><code>&lt;s&gt;[INST] &lt;&lt;SYS&gt;&gt;
+You are a helpful, respectful and honest support executive. Always be as helpfully as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information.
+Question: How can I create an account?
+Answer: To create an account, click on the 'Sign Up' button on the top right corner of our website and follow the instructions to complete the registration process.
+Question: Can I order without creating an account?
+Answer: Yes, you can place an order as a guest without creating an account. However, creating an account offers benefits such as order tracking and easier future purchases.
+Question: Do you have a loyalty program?
+Answer: Yes, we have a loyalty program where you can earn points for every purchase. These points can be redeemed for discounts on future orders. Please visit our website to learn more and join the program.
+&lt;&lt;/SYS&gt;&gt;
+
+How can I open an account? [/INST] To open an account, click on the 'Sign Up' button on the top right corner of our website and follow the instructions to complete the registration process.&lt;/s&gt;
+</code></pre><p>Everything after the last token <code>[/INST]</code> is the response we seek. Keep in mind that, from an LLM perspective generating responses is merely continuing the text prompt that we passed to it. To retrieve the generated response we need to index from the input prompt length.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>answer</span> <span class=o>=</span> <span class=n>tokenizer</span><span class=o>.</span><span class=n>batch_decode</span><span class=p>(</span><span class=n>generated_ids</span><span class=p>[:,</span> <span class=n>model_inputs</span><span class=o>.</span><span class=n>shape</span><span class=p>[</span><span class=mi>1</span><span class=p>]:])[</span><span class=mi>0</span><span class=p>]</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=build-a-chat-ui>Build a Chat UI</h3><p>Now we have all the necessary ingredients to build a chatbot. Gradio library offers several ready-made components that simplify the process of building a Chat UI. We need to wrap our token generation process as below:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>gradio</span> <span class=k>as</span> <span class=nn>gr</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>with</span> <span class=n>gr</span><span class=o>.</span><span class=n>Blocks</span><span class=p>()</span> <span class=k>as</span> <span class=n>chatbot</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>with</span> <span class=n>gr</span><span class=o>.</span><span class=n>Row</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>        <span class=n>answer_block</span> <span class=o>=</span> <span class=n>gr</span><span class=o>.</span><span class=n>Textbox</span><span class=p>(</span><span class=n>label</span><span class=o>=</span><span class=s2>&#34;Answers&#34;</span><span class=p>,</span> <span class=n>lines</span><span class=o>=</span><span class=mi>2</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>question</span> <span class=o>=</span> <span class=n>gr</span><span class=o>.</span><span class=n>Textbox</span><span class=p>(</span><span class=n>label</span><span class=o>=</span><span class=s2>&#34;Question&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>generate</span> <span class=o>=</span> <span class=n>gr</span><span class=o>.</span><span class=n>Button</span><span class=p>(</span><span class=n>value</span><span class=o>=</span><span class=s2>&#34;Ask&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>generate</span><span class=o>.</span><span class=n>click</span><span class=p>(</span><span class=n>respond</span><span class=p>,</span> <span class=n>inputs</span><span class=o>=</span><span class=n>question</span><span class=p>,</span> <span class=n>outputs</span><span class=o>=</span><span class=p>[</span><span class=n>answer_block</span><span class=p>,</span> <span class=n>global_state</span><span class=p>,</span> <span class=n>exampleso</span><span class=p>])</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>chatbot</span><span class=o>.</span><span class=n>launch</span><span class=p>()</span>
+</span></span></code></pre></td></tr></table></div></div><p>Along with generating a response, we can also give a list of references to let the user know the source of truth for responses. We can also suggest other relevant questions that the users can click to follow. With these additions, the code for the chat component is as follows:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span><span class=lnt>55
+</span><span class=lnt>56
+</span><span class=lnt>57
+</span><span class=lnt>58
+</span><span class=lnt>59
+</span><span class=lnt>60
+</span><span class=lnt>61
+</span><span class=lnt>62
+</span><span class=lnt>63
+</span><span class=lnt>64
+</span><span class=lnt>65
+</span><span class=lnt>66
+</span><span class=lnt>67
+</span><span class=lnt>68
+</span><span class=lnt>69
+</span><span class=lnt>70
+</span><span class=lnt>71
+</span><span class=lnt>72
+</span><span class=lnt>73
+</span><span class=lnt>74
+</span><span class=lnt>75
+</span><span class=lnt>76
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=kn>import</span> <span class=nn>gradio</span> <span class=k>as</span> <span class=nn>gr</span>
+</span></span><span class=line><span class=cl><span class=kn>import</span> <span class=nn>random</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>samples</span> <span class=o>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=s2>&#34;How can I return a product?&#34;</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=s2>&#34;What is the return policy?&#34;</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>    <span class=p>[</span><span class=s2>&#34;How can I contact customer support?&#34;</span><span class=p>],</span>
+</span></span><span class=line><span class=cl><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>update_examples</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>    <span class=k>global</span> <span class=n>samples</span>
+</span></span><span class=line><span class=cl>    <span class=n>samples</span> <span class=o>=</span> <span class=n>get_new_examples</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>gr</span><span class=o>.</span><span class=n>Dataset</span><span class=o>.</span><span class=n>update</span><span class=p>(</span><span class=n>samples</span><span class=o>=</span><span class=n>samples</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>respond</span><span class=p>(</span><span class=n>query</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>global</span> <span class=n>samples</span>
+</span></span><span class=line><span class=cl>    <span class=n>docs</span> <span class=o>=</span> <span class=n>collection</span><span class=o>.</span><span class=n>query</span><span class=p>(</span><span class=n>query_texts</span><span class=o>=</span><span class=p>[</span><span class=n>query</span><span class=p>],</span> <span class=n>n_results</span><span class=o>=</span><span class=mi>3</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>chat</span> <span class=o>=</span> <span class=p>[]</span>
+</span></span><span class=line><span class=cl>    <span class=n>related_questions</span> <span class=o>=</span> <span class=p>[]</span>
+</span></span><span class=line><span class=cl>    <span class=n>references</span> <span class=o>=</span> <span class=s2>&#34;## References</span><span class=se>\n</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>system_message</span> <span class=o>=</span> <span class=s2>&#34;You are a helpful, respectful and honest support executive. Always be as helpfully as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don&#39;t know. Please don&#39;t share false information.&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>d</span> <span class=ow>in</span> <span class=n>docs</span><span class=p>[</span><span class=s1>&#39;metadatas&#39;</span><span class=p>][</span><span class=mi>0</span><span class=p>]:</span>
+</span></span><span class=line><span class=cl>        <span class=c1># prepare chat template</span>
+</span></span><span class=line><span class=cl>        <span class=n>system_message</span> <span class=o>+=</span> <span class=sa>f</span><span class=s2>&#34;</span><span class=se>\n</span><span class=s2> Question: </span><span class=si>{</span><span class=n>d</span><span class=p>[</span><span class=s1>&#39;question&#39;</span><span class=p>]</span><span class=si>}</span><span class=s2> </span><span class=se>\n</span><span class=s2> Answer: </span><span class=si>{</span><span class=n>d</span><span class=p>[</span><span class=s1>&#39;answer&#39;</span><span class=p>]</span><span class=si>}</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=c1># Update references</span>
+</span></span><span class=line><span class=cl>        <span class=n>references</span> <span class=o>+=</span> <span class=sa>f</span><span class=s2>&#34;**</span><span class=si>{</span><span class=n>d</span><span class=p>[</span><span class=s1>&#39;question&#39;</span><span class=p>]</span><span class=si>}</span><span class=s2>**</span><span class=se>\n\n</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=n>references</span> <span class=o>+=</span> <span class=sa>f</span><span class=s2>&#34;&gt; </span><span class=si>{</span><span class=n>d</span><span class=p>[</span><span class=s1>&#39;answer&#39;</span><span class=p>]</span><span class=si>}</span><span class=se>\n\n</span><span class=s2>&#34;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=c1># Update related questions</span>
+</span></span><span class=line><span class=cl>        <span class=n>related_questions</span><span class=o>.</span><span class=n>append</span><span class=p>([</span><span class=n>d</span><span class=p>[</span><span class=s1>&#39;question&#39;</span><span class=p>]])</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>chat</span><span class=o>.</span><span class=n>append</span><span class=p>({</span><span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;system&#34;</span><span class=p>,</span> <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=n>system_message</span><span class=p>})</span>
+</span></span><span class=line><span class=cl>    <span class=n>chat</span><span class=o>.</span><span class=n>append</span><span class=p>({</span><span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;user&#34;</span><span class=p>,</span> <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=n>query</span><span class=p>})</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>encodeds</span> <span class=o>=</span> <span class=n>tokenizer</span><span class=o>.</span><span class=n>apply_chat_template</span><span class=p>(</span><span class=n>chat</span><span class=p>,</span> <span class=n>return_tensors</span><span class=o>=</span><span class=s2>&#34;pt&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>model_inputs</span> <span class=o>=</span> <span class=n>encodeds</span><span class=o>.</span><span class=n>to</span><span class=p>(</span><span class=n>model</span><span class=o>.</span><span class=n>device</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>streamer</span> <span class=o>=</span> <span class=n>TextStreamer</span><span class=p>(</span><span class=n>tokenizer</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>model</span><span class=o>.</span><span class=n>to</span><span class=p>(</span><span class=n>model</span><span class=o>.</span><span class=n>device</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>generated_ids</span> <span class=o>=</span> <span class=n>model</span><span class=o>.</span><span class=n>generate</span><span class=p>(</span><span class=n>model_inputs</span><span class=p>,</span> <span class=n>streamer</span><span class=o>=</span><span class=n>streamer</span><span class=p>,</span> <span class=n>temperature</span><span class=o>=</span><span class=mf>0.01</span><span class=p>,</span> <span class=n>max_new_tokens</span><span class=o>=</span><span class=mi>100</span><span class=p>,</span> <span class=n>do_sample</span><span class=o>=</span><span class=kc>True</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>answer</span> <span class=o>=</span> <span class=n>tokenizer</span><span class=o>.</span><span class=n>batch_decode</span><span class=p>(</span><span class=n>generated_ids</span><span class=p>[:,</span> <span class=n>model_inputs</span><span class=o>.</span><span class=n>shape</span><span class=p>[</span><span class=mi>1</span><span class=p>]:])[</span><span class=mi>0</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=n>answer</span> <span class=o>=</span> <span class=n>answer</span><span class=o>.</span><span class=n>replace</span><span class=p>(</span><span class=s1>&#39;&lt;/s&gt;&#39;</span><span class=p>,</span> <span class=s1>&#39;&#39;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=n>samples</span> <span class=o>=</span> <span class=n>related_questions</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=n>related</span> <span class=o>=</span> <span class=n>gr</span><span class=o>.</span><span class=n>Dataset</span><span class=o>.</span><span class=n>update</span><span class=p>(</span><span class=n>samples</span><span class=o>=</span><span class=n>related_questions</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>yield</span> <span class=p>[</span><span class=n>answer</span><span class=p>,</span> <span class=n>references</span><span class=p>,</span> <span class=n>related</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>def</span> <span class=nf>load_example</span><span class=p>(</span><span class=n>example_id</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=k>global</span> <span class=n>samples</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>samples</span><span class=p>[</span><span class=n>example_id</span><span class=p>][</span><span class=mi>0</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>with</span> <span class=n>gr</span><span class=o>.</span><span class=n>Blocks</span><span class=p>()</span> <span class=k>as</span> <span class=n>chatbot</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=k>with</span> <span class=n>gr</span><span class=o>.</span><span class=n>Row</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>        <span class=k>with</span> <span class=n>gr</span><span class=o>.</span><span class=n>Column</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>            <span class=n>answer_block</span> <span class=o>=</span> <span class=n>gr</span><span class=o>.</span><span class=n>Textbox</span><span class=p>(</span><span class=n>label</span><span class=o>=</span><span class=s2>&#34;Answers&#34;</span><span class=p>,</span> <span class=n>lines</span><span class=o>=</span><span class=mi>2</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=n>question</span> <span class=o>=</span> <span class=n>gr</span><span class=o>.</span><span class=n>Textbox</span><span class=p>(</span><span class=n>label</span><span class=o>=</span><span class=s2>&#34;Question&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=n>examples</span> <span class=o>=</span> <span class=n>gr</span><span class=o>.</span><span class=n>Dataset</span><span class=p>(</span><span class=n>samples</span><span class=o>=</span><span class=n>samples</span><span class=p>,</span> <span class=n>components</span><span class=o>=</span><span class=p>[</span><span class=n>question</span><span class=p>],</span> <span class=n>label</span><span class=o>=</span><span class=s2>&#34;Similar questions&#34;</span><span class=p>,</span> <span class=nb>type</span><span class=o>=</span><span class=s2>&#34;index&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=n>generate</span> <span class=o>=</span> <span class=n>gr</span><span class=o>.</span><span class=n>Button</span><span class=p>(</span><span class=n>value</span><span class=o>=</span><span class=s2>&#34;Ask&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>with</span> <span class=n>gr</span><span class=o>.</span><span class=n>Column</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>            <span class=n>references_block</span> <span class=o>=</span> <span class=n>gr</span><span class=o>.</span><span class=n>Markdown</span><span class=p>(</span><span class=s2>&#34;## References</span><span class=se>\n</span><span class=s2>&#34;</span><span class=p>,</span> <span class=n>label</span><span class=o>=</span><span class=s2>&#34;global variable&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>        <span class=n>examples</span><span class=o>.</span><span class=n>click</span><span class=p>(</span><span class=n>load_example</span><span class=p>,</span> <span class=n>inputs</span><span class=o>=</span><span class=p>[</span><span class=n>examples</span><span class=p>],</span> <span class=n>outputs</span><span class=o>=</span><span class=p>[</span><span class=n>question</span><span class=p>])</span>
+</span></span><span class=line><span class=cl>        <span class=n>generate</span><span class=o>.</span><span class=n>click</span><span class=p>(</span><span class=n>respond</span><span class=p>,</span> <span class=n>inputs</span><span class=o>=</span><span class=n>question</span><span class=p>,</span> <span class=n>outputs</span><span class=o>=</span><span class=p>[</span><span class=n>answer_block</span><span class=p>,</span> <span class=n>references_block</span><span class=p>,</span> <span class=n>examples</span><span class=p>])</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=n>chatbot</span><span class=o>.</span><span class=n>queue</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=n>chatbot</span><span class=o>.</span><span class=n>launch</span><span class=p>()</span>
+</span></span></code></pre></td></tr></table></div></div><h1 id=conclusion>Conclusion</h1><p>With the above setup, we can build a chatbot that can provide truthful responses based on an organization&rsquo;s knowledge base. Since the model possesses the language understanding typical of all LLMs, it is able to respond to questions phrased in different manners. And since the responses are tailored to follow a question-and-answer format, the user experience is not disruptive and they don&rsquo;t feel like talking to an impersonal bot.</p><p><img src=/images/2023-06-25-rag.gif loading=lazy alt="RAG Chatbot"></p><h1 id=reference>Reference</h1><ul><li><a class=link href=https://arxiv.org/abs/2005.11401 target=_blank rel=noopener>https://arxiv.org/abs/2005.11401</a></li><li><a class=link href=https://scriv.ai/guides/retrieval-augmented-generation-overview/ target=_blank rel=noopener>https://scriv.ai/guides/retrieval-augmented-generation-overview/</a></li><li><a class=link href=https://research.ibm.com/blog/retrieval-augmented-generation-RAG target=_blank rel=noopener>https://research.ibm.com/blog/retrieval-augmented-generation-RAG</a></li></ul></section><footer class=article-footer><section class=article-tags><a href=/tags/llama/>Llama</a>
+<a href=/tags/langchain/>Langchain</a></section><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>Related content</h2><div class=related-content><div class="flex article-list--tile"><article><a href=/p/building-a-codenames-ai-assistant-with-multi-modal-llms/><div class=article-details><h2 class=article-title>Building a Codenames AI Assistant with Multi-Modal LLMs</h2></div></a></article><article><a href=/p/generating-visual-illusions-using-diffusion-models-on-low-vram/><div class=article-details><h2 class=article-title>Generating Visual Illusions Using Diffusion Models On Low VRAM</h2></div></a></article><article class=has-image><a href=/p/2023-05-16-paint-like-bob-ross-using-stable-diffusion/><div class=article-image><img src=/images/2023-05-16-stable-diffusion-art.png loading=lazy data-key=2023-05-16-paint-like-bob-ross-using-stable-diffusion data-hash=/images/2023-05-16-stable-diffusion-art.png></div><div class=article-details><h2 class=article-title>Create Beautiful Paintings From Rough Sketches Using Stable diffusion</h2></div></a></article></div></div></aside><div class=disqus-container></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2024 Ephemeral Dance Of Electrons</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.29.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

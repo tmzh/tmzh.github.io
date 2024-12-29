@@ -1,1 +1,283 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Big Data on Ephemeral Dance Of Electrons</title><link>https://tmzh.github.io/categories/big-data/</link><description>Recent content in Big Data on Ephemeral Dance Of Electrons</description><generator>Hugo</generator><language>en</language><lastBuildDate>Sat, 05 Jan 2019 12:00:00 +0000</lastBuildDate><atom:link href="https://tmzh.github.io/categories/big-data/index.xml" rel="self" type="application/rss+xml"/><item><title>Visualizing air routes for major airports using Spark and Matplotlib</title><link>https://tmzh.github.io/post/2019-01-05-using-spark-and-matplotlib-to-visualize-air-routes-for-major-airports-around-the-world/</link><pubDate>Sat, 05 Jan 2019 12:00:00 +0000</pubDate><guid>https://tmzh.github.io/post/2019-01-05-using-spark-and-matplotlib-to-visualize-air-routes-for-major-airports-around-the-world/</guid><description>&lt;p>In 2nd Century AD, Hellenic Cartographer Ptolemy was beset with an arbitrary choice of whether his maps should have north on the top or any other direction. Based in Alexandria, he reasoned that all population centers and places of importance lie to the north and would be convenient for study if they were in the upper right corner of the map. This arbitrary choice had long, unintended repercussions for mankind such as Australia being considered &amp;ldquo;Down under&amp;rdquo; or even our solar system to be perceived as rotating in counter-clockwise direction. Who would have thought that the stroke of a cartographer carried celestial importance!&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Big Data on Ephemeral Dance Of Electrons</title><link>https://example.com/categories/big-data/</link><description>Recent content in Big Data on Ephemeral Dance Of Electrons</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 05 Jan 2019 12:00:00 +0000</lastBuildDate><atom:link href="https://example.com/categories/big-data/index.xml" rel="self" type="application/rss+xml"/><item><title>Visualizing air routes for major airports using Spark and Matplotlib</title><link>https://example.com/p/2019-01-05-using-spark-and-matplotlib-to-visualize-air-routes-for-major-airports-around-the-world/</link><pubDate>Sat, 05 Jan 2019 12:00:00 +0000</pubDate><guid>https://example.com/p/2019-01-05-using-spark-and-matplotlib-to-visualize-air-routes-for-major-airports-around-the-world/</guid><description>&lt;p>In 2nd Century AD, Hellenic Cartographer Ptolemy was beset with an arbitrary choice of whether his maps should have north on the top or any other direction. Based in Alexandria, he reasoned that all population centers and places of importance lie to the north and would be convenient for study if they were in the upper right corner of the map. This arbitrary choice had long, unintended repercussions for mankind such as Australia being considered &amp;ldquo;Down under&amp;rdquo; or even our solar system to be perceived as rotating in counter-clockwise direction. Who would have thought that the stroke of a cartographer carried celestial importance!&lt;/p>
+&lt;p>Similarly, I am always fascinated about the distribution of population masses and economic activities acrosss the globe and what sort of external signals gets influenced by this distribution. Flight routes in major airports would be one such signal. For instance, closer you get to north pole , most of your businesses will be facing south and vice versa. Or across the Atlantic, it would be interesting to note whether east-west trans-atlantic traffic volume dominates over domestic air traffic in America. I tried to visualize this flight path orientation across important airports in the globe. This post is partly inspired by another beautiful piece of visualization of &lt;a class="link" href="http://geoffboeing.com/2018/07/comparing-city-street-orientations/" target="_blank" rel="noopener"
+>street orientation of major cities across the world&lt;/a> by Goef Boeing.&lt;/p>
+&lt;h2 id="the-data-and-tools">The Data and tools
+&lt;/h2>&lt;p>The source data is from &lt;a class="link" href="https://openflights.org/data.html" target="_blank" rel="noopener"
+>openflights.org&lt;/a>. It contains over 67,000 routes between 3321 airports across the globe. It is not the most recent (their routes data source stopped providing updates since 2014), however it is enough to satiate our curiousity. For pre-processing, I chose to use Spark which is an overkill for such a small dataset. Spark is normally used for Big Data workloads where the data is too big to fit inside a single host. I thought this example would be a nice segue to using Spark for data transformations. Pandas and numpy were also used to bin the data before visualizing them on matplotlib.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">wget -O /tmp/airports.dat https://raw.githubusercontent.com/jpatokal/openflights/master/data/airports.dat
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">wget -O /tmp/routes.dat https://raw.githubusercontent.com/jpatokal/openflights/master/data/routes.dat
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="pre-processing-data-in-spark">Pre-processing data in Spark
+&lt;/h2>&lt;p>Spark has two fundamental sets of APIs: the low-level unstructured RDD APIs, and the higher-level structured APIs which includes DataFrames and Spark SQL. Unlike the basic Spark RDD API, the structured APIs provide Spark with more information about the structure of the data and transformations. This allows it to take advantage of Spark&amp;rsquo;s optimizers such as Catalyst and Tungsten. For this reason, it is better to use the modern DataFrames API.&lt;/p>
+&lt;p>The Spark DataFrame API provides a convenient read function which can parse csv files and infer the schema on its own. However the source data doesn&amp;rsquo;t carry the header row and it is too tedious to rename columns once the dataframe has been created. It is far simpler to insert the header row before letting spark infer the schema.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-bash" data-lang="bash">&lt;span class="line">&lt;span class="cl">sed -i &lt;span class="s1">&amp;#39;1s/^/airport_id,name,city,country,iata,icao,latitude,longitude,altitude,tz,dst,tz_olson,airport_type,data_source\n/&amp;#39;&lt;/span> /tmp/airports.dat
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">sed -i &lt;span class="s1">&amp;#39;1s/^/airline,airline_id,src_airport,src_airport_id,dst_airport,dst_airport_id,codeshare,stops,equipment\n/&amp;#39;&lt;/span> /tmp/routes.dat
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">table_names&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s2">&amp;#34;routes&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s2">&amp;#34;airports&amp;#34;&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">for&lt;/span> &lt;span class="n">table_name&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">table_names&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">df&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">spark&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">read&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">load&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;file:///tmp/&amp;#34;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">table_name&lt;/span> &lt;span class="o">+&lt;/span>&lt;span class="s2">&amp;#34;.dat&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">format&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;csv&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">inferSchema&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;true&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">header&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;true&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">df&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">write&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">format&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;parquet&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">saveAsTable&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">table_name&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Ignore broken rows and consider only direct flights &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">route_df&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">spark&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">read&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">table&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;routes&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>\
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">.&lt;/span>&lt;span class="n">filter&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">col&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;stops&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span>\
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">.&lt;/span>&lt;span class="n">filter&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">col&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;dst_airport_id&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="se">\\&lt;/span>&lt;span class="s1">N&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>\
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">.&lt;/span>&lt;span class="n">filter&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">col&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;src_airport_id&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="se">\\&lt;/span>&lt;span class="s1">N&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>The next step to join the routes and airports table is seemingly trivial. However when we join airport table twice in Spark (once each for source airport and destination airport), the query planner gets confused on the join conditions (See &lt;a class="link" href="https://issues.apache.org/jira/browse/SPARK-25150" target="_blank" rel="noopener"
+>SPARK-25150&lt;/a>). To mitigate this, we create separate copies of dataframes for &lt;code>src_airport&lt;/code> and &lt;code>dst_airport&lt;/code> (although just one additional copy is sufficient to sort out the ambiguity).&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;span class="lnt">36
+&lt;/span>&lt;span class="lnt">37
+&lt;/span>&lt;span class="lnt">38
+&lt;/span>&lt;span class="lnt">39
+&lt;/span>&lt;span class="lnt">40
+&lt;/span>&lt;span class="lnt">41
+&lt;/span>&lt;span class="lnt">42
+&lt;/span>&lt;span class="lnt">43
+&lt;/span>&lt;span class="lnt">44
+&lt;/span>&lt;span class="lnt">45
+&lt;/span>&lt;span class="lnt">46
+&lt;/span>&lt;span class="lnt">47
+&lt;/span>&lt;span class="lnt">48
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">src_airport_df&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">airport_df&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">select&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;airport_id&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;name&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;city&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;country&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;latitude&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;longitude&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">toDF&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;src_airport_id&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;src_airport_name&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;src_city&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;src_cntry&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;src_lat&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;src_lon&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">dst_airport_df&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">airport_df&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">select&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;airport_id&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;city&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;country&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;latitude&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;longitude&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">toDF&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;dst_airport_id&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;dst_city&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;dst_cntry&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;dst_lat&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;dst_lon&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">src_cond&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="n">route_df&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">src_airport_id&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">src_airport_df&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">src_airport_id&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">dst_cond&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="n">route_df&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">dst_airport_id&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">dst_airport_df&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">dst_airport_id&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">routes_airport_df&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">route_df&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">join&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">src_airport_df&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">src_cond&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">how&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;left&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>\
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">.&lt;/span>&lt;span class="n">join&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">dst_airport_df&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">dst_cond&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">how&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;left&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>\
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">.&lt;/span>&lt;span class="n">select&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;airline&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;src_airport&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;src_airport_name&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;dst_airport&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;src_city&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;src_cntry&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;src_lon&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;src_lat&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;dst_city&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;dst_cntry&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;dst_lon&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;dst_lat&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">result_df&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">routes_airport_df&lt;/span>\
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">.&lt;/span>&lt;span class="n">withColumn&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;delta_lon&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">routes_airport_df&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">dst_lon&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">routes_airport_df&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">src_lon&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="mi">360&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">routes_airport_df&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">dst_lon&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">routes_airport_df&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">src_lon&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="mi">180&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cast&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;integer&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">+&lt;/span> &lt;span class="mi">360&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">routes_airport_df&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">src_lon&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">-&lt;/span> &lt;span class="n">routes_airport_df&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">dst_lon&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="mi">180&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cast&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;integer&amp;#34;&lt;/span>&lt;span class="p">))&lt;/span>\
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">.&lt;/span>&lt;span class="n">withColumn&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;delta_lat&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">routes_airport_df&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">dst_lat&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="n">routes_airport_df&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">src_lat&lt;/span>&lt;span class="p">)&lt;/span>\
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="o">.&lt;/span>&lt;span class="n">select&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;airline&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;src_airport&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;src_airport_name&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;dst_airport&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;src_city&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;src_cntry&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;dst_city&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;dst_cntry&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;src_lon&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;dst_lon&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;src_lat&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;dst_lat&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;delta_lon&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;delta_lat&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>The additional arithmetic juggling in calculating the longitudinal distance is to ensure that we take the shortest distance between the points. If two points are more than 180 degrees apart, we can get the shorter path by adding or removing a full circle (360 degrees).&lt;/p>
+&lt;p>Note that for these calculations, we treat geographic co-ordinates as cartesian co-ordinates in &lt;a class="link" href="https://www.wikiwand.com/en/Two-dimensional_space" target="_blank" rel="noopener"
+>Euclidean plane&lt;/a>, with longitudes representing x-ticks and latitudes representing y-ticks- all of them equally spaced. This may not accurately represent the ground reality as earth&amp;rsquo;s surface is almost spherical and longitudes converges as we go towards the poles. The net effect is that the map gets stretched out at the poles. However this kind of representation(called &lt;a class="link" href="https://www.wikiwand.com/en/Mercator_projection" target="_blank" rel="noopener"
+>Mercator projection&lt;/a>) is not too uncommon and we will proceed to use it.&lt;/p>
+&lt;p>&lt;img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f4/Mercator_projection_SW.jpg/1061px-Mercator_projection_SW.jpg"
+loading="lazy"
+alt="Mercator projection"
+>&lt;/p>
+&lt;p>Next we calculate the relative bearing between the source and destination. In navigation, bearing is the direction to a destination point from a source point. We treated our geo co-ordinates as cartesian co-ordinates and x-axis is represented by the equator. So a bearing of zero would indicate east-bound direction and the angle grows counter-clockwise from east to west. Since we assumed Euclidean plane from the beginning, we can use &lt;a class="link" href="https://www.wikiwand.com/en/Atan2#/History_and_motivation" target="_blank" rel="noopener"
+>atan2&lt;/a> function from popular computing to calculate the angle. Fortunately, spark also has a native implementation of atan2 function, or else we migt have had to create a UDF (User Defined Function).&lt;/p>
+&lt;blockquote>
+&lt;p>The angle calculated using atan2 still doesn&amp;rsquo;t give the exact bearing between two points on earth&amp;rsquo;s surface. In fact, the actual bearing along a &lt;a class="link" href="https://www.wikiwand.com/en/Geodesic" target="_blank" rel="noopener"
+>geodesic&lt;/a> continuously changes further apart we are from the equator. Since we are visualizing earth&amp;rsquo;s surface as flat map, this difference is acceptable.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="visualizing">Visualizing
+&lt;/h2>&lt;p>Visualization happens in the python process which means the data has to be succesfully transferred from the JVM universe of Spark to Python. In real world workcases, when we output to python we have to make sure that the transformed data from Spark can fit inside the memory of the Spark driver process. Since we aren&amp;rsquo;t encumbered by any such problems we can safely move the data to Python process (a pandas Dataframe). If the memory is really a bottleneck, we have to move some of the steps upstream (such as histogram binning) to spark UDF&amp;rsquo;s so that Pandas only works with aggregates.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">pandas&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nn">pd&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">numpy&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nn">np&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">matplotlib.pyplot&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nn">plt&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">pdDF&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">df_with_angle&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">toPandas&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>For polar histogram, I have adopted the technique used by Jeff Boeing. Counting histogram bins based on linear axis can be misleading since 359° and 1° are treated as extremes whereas in polar co-ordinate they represent adjacent points. The solution is to create twice the number of bins desired and sum them pairwise, with bins around edges ([-175,0] and [0,175]) summed together.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">count_and_merge&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">n&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">bearings&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">## make twice as many bins as desired, then merge them in pairs&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">## prevents bin-edge effects around common values like 0° and 90°&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">bins&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">arange&lt;/span>&lt;span class="p">((&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="n">n&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">n&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="mi">180&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="n">n&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">count&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">angles&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">histogram&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">bearings&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">bins&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">bins&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">## move the last bin to the front, so eg 0.01° and 359.99° will be binned together&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">count&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">roll&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">count&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">count&lt;/span>&lt;span class="p">[::&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">count&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">::&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">],&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">roll&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">angles&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">::&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">],&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">polar_plot&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">ax&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">bearings&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">n&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">36&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">title&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">bins&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">arange&lt;/span>&lt;span class="p">((&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="n">n&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">n&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">*&lt;/span> &lt;span class="mi">180&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="n">n&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">radii&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">division&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">count_and_merge&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">n&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">bearings&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">theta&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">deg2rad&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">division&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">width&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">pi&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">/&lt;/span> &lt;span class="n">n&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ax&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">set_theta_zero_location&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;E&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">title_font&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="s1">&amp;#39;family&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="s1">&amp;#39;Corbel&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;size&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">24&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;weight&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="s1">&amp;#39;bold&amp;#39;&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">xtick_font&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{&lt;/span>&lt;span class="s1">&amp;#39;family&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="s1">&amp;#39;Corbel&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;size&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;weight&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="s1">&amp;#39;bold&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;alpha&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mf">1.0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;zorder&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ax&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">set_title&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">title&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">upper&lt;/span>&lt;span class="p">(),&lt;/span> &lt;span class="n">y&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mf">1.05&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">fontdict&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">title_font&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ax&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">set_yticks&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">linspace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="nb">max&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">ax&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get_ylim&lt;/span>&lt;span class="p">()),&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">yticklabels&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="si">{:.2f}&lt;/span>&lt;span class="s1">&amp;#39;&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">format&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">y&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">y&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">ax&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get_yticks&lt;/span>&lt;span class="p">()]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">yticklabels&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ax&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">set_yticklabels&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">labels&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">yticklabels&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">fontdict&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">ytick_font&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">xticklabels&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;E&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;N&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;W&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;S&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ax&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">set_xticklabels&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">labels&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">xticklabels&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">fontdict&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">xtick_font&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ax&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">tick_params&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">axis&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;x&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">which&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;major&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">pad&lt;/span>&lt;span class="o">=-&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">bars&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">ax&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">bar&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">theta&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">height&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">radii&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">width&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">width&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">align&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;center&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">bottom&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">zorder&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">2&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">color&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;#003366&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">edgecolor&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;k&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">linewidth&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mf">0.5&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">alpha&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mf">0.7&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="conclusion">Conclusion
+&lt;/h2>&lt;p>Here is the resultant plot. The most obvious pattern that we can observe is that northernmost cities have most of their routes pointing towards south. This is expected because our model of earth is flat and hence it precludes the possibility of any polar routes between two points (which may be the &lt;a class="link" href="https://www.wikiwand.com/en/Polar_route" target="_blank" rel="noopener"
+>actual path&lt;/a> taken by an aircraft). Also note that the absence of pacific-bound routes (towards americas) from chinese airports or the relative dominance of south-eastern routes from London and north-eastern routes from Hong Kong. Doesn&amp;rsquo;t it tell something about the current politico-economic climate of the world? I am sure the shipping routes will tell a different story though.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/airport_traffic_orientation.png"
+loading="lazy"
+alt="Polar plot"
+>&lt;/p></description></item></channel></rss>

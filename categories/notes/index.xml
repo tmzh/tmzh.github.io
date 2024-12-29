@@ -1,9 +1,77 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Notes on Ephemeral Dance Of Electrons</title><link>https://tmzh.github.io/categories/notes/</link><description>Recent content in Notes on Ephemeral Dance Of Electrons</description><generator>Hugo</generator><language>en</language><lastBuildDate>Thu, 24 Aug 2017 15:41:28 +0000</lastBuildDate><atom:link href="https://tmzh.github.io/categories/notes/index.xml" rel="self" type="application/rss+xml"/><item><title>Using a bluetooth serial console with linux</title><link>https://tmzh.github.io/post/2017-08-24-using-a-bluetooth-serial-console-with-linux/</link><pubDate>Thu, 24 Aug 2017 15:41:28 +0000</pubDate><guid>https://tmzh.github.io/post/2017-08-24-using-a-bluetooth-serial-console-with-linux/</guid><description>&lt;p>Recently I bought a &lt;a href="https://www.aliexpress.com/store/product/FREE-SHIPPING-Bt578-rs232-wireless-male-female-general-serial-port-bluetooth-adapter-bluetooth-module/719457_1271204185.html">bluetooth RS232 serial convertor&lt;/a>. I wasn&amp;rsquo;t sure whether it would work with my Linux laptop. But it turned out to be quite simple to setup.&lt;/p>
-&lt;h2 id="pre-requisites">Pre-requisites&lt;/h2>
-&lt;p>The following packages are required:&lt;/p>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Notes on Ephemeral Dance Of Electrons</title><link>https://example.com/categories/notes/</link><description>Recent content in Notes on Ephemeral Dance Of Electrons</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Thu, 24 Aug 2017 15:41:28 +0000</lastBuildDate><atom:link href="https://example.com/categories/notes/index.xml" rel="self" type="application/rss+xml"/><item><title>Using a bluetooth serial console with linux</title><link>https://example.com/p/2017-08-24-using-a-bluetooth-serial-console-with-linux/</link><pubDate>Thu, 24 Aug 2017 15:41:28 +0000</pubDate><guid>https://example.com/p/2017-08-24-using-a-bluetooth-serial-console-with-linux/</guid><description>&lt;p>Recently I bought a &lt;a class="link" href="https://www.aliexpress.com/store/product/FREE-SHIPPING-Bt578-rs232-wireless-male-female-general-serial-port-bluetooth-adapter-bluetooth-module/719457_1271204185.html" target="_blank" rel="noopener"
+>bluetooth RS232 serial convertor&lt;/a>. I wasn&amp;rsquo;t sure whether it would work with my Linux laptop. But it turned out to be quite simple to setup.&lt;/p>
+&lt;h2 id="pre-requisites">Pre-requisites
+&lt;/h2>&lt;p>The following packages are required:&lt;/p>
 &lt;ul>
 &lt;li>bluez&lt;/li>
 &lt;li>bluez-utils&lt;/li>
 &lt;li>byobu (optional)&lt;/li>
 &lt;/ul>
-&lt;p>Bluez provides the bluetooth protocol stack (most likely shipped with the OS), bluez-utils provides the bluetoothctl utility and byobu is a wrapper around screen terminal emulator. You can also use &amp;lsquo;screen&amp;rsquo; directly. Install these using your distributions recommended procedure.&lt;/p></description></item></channel></rss>
+&lt;p>Bluez provides the bluetooth protocol stack (most likely shipped with the OS), bluez-utils provides the bluetoothctl utility and byobu is a wrapper around screen terminal emulator. You can also use &amp;lsquo;screen&amp;rsquo; directly. Install these using your distributions recommended procedure.&lt;/p>
+&lt;h2 id="steps">Steps
+&lt;/h2>&lt;ol>
+&lt;li>Start daemon:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl"> Swanky:~$ systemctl start bluetooth
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;ol start="2">
+&lt;li>Discover using bluetoothctl:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl"> Swanky:~$ bluetoothctl
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">[&lt;/span>NEW&lt;span class="o">]&lt;/span> Controller &amp;lt;controller-mac-address&amp;gt; xkgt-Swanky &lt;span class="o">[&lt;/span>default&lt;span class="o">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">[&lt;/span>bluetooth&lt;span class="o">]&lt;/span>&lt;span class="c1"># power on&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">[&lt;/span>bluetooth&lt;span class="o">]&lt;/span>&lt;span class="c1"># scan on&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;ol start="3">
+&lt;li>Once you can see your device, turn off the scan and pair&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl"> &lt;span class="o">[&lt;/span>bluetooth&lt;span class="o">]&lt;/span>&lt;span class="c1"># scan off&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="o">[&lt;/span>bluetooth&lt;span class="o">]&lt;/span>&lt;span class="c1"># pair &amp;lt;device-mac-address&amp;gt;&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;ol start="4">
+&lt;li>Exit blutoothctl and create serial device (Note that root privileges are required):&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl"> &lt;span class="o">[&lt;/span>bluetooth&lt;span class="o">]&lt;/span>&lt;span class="c1"># exit&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> Swanky:~$ sudo rfcomm &lt;span class="nb">bind&lt;/span> 0 &amp;lt;device-mac-address&amp;gt;
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;ol start="5">
+&lt;li>You should now have /dev/rfcomm0. Connect to it using byobu-screen utility:&lt;/li>
+&lt;/ol>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="line">&lt;span class="cl"> Swanky:~$ byobu-screen /dev/rfcomm0
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Enjoy your wireless console connection!&lt;/p></description></item></channel></rss>

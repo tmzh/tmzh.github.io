@@ -1,0 +1,267 @@
+<!doctype html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="Introduction Large Language Models (LLMs) are good at generating coherent text, but they have few inherent limitations:\nHallucinations: They learn and generate information in terms of likelihood and may produce information that is not grounded in facts Knowledge Cutoff: LLMs are trained on a fixed dataset and do not have access to real-time information or the ability to perform complex tasks like web browsing or executing code. Abstraction and Reasoning: LLMs may struggle with abstract reasoning and complex tasks that require logical steps or mathematical operations. Their output is not precise enough for tasks with fixed rule-sets w/o interfacing with external tools There are two ways to address these limitations:\n"><title>Building Natural Language Interfaces with LLM Function Calling</title>
+<link rel=canonical href=https://example.com/p/building-natural-language-interfaces-with-llm-function-calling/><link rel=stylesheet href=/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css><meta property='og:title' content="Building Natural Language Interfaces with LLM Function Calling"><meta property='og:description' content="Introduction Large Language Models (LLMs) are good at generating coherent text, but they have few inherent limitations:\nHallucinations: They learn and generate information in terms of likelihood and may produce information that is not grounded in facts Knowledge Cutoff: LLMs are trained on a fixed dataset and do not have access to real-time information or the ability to perform complex tasks like web browsing or executing code. Abstraction and Reasoning: LLMs may struggle with abstract reasoning and complex tasks that require logical steps or mathematical operations. Their output is not precise enough for tasks with fixed rule-sets w/o interfacing with external tools There are two ways to address these limitations:\n"><meta property='og:url' content='https://example.com/p/building-natural-language-interfaces-with-llm-function-calling/'><meta property='og:site_name' content='Ephemeral Dance Of Electrons'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='LLM'><meta property='article:tag' content='Function Calling'><meta property='article:tag' content='Natural Language Interface'><meta property='article:published_time' content='2024-10-27T00:00:00+00:00'><meta property='article:modified_time' content='2024-10-27T00:00:00+00:00'><meta name=twitter:title content="Building Natural Language Interfaces with LLM Function Calling"><meta name=twitter:description content="Introduction Large Language Models (LLMs) are good at generating coherent text, but they have few inherent limitations:\nHallucinations: They learn and generate information in terms of likelihood and may produce information that is not grounded in facts Knowledge Cutoff: LLMs are trained on a fixed dataset and do not have access to real-time information or the ability to perform complex tasks like web browsing or executing code. Abstraction and Reasoning: LLMs may struggle with abstract reasoning and complex tasks that require logical steps or mathematical operations. Their output is not precise enough for tasks with fixed rule-sets w/o interfacing with external tools There are two ways to address these limitations:\n"></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"light")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=images/ars_longa.png width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🎓</span></figure><div class=site-meta><h1 class=site-name><a href=/>Ephemeral Dance Of Electrons</a></h1><h2 class=site-description>Ars Longa, vita brevis</h2></div></header><ol class=menu-social><li><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Dark Mode</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">Table of contents</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#introduction>Introduction</a></li><li><a href=#what-is-function-calling>What is Function Calling?</a></li><li><a href=#function-calling-as-a-natural-language-interface>Function Calling As A Natural Language Interface</a><ol><li><a href=#example-tmdb-movie-explorer>Example: TMDB Movie Explorer</a></li><li><a href=#chain-of-thought-reasoning>Chain of Thought Reasoning</a></li><li><a href=#tool-definitions>Tool Definitions</a></li></ol></li><li><a href=#handling-function-calls>Handling Function Calls</a><ol><li><a href=#recursive-function-calls>Recursive Function Calls</a></li></ol></li><li><a href=#lessons-learnt-and-caveats>Lessons learnt and Caveats</a></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/gen-ai/>Gen AI
+</a><a href=/categories/machine-learning/>Machine Learning</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/p/building-natural-language-interfaces-with-llm-function-calling/>Building Natural Language Interfaces with LLM Function Calling</a></h2></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>2024-10-27</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>7 minute read</time></div></footer></div></header><section class=article-content><h2 id=introduction>Introduction</h2><p>Large Language Models (LLMs) are good at generating coherent text, but they have few inherent limitations:</p><ol><li><strong>Hallucinations</strong>: They learn and generate information in terms of likelihood and may produce information that is not grounded in facts</li><li><strong>Knowledge Cutoff</strong>: LLMs are trained on a fixed dataset and do not have access to real-time information or the ability to perform complex tasks like web browsing or executing code.</li><li><strong>Abstraction and Reasoning</strong>: LLMs may struggle with abstract reasoning and complex tasks that require logical steps or mathematical operations. Their output is not precise enough for tasks with fixed rule-sets w/o interfacing with external tools</li></ol><p>There are two ways to address these limitations:</p><ol><li>Retrieval Augmented Generation (RAG)</li><li>Function Calling</li></ol><p>This post focuses on the latter.</p><h2 id=what-is-function-calling>What is Function Calling?</h2><p>Function Calling enables LLMs to interact with external tools or APIs, thereby supplementing their knowledge and capabilities. This process involves:</p><ol><li><strong>Defining Functions</strong>: Specify the functions the model can call, along with their parameters.</li><li><strong>Generating Function Calls</strong>: The model generates function calls based on the user&rsquo;s input.</li><li><strong>Executing Functions</strong>: The external tools execute these function calls and return the results.</li><li><strong>Incorporating Results</strong>: The results are fed back into the model to generate a final response.</li></ol><p><img src=/images/2024-12-04-function-calling-diagram.png loading=lazy></p><p>This approach helps overcome the limitations of knowledge cutoff and abstract reasoning by allowing LLMs to leverage external knowledge sources or tools. Although the function specifications can be passed as part of the prompt, it&rsquo;s more effective to use an internalized template known by the model.</p><h2 id=function-calling-as-a-natural-language-interface>Function Calling As A Natural Language Interface</h2><p>Function calling is not limited to simple tasks like calculator operations or weather API queries. It can be used to create an alternative, intuitive natural language interfaces for existing applications. This eliminates the need for complex UIs, as users can interact with the application using plain English.</p><p><img src=/images/27-10-2024-function_calling.excalidraw.png loading=lazy></p><h3 id=example-tmdb-movie-explorer>Example: TMDB Movie Explorer</h3><p>I have implemented a simple Flask application both with traditional UI and a Natural Language Interface that uses the function calling mechanism. The traditional UI of the application allows users to query movies by cast, genre, or title, whereas the Natural Language Interface allows users to ask in natural language</p><p><img src=/images/2024-12-04-movies-app.gif loading=lazy alt="TMDB Movie Explorer"></p><h3 id=chain-of-thought-reasoning>Chain of Thought Reasoning</h3><p>To handle user queries, we employ a chain of thought (CoT) reasoning approach. This involves:</p><ol><li>Analyzing the User&rsquo;s Request: Determine the intent behind the query.</li><li>Generating a Reasoning Chain: Outline the logical steps required to gather the necessary information.</li><li>Identifying Relevant Functions: Recognize which functions and the order in which they need to be called to fulfill the request</li></ol><p>For example, for the query &ldquo;List comedy movies with Tom Cruise in it,&rdquo; the reasoning chain might be:</p><ul><li>Search for the person ID of Tom Cruise using the <code>search_person</code> function.</li><li>Search for the genre ID of comedy using the <code>search_genre</code> function.</li><li>Call the <code>discover_movie</code> function with the person ID and genre ID to find comedy movies that Tom Cruise has been in.</li></ul><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>generate_reasoning_chain</span><span class=p>(</span><span class=n>user_prompt</span><span class=p>:</span> <span class=nb>str</span><span class=p>)</span> <span class=o>-&gt;</span> <span class=n>Any</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=n>messages</span> <span class=o>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;system&#34;</span><span class=p>,</span> 
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=s2>&#34;You are a movie search assistant bot who uses TMDB to help users find movies. Think step by step and identify the sequence of reasoning steps that will help to answer the user&#39;s query.&#34;</span>
+</span></span><span class=line><span class=cl>        <span class=p>],</span>
+</span></span><span class=line><span class=cl>        <span class=p>{</span><span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;user&#34;</span><span class=p>,</span> <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=n>user_prompt</span><span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>messages</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=tool-definitions>Tool Definitions</h3><p>Tools are described using JSON Schema and passed to the model in the prompt. Here&rsquo;s an example of tool definitions:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=n>tools</span> <span class=o>=</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;function&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;function&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;name&#34;</span><span class=p>:</span> <span class=s2>&#34;get_movie_details&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;description&#34;</span><span class=p>:</span> <span class=s2>&#34;Get the top level details of a movie by ID&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;parameters&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=s2>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;object&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=s2>&#34;properties&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                    <span class=s2>&#34;movie_id&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                        <span class=s2>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;integer&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                        <span class=s2>&#34;description&#34;</span><span class=p>:</span> <span class=s2>&#34;The ID of the movie to get details for. Use discover_movie to find the ID of a movie.&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                    <span class=p>},</span>
+</span></span><span class=line><span class=cl>                <span class=p>},</span>
+</span></span><span class=line><span class=cl>                <span class=s2>&#34;required&#34;</span><span class=p>:</span> <span class=p>[</span><span class=s2>&#34;movie_id&#34;</span><span class=p>],</span>
+</span></span><span class=line><span class=cl>            <span class=p>},</span>
+</span></span><span class=line><span class=cl>        <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;function&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;function&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;name&#34;</span><span class=p>:</span> <span class=s2>&#34;search_person&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;description&#34;</span><span class=p>:</span> <span class=s2>&#34;Search for people in the entertainment industry.&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>            <span class=s2>&#34;parameters&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=s2>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;object&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=s2>&#34;properties&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                    <span class=s2>&#34;query&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>                        <span class=s2>&#34;type&#34;</span><span class=p>:</span> <span class=s2>&#34;string&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                        <span class=s2>&#34;description&#34;</span><span class=p>:</span> <span class=s2>&#34;The search query for the person&#34;</span>
+</span></span><span class=line><span class=cl>                    <span class=p>},</span>
+</span></span><span class=line><span class=cl>                <span class=p>},</span>
+</span></span><span class=line><span class=cl>                <span class=s2>&#34;required&#34;</span><span class=p>:</span> <span class=p>[</span><span class=s2>&#34;query&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>]</span>
+</span></span></code></pre></td></tr></table></div></div><p>We pass this message structure to the LLM to generate a reasoning chain. Here we are using <code>llama3-groq-70b-8192-tool-use-preview</code> model from groq which is 70B parameter model that is fine-tuned for tool use.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=c1># Passing the tools to the function</span>
+</span></span><span class=line><span class=cl><span class=n>response</span> <span class=o>=</span> <span class=n>client</span><span class=o>.</span><span class=n>chat</span><span class=o>.</span><span class=n>completions</span><span class=o>.</span><span class=n>create</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>    <span class=n>model</span><span class=o>=</span><span class=n>MODEL</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>messages</span><span class=o>=</span><span class=n>messages</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>tools</span><span class=o>=</span><span class=n>tools</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>tool_choice</span><span class=o>=</span><span class=n>tool_choice</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>temperature</span><span class=o>=</span><span class=mi>0</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>    <span class=n>max_tokens</span><span class=o>=</span><span class=mi>4096</span><span class=p>,</span>
+</span></span><span class=line><span class=cl><span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>Here each tool is a python function like below which calls TMDB API to retrieve the data.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>discover_movie</span><span class=p>(</span><span class=n>include_adult</span><span class=o>=</span><span class=kc>False</span><span class=p>,</span> <span class=n>include_video</span><span class=o>=</span><span class=kc>False</span><span class=p>,</span> <span class=n>language</span><span class=o>=</span><span class=s2>&#34;en-US&#34;</span><span class=p>,</span> <span class=n>page</span><span class=o>=</span><span class=mi>1</span><span class=p>,</span> <span class=n>sort_by</span><span class=o>=</span><span class=s2>&#34;popularity.desc&#34;</span><span class=p>,</span> <span class=o>**</span><span class=n>kwargs</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=n>endpoint</span> <span class=o>=</span> <span class=sa>f</span><span class=s2>&#34;</span><span class=si>{</span><span class=n>BASE_URL</span><span class=si>}</span><span class=s2>/discover/movie&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=n>params</span> <span class=o>=</span> <span class=p>{}</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>key</span><span class=p>,</span> <span class=n>value</span> <span class=ow>in</span> <span class=n>kwargs</span><span class=o>.</span><span class=n>items</span><span class=p>():</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=n>value</span> <span class=ow>is</span> <span class=ow>not</span> <span class=kc>None</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>params</span><span class=p>[</span><span class=n>key</span><span class=p>]</span> <span class=o>=</span> <span class=n>value</span>
+</span></span><span class=line><span class=cl>    <span class=n>response</span> <span class=o>=</span> <span class=n>query_tmdb</span><span class=p>(</span><span class=n>endpoint</span><span class=p>,</span> <span class=n>params</span><span class=o>=</span><span class=n>params</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=n>response</span>
+</span></span></code></pre></td></tr></table></div></div><p>Here is an example of the reasoning chain generated for the query &ldquo;List comedy movies with Tom Cruise in it&rdquo;</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=p>[</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;system&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=s2>&#34;You are a movie search assistant bot who uses TMDB to help users find movies. Think step by step and identify the sequence of function calls that will help to answer.&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;user&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=s2>&#34;List comedy movies with tom cruise in it&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=p>{</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;assistant&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=s2>&#34;To find comedy movies with Tom Cruise, I will first need to find the person ID for Tom Cruise using the search_person function. Once I have the person ID, I can use the discover_movie function to find comedy movies that he has been in.&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>]</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=handling-function-calls>Handling Function Calls</h2><p>The model returns a response containing tool calls. We extract the function name and arguments from the response and execute the function. The function&rsquo;s response is then added to the conversation history.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>if</span> <span class=n>response</span><span class=o>.</span><span class=n>choices</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span><span class=o>.</span><span class=n>finish_reason</span> <span class=o>==</span> <span class=s2>&#34;tool_calls&#34;</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>    <span class=n>tool_calls</span> <span class=o>=</span> <span class=n>response</span><span class=o>.</span><span class=n>choices</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span><span class=o>.</span><span class=n>message</span><span class=o>.</span><span class=n>tool_calls</span>
+</span></span><span class=line><span class=cl>    <span class=n>new_messages</span> <span class=o>=</span> <span class=n>messages</span><span class=o>.</span><span class=n>copy</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>    <span class=k>for</span> <span class=n>tool_call</span> <span class=ow>in</span> <span class=n>tool_calls</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>tool_result</span> <span class=o>=</span> <span class=n>execute_tool</span><span class=p>(</span><span class=n>tool_call</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=n>new_messages</span><span class=o>.</span><span class=n>append</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>            <span class=p>{</span>
+</span></span><span class=line><span class=cl>                <span class=s2>&#34;tool_call_id&#34;</span><span class=p>:</span> <span class=n>tool_call</span><span class=o>.</span><span class=n>id</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;tool&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=s2>&#34;name&#34;</span><span class=p>:</span> <span class=n>tool_call</span><span class=o>.</span><span class=n>function</span><span class=o>.</span><span class=n>name</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=nb>str</span><span class=p>(</span><span class=n>tool_result</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>            <span class=p>}</span>
+</span></span><span class=line><span class=cl>        <span class=p>)</span>
+</span></span></code></pre></td></tr></table></div></div><p>Now the conversation history would be like:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=p>[{</span><span class=s1>&#39;role&#39;</span><span class=p>:</span> <span class=s1>&#39;system&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s1>&#39;content&#39;</span><span class=p>:</span> <span class=s1>&#39;You are a movie search assistant bot who uses TMDB to help users find movies. Think step by step and identify the sequence of function calls that will help to answer.</span><span class=se>\n</span><span class=s1>        Do not call multiple functions when they need to be executed in sequence. Only call multiple functions when they can be executed in parallel. Stop with a discover_movie function call that returns a list of movie ids&#39;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl> <span class=p>{</span><span class=s1>&#39;role&#39;</span><span class=p>:</span> <span class=s1>&#39;user&#39;</span><span class=p>,</span> <span class=s1>&#39;content&#39;</span><span class=p>:</span> <span class=s1>&#39;List some movies of Tom hanks&#39;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl> <span class=p>{</span><span class=s1>&#39;role&#39;</span><span class=p>:</span> <span class=s1>&#39;assistant&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s1>&#39;content&#39;</span><span class=p>:</span> <span class=s1>&#39;To find movies of Tom Hanks, I will first need to find the person ID of Tom Hanks using the search_person function. Once I have the person ID, I can use the discover_movie function to find movies that he has been in.&#39;</span><span class=p>},</span>
+</span></span><span class=line><span class=cl> <span class=p>{</span><span class=s1>&#39;tool_call_id&#39;</span><span class=p>:</span> <span class=s1>&#39;call_p11f&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s1>&#39;role&#39;</span><span class=p>:</span> <span class=s1>&#39;tool&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s1>&#39;name&#39;</span><span class=p>:</span> <span class=s1>&#39;search_person&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s1>&#39;content&#39;</span><span class=p>:</span> <span class=o>...</span><span class=p>,</span>
+</span></span><span class=line><span class=cl> <span class=p>{</span><span class=s1>&#39;tool_call_id&#39;</span><span class=p>:</span> <span class=s1>&#39;call_0b5m&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s1>&#39;role&#39;</span><span class=p>:</span> <span class=s1>&#39;tool&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s1>&#39;name&#39;</span><span class=p>:</span> <span class=s1>&#39;discover_movie&#39;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>  <span class=s1>&#39;content&#39;</span><span class=p>:</span> <span class=o>...</span><span class=p>}]</span>
+</span></span></code></pre></td></tr></table></div></div><h3 id=recursive-function-calls>Recursive Function Calls</h3><p>We recursively call functions recommended by the LLM until we reach the final function call. The final <code>discover_movie</code> call consolidates all the gathered parameters and data into a single request that retrieves the ultimate list of movies relevant to the user&rsquo;s inquiry</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-python data-lang=python><span class=line><span class=cl><span class=k>def</span> <span class=nf>generate_domain_knowledge</span><span class=p>(</span><span class=n>messages</span><span class=p>,</span> <span class=n>count</span><span class=o>=</span><span class=mi>0</span><span class=p>):</span>
+</span></span><span class=line><span class=cl>    <span class=n>response</span> <span class=o>=</span> <span class=n>get_response</span><span class=p>(</span><span class=n>client</span><span class=p>,</span> <span class=n>MODEL</span><span class=p>,</span> <span class=n>messages</span><span class=p>,</span> <span class=n>tool_choice</span><span class=o>=</span><span class=s2>&#34;required&#34;</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=n>response</span><span class=o>.</span><span class=n>choices</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span><span class=o>.</span><span class=n>finish_reason</span> <span class=o>==</span> <span class=s2>&#34;tool_calls&#34;</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>        <span class=n>tool_calls</span> <span class=o>=</span> <span class=n>response</span><span class=o>.</span><span class=n>choices</span><span class=p>[</span><span class=mi>0</span><span class=p>]</span><span class=o>.</span><span class=n>message</span><span class=o>.</span><span class=n>tool_calls</span>
+</span></span><span class=line><span class=cl>        <span class=n>new_messages</span> <span class=o>=</span> <span class=n>messages</span><span class=o>.</span><span class=n>copy</span><span class=p>()</span>
+</span></span><span class=line><span class=cl>        <span class=k>for</span> <span class=n>tool_call</span> <span class=ow>in</span> <span class=n>tool_calls</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>tool_result</span> <span class=o>=</span> <span class=n>execute_tool</span><span class=p>(</span><span class=n>tool_call</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>            <span class=k>if</span> <span class=n>tool_call</span><span class=o>.</span><span class=n>function</span><span class=o>.</span><span class=n>name</span> <span class=o>==</span> <span class=s2>&#34;discover_movies&#34;</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>                <span class=k>return</span> <span class=n>tool_result</span><span class=p>[</span><span class=s1>&#39;results&#39;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>            <span class=k>else</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>                <span class=n>new_messages</span><span class=o>.</span><span class=n>append</span><span class=p>(</span>
+</span></span><span class=line><span class=cl>                    <span class=p>{</span>
+</span></span><span class=line><span class=cl>                        <span class=s2>&#34;tool_call_id&#34;</span><span class=p>:</span> <span class=n>tool_call</span><span class=o>.</span><span class=n>id</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                        <span class=s2>&#34;role&#34;</span><span class=p>:</span> <span class=s2>&#34;tool&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                        <span class=s2>&#34;name&#34;</span><span class=p>:</span> <span class=n>tool_call</span><span class=o>.</span><span class=n>function</span><span class=o>.</span><span class=n>name</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>                        <span class=s2>&#34;content&#34;</span><span class=p>:</span> <span class=nb>str</span><span class=p>(</span><span class=n>tool_result</span><span class=p>),</span>
+</span></span><span class=line><span class=cl>                    <span class=p>}</span>
+</span></span><span class=line><span class=cl>                <span class=p>)</span>
+</span></span><span class=line><span class=cl>        <span class=k>if</span> <span class=n>count</span> <span class=o>&lt;</span> <span class=mi>2</span><span class=p>:</span>
+</span></span><span class=line><span class=cl>            <span class=n>generate_domain_knowledge</span><span class=p>(</span><span class=n>new_messages</span><span class=p>,</span> <span class=n>count</span> <span class=o>+</span> <span class=mi>1</span><span class=p>)</span> <span class=c1># stop at 2 recursive calls</span>
+</span></span></code></pre></td></tr></table></div></div><h2 id=lessons-learnt-and-caveats>Lessons learnt and Caveats</h2><p>Keep in mind that the limitation and the perks of prompt engineering applies:</p><ul><li><strong>Simplicity</strong>: Keep the function calls simple and concise. The more complex the function calls, the more likely it is that the model will make mistakes.</li><li><strong>Parameter Validation</strong>: Function parameter validation is not handled by the model. It is up to the developer to ensure that the parameters are valid.</li><li><strong>Guardrails</strong>: Establish Guardrails to prevent the model from calling functions that it should not call</li></ul><p>Remember that the model is just one component of the system. The effectiveness and safety of the model depend on how it is used and integrated into the broader context. It is the developer&rsquo;s responsibility to tailor safety measures to their specific use case and ensure that the model&rsquo;s outputs are safe and appropriate for the context.</p><p>The above code along with a working app is available in <a class=link href=https://huggingface.co/spaces/tmzh/movies-app target=_blank rel=noopener>HF Spaces</a>.</p></section><footer class=article-footer><section class=article-tags><a href=/tags/llm/>LLM</a>
+<a href=/tags/function-calling/>Function Calling</a>
+<a href=/tags/natural-language-interface/>Natural Language Interface</a></section><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><aside class=related-content--wrapper><h2 class=section-title>Related content</h2><div class=related-content><div class="flex article-list--tile"><article class=has-image><a href=/p/2021-09-16-using-hugging-face-transformers-on-aws-sagemaker/><div class=article-image><img src=https://huggingface.co/blog/assets/17_the_partnership_amazon_sagemaker_and_hugging_face/cover.png loading=lazy data-key=2021-09-16-using-hugging-face-transformers-on-aws-sagemaker data-hash=https://huggingface.co/blog/assets/17_the_partnership_amazon_sagemaker_and_hugging_face/cover.png></div><div class=article-details><h2 class=article-title>Using Hugging Face Transformers on AWS Sagemaker</h2></div></a></article><article><a href=/p/2018-04-28-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/><div class=article-details><h2 class=article-title>Predicting the playing role of a cricketer using Machine Learning (Part 2)</h2></div></a></article><article><a href=/p/2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1/><div class=article-details><h2 class=article-title>Predicting the playing role of a cricketer using Machine Learning (Part 1)</h2></div></a></article></div></div></aside><div class=disqus-container></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2024 Ephemeral Dance Of Electrons</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.29.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>

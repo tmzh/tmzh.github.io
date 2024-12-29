@@ -1,1 +1,200 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Web-Scraping on Ephemeral Dance Of Electrons</title><link>https://tmzh.github.io/tags/web-scraping/</link><description>Recent content in Web-Scraping on Ephemeral Dance Of Electrons</description><generator>Hugo</generator><language>en</language><lastBuildDate>Mon, 23 Apr 2018 12:00:00 +0000</lastBuildDate><atom:link href="https://tmzh.github.io/tags/web-scraping/index.xml" rel="self" type="application/rss+xml"/><item><title>Predicting the playing role of a cricketer using Machine Learning (Part 1)</title><link>https://tmzh.github.io/post/2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1/</link><pubDate>Mon, 23 Apr 2018 12:00:00 +0000</pubDate><guid>https://tmzh.github.io/post/2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1/</guid><description>&lt;p>In this project, we will apply Machine Learning techniques to predict whether a particular cricket player is a batsman or bowler based on his career stats. First we will use Deep Neural Networks (DNN) model and later compare the results with a simpler classifier algorithm such as Random Forest Classifier.&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Web-Scraping on Ephemeral Dance Of Electrons</title><link>https://example.com/tags/web-scraping/</link><description>Recent content in Web-Scraping on Ephemeral Dance Of Electrons</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Mon, 23 Apr 2018 12:00:00 +0000</lastBuildDate><atom:link href="https://example.com/tags/web-scraping/index.xml" rel="self" type="application/rss+xml"/><item><title>Predicting the playing role of a cricketer using Machine Learning (Part 1)</title><link>https://example.com/p/2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1/</link><pubDate>Mon, 23 Apr 2018 12:00:00 +0000</pubDate><guid>https://example.com/p/2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1/</guid><description>&lt;p>In this project, we will apply Machine Learning techniques to predict whether a particular cricket player is a batsman or bowler based on his career stats. First we will use Deep Neural Networks (DNN) model and later compare the results with a simpler classifier algorithm such as Random Forest Classifier.&lt;/p>
+&lt;p>For the uninitiated, Cricket is a game of bat and ball, much similar to baseball. Cricket players have different roles to play in a game. Batsman&amp;rsquo;s role is to score runs while not losing their wicket, bowlers role is to get the batsman&amp;rsquo;s wicket while restricting their run score in due process. Allrounders can do both batting and bowling role well. A wicketkeeper is a specialist role whose purpose is to catch behind the wickets during the bowling innings. If you really intend to understand tne data behind this exercise, my half-baked explanations are barely sufficient. I suggest to refer to better reference such as &lt;a class="link" href="https://www.britannica.com/sports/cricket-sport" target="_blank" rel="noopener"
+>this&lt;/a>.&lt;/p>
+&lt;p>For the sake of consistency, we will consider only test players. Apart from being a puritan choice, the playing role of a player may differ from format to format and so we can&amp;rsquo;t expect a consistent prediction. The cricinfo player bio page has this &lt;code>playing role&lt;/code> information, but that covers only around 20% of the test players. For vast majority of players we only have numerical stats but no description whether the player is a batsman or a bowler.&lt;/p>
+&lt;p>This is a perfect problem for ML to assist. We have a decent amount of training data (600+ players) and good amount of features (statistics) to base our prediction on. It would also be interesting to observe which features are relevant to our consideration of a player as batsman or bowler.&lt;/p>
+&lt;p>This is by no means a comprehensive tutorial for ML. The goal of this post is to serve as gentle introduction and wet the appetite for newcomers. So in the process, I would cover the following areas:&lt;/p>
+&lt;ol>
+&lt;li>Data collection&lt;/li>
+&lt;li>Data processing&lt;/li>
+&lt;li>Machine Learning&lt;/li>
+&lt;li>Data visualization&lt;/li>
+&lt;/ol>
+&lt;h2 id="data-collection">Data Collection
+&lt;/h2>&lt;p>Most ML examples work with pre-processed data but in reality data is seldom available prepackaged. For this problem, we will have to scrape the data off cricinfo website. We will use Scrapy for getting this info off cricinfo website.&lt;/p>
+&lt;p>The Scrapy tool is well-documented and has some nice tutorials to get started. However I will attempt my own brief introduction.&lt;/p>
+&lt;p>To start we create a project as follows:&lt;/p>
+&lt;pre>&lt;code>scrapy startproject &amp;lt;project_name&amp;gt;
+&lt;/code>&lt;/pre>
+&lt;p>This will create the necessary folder structure. It will also create some boilerplate code which we can customize to our will later on.&lt;/p>
+&lt;blockquote>
+&lt;p>The default folder structure creates a parent folder and child folder with the same name. Do not get confused. All Scrapy commands are executed in the parent folder (where )&lt;/p>
+&lt;/blockquote>
+&lt;p>Ultimately our objective is to perform a web scraping using &lt;code>scrapy crawl&lt;/code> command which looks like the one below:&lt;/p>
+&lt;pre>&lt;code>cd &amp;lt;project_name&amp;gt;
+Scrapy crawl &amp;lt;spider_name&amp;gt; -o &amp;lt;file_name&amp;gt;.csv
+&lt;/code>&lt;/pre>
+&lt;p>In this command, the &lt;code>spider_name&lt;/code> is the name attribute of a spider class. This spider class file should be located under the spiders directory (&amp;lt;project_name&amp;gt;/&amp;lt;project_name&amp;gt;/spiders/*.py). The &lt;code>file_name&lt;/code> is the output file name, csv being our chosen export format. Let us see the steps involved in reaching to this stage.&lt;/p>
+&lt;h3 id="spider-class">Spider class
+&lt;/h3>&lt;p>Start with the skeleton code required for scraping. Here is the skeleton spider class file we will use:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">Scrapy&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">CricinfoSpider&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Scrapy&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">Spider&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">name&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;players&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">start_urls&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span> &lt;span class="c1"># list of starting urls&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">parse&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># do some fancy web scraping&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">pass&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>The file name of this python class is arbitrary&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>The spiders directory can contain multiple python file each implementing its own spider logic. The spider name attribute should be unique across all these files.&lt;/p>
+&lt;/blockquote>
+&lt;p>A Spider class should contain the following:&lt;/p>
+&lt;ol>
+&lt;li>name attribute to be called from the Scrapy command line&lt;/li>
+&lt;li>start_urls is a list holding the URLS which act as the starting pages of our scraping.&lt;/li>
+&lt;li>parse function which performs the grunt of scraping the data. The parse function can also recursively call itself to scrape more pages or it can also have a callback function which can be further customized.&lt;/li>
+&lt;/ol>
+&lt;p>The starting page for our scraping should be the one containing links to all player profile pages. In cricinfo, there is no such global directory. However there is a page for players who represented a country. The URL is like this&lt;/p>
+&lt;pre>&lt;code>http://www.espncricinfo.com/ci/content/player/caps.html?country=1;class=1
+&lt;/code>&lt;/pre>
+&lt;p>Notice the &lt;a class="link" href="http://www.ronstauffer.com/blog/understanding-a-url/" target="_blank" rel="noopener"
+>parameters&lt;/a> in the URL which we can manipulate to enumerate all test playing nations. The class parameter represents the game type- for test matches it is 1. Since the list of test playing nations is only a handful, I manually determined that the country code for test playing nations are 1 to 10 and 25 (25 is for Bangladesh, the latest addition to test playing nations). Armed with this info, we can define our start_urls as follows:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">start_urls&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;http://www.espncricinfo.com/ci/content/player/caps.html?country=&lt;/span>&lt;span class="si">{0}&lt;/span>&lt;span class="s1">;class=1&amp;#39;&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">format&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">str&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">))&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">x&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">list&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="p">))&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">25&lt;/span>&lt;span class="p">]]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>During a scraping process, Scrapy will issue a GET request to each one of these start_urls. If we get a valid HTTP 200 response, the response body will be passed on to parse function.&lt;/p>
+&lt;h3 id="parse-function">Parse function:
+&lt;/h3>&lt;p>The parse function receives the response object and extracts useful info from it. Our starting page doesn&amp;rsquo;t have the data that we need but contains the links to the player stats page which is what we want. So we will extract the links to player stats page and define another parse function to extract the statistics.&lt;/p>
+&lt;p>To extract the links, we will use CSS selectors. Looking at the source code of the page, we can see that all links to player stats has a class name of &lt;code>ColumnistSmry&lt;/code>. But that is not enough to uniquely identify player links since match links also has the same class name. We can further filter by matching the target URL which is expected to contain the string &amp;ldquo;player&amp;rdquo;. So our CSS selector for extracting relevant URLs would be:&lt;/p>
+&lt;pre>&lt;code>response.css('a.ColumnistSmry[href*=&amp;quot;player&amp;quot;]::attr(href)')
+&lt;/code>&lt;/pre>
+&lt;p>Once we extract the link, Scrapy provides a handy &lt;code>response.follow&lt;/code> function which navigates to the extracted link and can execute a callback function. This callback function will handle all our stats extraction since it will work directly with the player stats page. At this point, rest of the code is just a matter of studying the source code and extracting features using css selectors.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">parse&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">response&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">#follow player links&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">href&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;a.ColumnistSmry[href*=&amp;#34;player&amp;#34;]::attr(href)&amp;#39;&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">yield&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">follow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">href&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">parse_player&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">parse_player&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">player&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">PlayerItem&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">d&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">info&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;.ciPlayerinformationtxt&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">tables&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;.engineTable&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">values&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;span::text&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">extract&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">info&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">keys&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;b::text&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">extract&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">info&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">batting&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">tables&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">batting_keys&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">batting&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;th::text&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">extract&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">batting_values&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">batting&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;tr.data1&amp;#39;&lt;/span>&lt;span class="p">)[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;td::text&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">extract&lt;/span>&lt;span class="p">()[&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nb">len&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">batting_keys&lt;/span>&lt;span class="p">):]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">bowling&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">tables&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">bowling_keys&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">bowling&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;th::text&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">extract&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">bowling_values&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">bowling&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;tr.data1&amp;#39;&lt;/span>&lt;span class="p">)[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;td::text&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">extract&lt;/span>&lt;span class="p">()[&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nb">len&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">bowling_keys&lt;/span>&lt;span class="p">):]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">item&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">zip&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">keys&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">values&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;Bio_&amp;#39;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">title_clean&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">player&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">clean&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">item&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">zip&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">batting_keys&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">batting_values&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;Bat_&amp;#39;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">title_clean&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">player&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">clean&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">item&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">zip&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">bowling_keys&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">bowling_values&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;Bowl_&amp;#39;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">title_clean&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">player&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">clean&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">player&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>If you find it difficult to define appropriate CSS selector for any element, you can always use inspector tool from Developer tools in Chrome or firefox. You can right click on the interesting code block and copy CSS selector or Xpath (Xpath is also supported in Scrapy)&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="items-class">Items Class:
+&lt;/h3>&lt;p>In the parse function, you can note that I am updating the parsed information in to a class called &lt;code>PlayerItem()&lt;/code>. It is an instance of Scrapy.Item class and its attributes are defined in items.py file. Here is a brief snippet of my &lt;code>items.py&lt;/code> file.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">Scrapy&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">Item&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Field&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">PlayerItem&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Item&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># define the fields for your item here like:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Bio_Full_name&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Field&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Bio_Born&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Field&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Bio_Current_age&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Field&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Bio_Major_teams&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Field&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Bio_Playing_role&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Field&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>You don&amp;rsquo;t have to always use a Item class. One can simply yield the values from parse function and it will output to CSV just fine. However without an Item class, the fields of the CSV file is determined by the fields in the first record processed. Any new field that may appear in subsequent scraped records will be silently dropped. For that reason, it is preferrable to define the structure of our parsed data ahead using an Item class.&lt;/p>
+&lt;h2 id="conclusion">Conclusion
+&lt;/h2>&lt;p>Finally we can save the result of our hardwork to a precocious CSV file and guard it (Just kidding&amp;hellip; If you lose or corrupt the file, just delete it and scrape again! ).&lt;/p>
+&lt;pre>&lt;code>scrapy crawl players -o players.csv
+&lt;/code>&lt;/pre>
+&lt;p>In the next post we will look at pre-processing this data for our machine learning work. To learn more about Scrapy, do head to its official site. The documentation is excellent and once you grasp hold of the structure, rest falls in to place quite easily.&lt;/p></description></item></channel></rss>

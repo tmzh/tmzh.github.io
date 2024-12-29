@@ -1,6 +1,854 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Python on Ephemeral Dance Of Electrons</title><link>https://tmzh.github.io/tags/python/</link><description>Recent content in Python on Ephemeral Dance Of Electrons</description><generator>Hugo</generator><language>en</language><lastBuildDate>Sat, 02 Mar 2019 12:00:00 +0000</lastBuildDate><atom:link href="https://tmzh.github.io/tags/python/index.xml" rel="self" type="application/rss+xml"/><item><title>Using OpenCV object detection to keep kids away from TV</title><link>https://tmzh.github.io/post/2019-03-02-using-opencv-object-detection-to-keep-kids-away-from-tv/</link><pubDate>Sat, 02 Mar 2019 12:00:00 +0000</pubDate><guid>https://tmzh.github.io/post/2019-03-02-using-opencv-object-detection-to-keep-kids-away-from-tv/</guid><description>&lt;blockquote>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Python on Ephemeral Dance Of Electrons</title><link>https://example.com/tags/python/</link><description>Recent content in Python on Ephemeral Dance Of Electrons</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 02 Mar 2019 12:00:00 +0000</lastBuildDate><atom:link href="https://example.com/tags/python/index.xml" rel="self" type="application/rss+xml"/><item><title>Using OpenCV object detection to keep kids away from TV</title><link>https://example.com/p/2019-03-02-using-opencv-object-detection-to-keep-kids-away-from-tv/</link><pubDate>Sat, 02 Mar 2019 12:00:00 +0000</pubDate><guid>https://example.com/p/2019-03-02-using-opencv-object-detection-to-keep-kids-away-from-tv/</guid><description>&lt;blockquote>
 &lt;p>Give me a dozen healthy infants, well formed, and my own specified world to bring them up in and I’ll guarantee to take any one at random and train him to become any type of specialist I might select—doctor, lawyer, artist, merchant-chief and yes, even beggar-man thief, regardless of his talents, penchants, tendencies, abilities, vocations, and race of his ancestors.&lt;/p>
 &lt;/blockquote>
-&lt;p>This was John Watson, one of the founders of &lt;a href="https://www.wikiwand.com/en/Behaviorism">Behaviorism&lt;/a>, writing around 1925. He believed that human behavior is completely malleable and that it can be shaped into anything given the right environment. While I don&amp;rsquo;t harbor any grand objectives or sinister experiments like Watson did, I do hope to be able to teach my kids good habits using controlled environments. For instance, my two year old kids started developing the habit of getting too close to the TV. I didn&amp;rsquo;t want to use force or impose restrictions on them, so I thought I could use technology to discourage them from getting too close to TV.&lt;/p></description></item><item><title>Predicting the playing role of a cricketer using Machine Learning (Part 1)</title><link>https://tmzh.github.io/post/2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1/</link><pubDate>Mon, 23 Apr 2018 12:00:00 +0000</pubDate><guid>https://tmzh.github.io/post/2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1/</guid><description>&lt;p>In this project, we will apply Machine Learning techniques to predict whether a particular cricket player is a batsman or bowler based on his career stats. First we will use Deep Neural Networks (DNN) model and later compare the results with a simpler classifier algorithm such as Random Forest Classifier.&lt;/p></description></item><item><title>Using Constraint Programming Tools to solve an ancient Chinese math puzzle</title><link>https://tmzh.github.io/post/2017-12-09-using-constraint-programming-to-solve-an-ancient-chinese-math-puzzle/</link><pubDate>Sat, 09 Dec 2017 12:00:00 +0000</pubDate><guid>https://tmzh.github.io/post/2017-12-09-using-constraint-programming-to-solve-an-ancient-chinese-math-puzzle/</guid><description>&lt;p>&lt;a href="https://www.wikiwand.com/en/Constraint_programming">Constraint programming (CP)&lt;/a> is a subset of Operations Research (OR) where our task is to identify all feasible solutions to a given problem that satisfies a set of constraints. This is different from an optimization problem, where an objective function is defined and we arrive at solutions that either maximizes or minimizes an objective function.&lt;/p>
-&lt;p>CP is mostly well suited for solving logic puzzles, since most logic puzzles are based on constraints and enumerating feasible solutions. But apart from recreational maths, CP also has a lot of practical applications in Scheduling, Resource allocation, Manufacturing etc.,&lt;/p></description></item><item><title>Using Monte-Carlo Simulation to model ping test results</title><link>https://tmzh.github.io/post/2017-11-24-using-monte-carlo-simulation-to-model-ping-test-results/</link><pubDate>Fri, 24 Nov 2017 08:01:28 +0000</pubDate><guid>https://tmzh.github.io/post/2017-11-24-using-monte-carlo-simulation-to-model-ping-test-results/</guid><description>&lt;p>Recently we had a cabling issue in our core infrastructure which caused around 3 to 12% packet loss across few IP streams. One of my colleagues made an interesting observation that when he tried to ping with large packet size (5000 bytes) the packet loss rose up as high as 40%. In his opinion, that meant some applications were experiencing up to 40% packet loss. I seldom do large packet ping tests unless I am troubleshooting MTU issues, so to me this observation was interesting.&lt;/p>
-&lt;p>At the outset, it may look like an aggravated problem. Yet you know that your network path MTU doesn&amp;rsquo;t support jumbo frames end-to-end. If so, why is there a difference in packet loss rate when you ping with large datagrams? The answer is not too obvious. The important thing to note is that a ping test result is not a measure of ethernet frame loss but ICMP datagram loss. In most cases (when the ICMP datagram is smaller than ethernet MTU) both are the same. But why do large ICMP datagrams have higher loss percentage than individual ethernet frames? Enter Math.&lt;/p></description></item></channel></rss>
+&lt;p>This was John Watson, one of the founders of &lt;a class="link" href="https://www.wikiwand.com/en/Behaviorism" target="_blank" rel="noopener"
+>Behaviorism&lt;/a>, writing around 1925. He believed that human behavior is completely malleable and that it can be shaped into anything given the right environment. While I don&amp;rsquo;t harbor any grand objectives or sinister experiments like Watson did, I do hope to be able to teach my kids good habits using controlled environments. For instance, my two year old kids started developing the habit of getting too close to the TV. I didn&amp;rsquo;t want to use force or impose restrictions on them, so I thought I could use technology to discourage them from getting too close to TV.&lt;/p>
+&lt;h2 id="problem-statement">Problem statement
+&lt;/h2>&lt;p>I play YouTube rhymes on my HTPC which is connected to our living room TV. While watching they sometimes get down from the couch and walk to the TV. When they do, I want to turn off the video automatically to let them know that they have gone too close and not resume the playback until they get back to the couch. For my setup, that means pausing the youtube player and minimzing the browser.&lt;/p>
+&lt;p>Fortunately this is easy to do with a camera and &lt;a class="link" href="https://github.com/opencv/opencv" target="_blank" rel="noopener"
+>OpenCV&lt;/a>. Let us see how.&lt;/p>
+&lt;h2 id="tools-and-solutions">Tools and solutions
+&lt;/h2>&lt;p>Object detection is among the fundamental features of OpenCV and there are a few ways to do it. I explored three of them:&lt;/p>
+&lt;ol>
+&lt;li>
+&lt;p>&lt;em>Using HAAR Cascades&lt;/em>:
+This is a popular object detection method in OpenCV. It uses models that are trained on a lot of positive and negative images and extracting features from those images. The training step is optional here as there are lot of pre-trained models available to detect face and human bodies. However for my case, those models didn&amp;rsquo;t do well due to the awkward angle at which my camera was placed. Training my own model based on an image corpus is also not an option since asking two year olds to hold postures for model training is a non-trivial endeavour.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;em>Background Subtraction&lt;/em>:
+Among all the methods this is the one which impressed me! All we need is a single call to &lt;code>opencv2.createBackgroundSubtractorMOG()&lt;/code> to identify moving objects in the foreground and to eliminate static background. The method works by subtracting pixels from subsequent frames of a video and extracting those that change. However this method left a relatively larger footprint on the CPU (still not significant). I was also put off by the false shadow objects created under changing light conditions. But the biggest problem for me was that initial state of the frame was out of my control, so a person moving out of the frame would trigger object detection in the same way as a new person moving in. Asking my family to stay still as the computer boots up is a tricky request&amp;hellip; even by my standards.&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>&lt;em>Contour detection&lt;/em>:
+This is among the cheaper method in terms of computational requirements and it was just the method I needed for my simple requirement. It works by identifying contours in a picture. If the picture is black and white, the contour detection works better. Fortunately, since I only needed to detect a head in the visual frame and the hair in the head helped to distinguish the contours clearly. So this seemed to be the best fit for my requirement and I went with it.&lt;/p>
+&lt;/li>
+&lt;/ol>
+&lt;h2 id="using-contour-detection">Using Contour detection
+&lt;/h2>&lt;p>With the default OpenCV video capture drivers, my camera returned a frame with resolution 640 x 480 pixels. Here you can see my son lost in the colorful world of baby rhymes, hoping to dive into the TV to enjoy the rhymes in full splendor.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/naughty-kid.png"
+loading="lazy"
+alt="Naughty kid"
+>&lt;/p>
+&lt;p>First I cropped the image to focus only on the area that I want to monitor- a small rectange close to TV. Blurring was done to smoothen the contours.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">cropped&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">frame&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">100&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">300&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">630&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Blur the image&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">blurred&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">blur&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">cropped&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">3&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://example.com/images/cropped.png"
+loading="lazy"
+alt="Cropped image"
+>&lt;/p>
+&lt;p>Next I needed to convert color channels. Contour detection is not efficient when the color intensities are in 3 dimensions (RGB). The job is greatly simplified if we can restict the colors to a single dimension. And it works even better with binary images where the pixels are either pure black or white (even for us black and white are easier to tell apart than a million shades of other colors in between).&lt;/p>
+&lt;p>So we apply a threshold using &lt;code>cv2.inRange&lt;/code> function which converts the image to black and white (not grey scale). This is done by specifying a range of interesting colors and every pixel that fall in the range will be converted to white and rest to black.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Convert to HSV color space&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hsv&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cvtColor&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">blurred&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">COLOR_BGR2HSV&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># define range of blue color in HSV&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">lower_black&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">array&lt;/span>&lt;span class="p">([&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">upper_black&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">array&lt;/span>&lt;span class="p">([&lt;/span>&lt;span class="mi">180&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">50&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Create a binary image with where the head will be white while the rest is black&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">thresh&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">inRange&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">hsv&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">lower_black&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">upper_black&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://example.com/images/filtered.png"
+loading="lazy"
+alt="Thresholded image"
+>&lt;/p>
+&lt;p>Finally we turn to the &lt;code>cv2.findContours&lt;/code> method. The &lt;code>cv2.findContours&lt;/code> method returns an array of contours. I looked for the largest contour by area and triggered helper methods when the area was bigger than a threshold. We can even plot the contours to see how our object detection works, as I have done in the picture below.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">_&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">contours&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">hierarchy&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">findContours&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">thresh&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">RETR_TREE&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">CHAIN_APPROX_SIMPLE&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">if&lt;/span> &lt;span class="n">contours&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">area&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">max&lt;/span>&lt;span class="p">([&lt;/span>&lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">contourArea&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">c&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">contours&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">area&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="mi">1500&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">drawContours&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">cropped&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">contours&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span> &lt;span class="p">,&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="mi">3&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># Object detected. Do something&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">drawContours&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">cropped&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">contours&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="mi">3&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://example.com/images/contour-detection.png"
+loading="lazy"
+alt="Contour detection"
+>&lt;/p>
+&lt;p>And there you go! The naughty infiltrator is caught.&lt;/p>
+&lt;h2 id="controlling-the-playback">Controlling the playback
+&lt;/h2>&lt;p>For controlling the playback, I used a combination of pyautogui and win32con libraries. Since I didn&amp;rsquo;t want to interrupt playbacks on normal times, the object detection is activated only when Youtube is one among the foreground windows.&lt;/p>
+&lt;p>Now without much adieu, here is the full code.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt"> 10
+&lt;/span>&lt;span class="lnt"> 11
+&lt;/span>&lt;span class="lnt"> 12
+&lt;/span>&lt;span class="lnt"> 13
+&lt;/span>&lt;span class="lnt"> 14
+&lt;/span>&lt;span class="lnt"> 15
+&lt;/span>&lt;span class="lnt"> 16
+&lt;/span>&lt;span class="lnt"> 17
+&lt;/span>&lt;span class="lnt"> 18
+&lt;/span>&lt;span class="lnt"> 19
+&lt;/span>&lt;span class="lnt"> 20
+&lt;/span>&lt;span class="lnt"> 21
+&lt;/span>&lt;span class="lnt"> 22
+&lt;/span>&lt;span class="lnt"> 23
+&lt;/span>&lt;span class="lnt"> 24
+&lt;/span>&lt;span class="lnt"> 25
+&lt;/span>&lt;span class="lnt"> 26
+&lt;/span>&lt;span class="lnt"> 27
+&lt;/span>&lt;span class="lnt"> 28
+&lt;/span>&lt;span class="lnt"> 29
+&lt;/span>&lt;span class="lnt"> 30
+&lt;/span>&lt;span class="lnt"> 31
+&lt;/span>&lt;span class="lnt"> 32
+&lt;/span>&lt;span class="lnt"> 33
+&lt;/span>&lt;span class="lnt"> 34
+&lt;/span>&lt;span class="lnt"> 35
+&lt;/span>&lt;span class="lnt"> 36
+&lt;/span>&lt;span class="lnt"> 37
+&lt;/span>&lt;span class="lnt"> 38
+&lt;/span>&lt;span class="lnt"> 39
+&lt;/span>&lt;span class="lnt"> 40
+&lt;/span>&lt;span class="lnt"> 41
+&lt;/span>&lt;span class="lnt"> 42
+&lt;/span>&lt;span class="lnt"> 43
+&lt;/span>&lt;span class="lnt"> 44
+&lt;/span>&lt;span class="lnt"> 45
+&lt;/span>&lt;span class="lnt"> 46
+&lt;/span>&lt;span class="lnt"> 47
+&lt;/span>&lt;span class="lnt"> 48
+&lt;/span>&lt;span class="lnt"> 49
+&lt;/span>&lt;span class="lnt"> 50
+&lt;/span>&lt;span class="lnt"> 51
+&lt;/span>&lt;span class="lnt"> 52
+&lt;/span>&lt;span class="lnt"> 53
+&lt;/span>&lt;span class="lnt"> 54
+&lt;/span>&lt;span class="lnt"> 55
+&lt;/span>&lt;span class="lnt"> 56
+&lt;/span>&lt;span class="lnt"> 57
+&lt;/span>&lt;span class="lnt"> 58
+&lt;/span>&lt;span class="lnt"> 59
+&lt;/span>&lt;span class="lnt"> 60
+&lt;/span>&lt;span class="lnt"> 61
+&lt;/span>&lt;span class="lnt"> 62
+&lt;/span>&lt;span class="lnt"> 63
+&lt;/span>&lt;span class="lnt"> 64
+&lt;/span>&lt;span class="lnt"> 65
+&lt;/span>&lt;span class="lnt"> 66
+&lt;/span>&lt;span class="lnt"> 67
+&lt;/span>&lt;span class="lnt"> 68
+&lt;/span>&lt;span class="lnt"> 69
+&lt;/span>&lt;span class="lnt"> 70
+&lt;/span>&lt;span class="lnt"> 71
+&lt;/span>&lt;span class="lnt"> 72
+&lt;/span>&lt;span class="lnt"> 73
+&lt;/span>&lt;span class="lnt"> 74
+&lt;/span>&lt;span class="lnt"> 75
+&lt;/span>&lt;span class="lnt"> 76
+&lt;/span>&lt;span class="lnt"> 77
+&lt;/span>&lt;span class="lnt"> 78
+&lt;/span>&lt;span class="lnt"> 79
+&lt;/span>&lt;span class="lnt"> 80
+&lt;/span>&lt;span class="lnt"> 81
+&lt;/span>&lt;span class="lnt"> 82
+&lt;/span>&lt;span class="lnt"> 83
+&lt;/span>&lt;span class="lnt"> 84
+&lt;/span>&lt;span class="lnt"> 85
+&lt;/span>&lt;span class="lnt"> 86
+&lt;/span>&lt;span class="lnt"> 87
+&lt;/span>&lt;span class="lnt"> 88
+&lt;/span>&lt;span class="lnt"> 89
+&lt;/span>&lt;span class="lnt"> 90
+&lt;/span>&lt;span class="lnt"> 91
+&lt;/span>&lt;span class="lnt"> 92
+&lt;/span>&lt;span class="lnt"> 93
+&lt;/span>&lt;span class="lnt"> 94
+&lt;/span>&lt;span class="lnt"> 95
+&lt;/span>&lt;span class="lnt"> 96
+&lt;/span>&lt;span class="lnt"> 97
+&lt;/span>&lt;span class="lnt"> 98
+&lt;/span>&lt;span class="lnt"> 99
+&lt;/span>&lt;span class="lnt">100
+&lt;/span>&lt;span class="lnt">101
+&lt;/span>&lt;span class="lnt">102
+&lt;/span>&lt;span class="lnt">103
+&lt;/span>&lt;span class="lnt">104
+&lt;/span>&lt;span class="lnt">105
+&lt;/span>&lt;span class="lnt">106
+&lt;/span>&lt;span class="lnt">107
+&lt;/span>&lt;span class="lnt">108
+&lt;/span>&lt;span class="lnt">109
+&lt;/span>&lt;span class="lnt">110
+&lt;/span>&lt;span class="lnt">111
+&lt;/span>&lt;span class="lnt">112
+&lt;/span>&lt;span class="lnt">113
+&lt;/span>&lt;span class="lnt">114
+&lt;/span>&lt;span class="lnt">115
+&lt;/span>&lt;span class="lnt">116
+&lt;/span>&lt;span class="lnt">117
+&lt;/span>&lt;span class="lnt">118
+&lt;/span>&lt;span class="lnt">119
+&lt;/span>&lt;span class="lnt">120
+&lt;/span>&lt;span class="lnt">121
+&lt;/span>&lt;span class="lnt">122
+&lt;/span>&lt;span class="lnt">123
+&lt;/span>&lt;span class="lnt">124
+&lt;/span>&lt;span class="lnt">125
+&lt;/span>&lt;span class="lnt">126
+&lt;/span>&lt;span class="lnt">127
+&lt;/span>&lt;span class="lnt">128
+&lt;/span>&lt;span class="lnt">129
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="ch">#!C:\Python&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">time&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">numpy&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nn">np&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">win32con&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">SW_RESTORE&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">SW_SHOW&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">cv2&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">pyautogui&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">win32gui&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">TRIGGER_THRESHOLD&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">30&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">COOLDOWN_THRESHOLD&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">5&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">get_windows_placement&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">window_id&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">win32gui&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">GetWindowPlacement&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">window_id&lt;/span>&lt;span class="p">)[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">set_active_window&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">window_id&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">get_windows_placement&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">window_id&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mi">2&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">win32gui&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ShowWindow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">window_id&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">SW_RESTORE&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">win32gui&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ShowWindow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">window_id&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">SW_SHOW&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">win32gui&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">SetForegroundWindow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">window_id&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">win32gui&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">SetActiveWindow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">window_id&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">search_and_restore_youtube&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">window_id&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">hwnd&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="s2">&amp;#34;YouTube&amp;#34;&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">win32gui&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">GetWindowText&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">window_id&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">set_active_window&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">window_id&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">check_for_youtube&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">window_id&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">hwnd&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="s2">&amp;#34;YouTube&amp;#34;&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">win32gui&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">GetWindowText&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">window_id&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hwnd&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">append&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">window_id&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="kc">True&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">FrameCounter&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">counter&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">minimized&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">state&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;nf_max&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="fm">__str__&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Current count: &lt;/span>&lt;span class="si">{}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">counter&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">found&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">state&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s2">&amp;#34;nf_max&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">counter&lt;/span> &lt;span class="o">+=&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">state&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;f_max&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">elif&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">state&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s2">&amp;#34;f_max&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">counter&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="n">TRIGGER_THRESHOLD&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">minimize_all_windows&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">state&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;f_min&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">counter&lt;/span> &lt;span class="o">+=&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">next&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">not_found&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">state&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s2">&amp;#34;f_min&amp;#34;&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">counter&lt;/span> &lt;span class="o">-=&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">state&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;nf_min&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">elif&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">state&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s2">&amp;#34;nf_min&amp;#34;&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">counter&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">TRIGGER_THRESHOLD&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="n">COOLDOWN_THRESHOLD&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">restore_firefox&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">state&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;nf_max&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">counter&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span> &lt;span class="c1">#forget and forgive&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">counter&lt;/span> &lt;span class="o">-=&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">elif&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">state&lt;/span> &lt;span class="o">==&lt;/span>&lt;span class="s2">&amp;#34;f_max&amp;#34;&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">counter&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">max&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">counter&lt;/span> &lt;span class="o">-&lt;/span> &lt;span class="mi">1&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">next&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">minimize_all_windows&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Minimizing firefox at &lt;/span>&lt;span class="si">{0}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">format&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">counter&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">pyautogui&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">hotkey&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;k&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">pyautogui&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">hotkey&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;win&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;d&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">minimized&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">True&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">restore_firefox&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Restoring firefox at &lt;/span>&lt;span class="si">{0}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">format&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">counter&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">win32gui&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">EnumWindows&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">search_and_restore_youtube&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="kc">None&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">pyautogui&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">hotkey&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;k&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">minimized&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="kc">False&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">find_kids&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">frame&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">frame_counter&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">cropped&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">frame&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">100&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">300&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">0&lt;/span>&lt;span class="p">:&lt;/span>&lt;span class="mi">630&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># Blur the image&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">blur&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">blur&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">cropped&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">3&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># Convert to HSV color space&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hsv&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">cvtColor&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">blur&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">COLOR_BGR2HSV&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># define range of blue color in HSV&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">lower_black&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">array&lt;/span>&lt;span class="p">([&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">upper_black&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">array&lt;/span>&lt;span class="p">([&lt;/span>&lt;span class="mi">180&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="mi">50&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># Create a binary image with where the head will be white while the rest is black&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">thresh&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">inRange&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">hsv&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">lower_black&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">upper_black&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">_&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">contours&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">hierarchy&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">findContours&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">thresh&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">RETR_TREE&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">CHAIN_APPROX_SIMPLE&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">contours&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">area&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">max&lt;/span>&lt;span class="p">([&lt;/span>&lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">contourArea&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">c&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">c&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">contours&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">area&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="mi">1500&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">drawContours&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">cropped&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">contours&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">-&lt;/span>&lt;span class="mi">1&lt;/span> &lt;span class="p">,&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">255&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">),&lt;/span> &lt;span class="mi">3&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">frame_counter&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">found&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">frame_counter&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">not_found&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">frame_counter&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">not_found&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">imshow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;filtered&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">cropped&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">if&lt;/span> &lt;span class="vm">__name__&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s1">&amp;#39;__main__&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">cap&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">VideoCapture&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">cap&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">set&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">CAP_PROP_POS_MSEC&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">1000&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">frame_counter&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">FrameCounter&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hwnd&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">[]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">while&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">cap&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">isOpened&lt;/span>&lt;span class="p">()):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># Run only when Youtube is one of the running window titles&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">win32gui&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">EnumWindows&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">check_for_youtube&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">hwnd&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">hwnd&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">ret&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">frame&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">cap&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">read&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">find_kids&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">frame&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">frame_counter&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">k&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">waitKey&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">500&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">&amp;amp;&lt;/span> &lt;span class="mh">0xff&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">k&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="mi">27&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">break&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">cap&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">release&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">cv2&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">destroyAllWindows&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="results">Results
+&lt;/h2>&lt;p>Overall, I would say that the whole exercise was quite effective. The kids have learnt stay away from TV- well, most of the times. Sometimes they do succumb to the temptation and get closer. And when the playback stops, they move away from the TV and wait for the playback to automatically resume. It seems they have figured out their environment on their own.&lt;/p>
+&lt;p>But the kids cognition process is not without its faults, there were some unexpected results. For instance, my son developed a superstition that everytime the playback stops he needs to run all the way to kitchen for it to resume (exactly the time taken for the resume timer to cooldown) and so far he hasn&amp;rsquo;t observed any counter-examples to break the correlation between trip to kitchen and resumption of youtube videos. But I expect that over the next few days he will refine his model of environment. My daughter has developed no such belief, she climbs back in to the couch and patiently waits for the playback to resume.&lt;/p>
+&lt;p>Now, I think I have solved my initial problem satisfactorily using technology, further strengthening my conviction that when used properly, technology can be a solution and not a problem. Now all I need to do is find some technical solutions to get rid of those earworm rhymes that I keep awkwardly humming in public.&lt;/p></description></item><item><title>Predicting the playing role of a cricketer using Machine Learning (Part 1)</title><link>https://example.com/p/2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1/</link><pubDate>Mon, 23 Apr 2018 12:00:00 +0000</pubDate><guid>https://example.com/p/2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1/</guid><description>&lt;p>In this project, we will apply Machine Learning techniques to predict whether a particular cricket player is a batsman or bowler based on his career stats. First we will use Deep Neural Networks (DNN) model and later compare the results with a simpler classifier algorithm such as Random Forest Classifier.&lt;/p>
+&lt;p>For the uninitiated, Cricket is a game of bat and ball, much similar to baseball. Cricket players have different roles to play in a game. Batsman&amp;rsquo;s role is to score runs while not losing their wicket, bowlers role is to get the batsman&amp;rsquo;s wicket while restricting their run score in due process. Allrounders can do both batting and bowling role well. A wicketkeeper is a specialist role whose purpose is to catch behind the wickets during the bowling innings. If you really intend to understand tne data behind this exercise, my half-baked explanations are barely sufficient. I suggest to refer to better reference such as &lt;a class="link" href="https://www.britannica.com/sports/cricket-sport" target="_blank" rel="noopener"
+>this&lt;/a>.&lt;/p>
+&lt;p>For the sake of consistency, we will consider only test players. Apart from being a puritan choice, the playing role of a player may differ from format to format and so we can&amp;rsquo;t expect a consistent prediction. The cricinfo player bio page has this &lt;code>playing role&lt;/code> information, but that covers only around 20% of the test players. For vast majority of players we only have numerical stats but no description whether the player is a batsman or a bowler.&lt;/p>
+&lt;p>This is a perfect problem for ML to assist. We have a decent amount of training data (600+ players) and good amount of features (statistics) to base our prediction on. It would also be interesting to observe which features are relevant to our consideration of a player as batsman or bowler.&lt;/p>
+&lt;p>This is by no means a comprehensive tutorial for ML. The goal of this post is to serve as gentle introduction and wet the appetite for newcomers. So in the process, I would cover the following areas:&lt;/p>
+&lt;ol>
+&lt;li>Data collection&lt;/li>
+&lt;li>Data processing&lt;/li>
+&lt;li>Machine Learning&lt;/li>
+&lt;li>Data visualization&lt;/li>
+&lt;/ol>
+&lt;h2 id="data-collection">Data Collection
+&lt;/h2>&lt;p>Most ML examples work with pre-processed data but in reality data is seldom available prepackaged. For this problem, we will have to scrape the data off cricinfo website. We will use Scrapy for getting this info off cricinfo website.&lt;/p>
+&lt;p>The Scrapy tool is well-documented and has some nice tutorials to get started. However I will attempt my own brief introduction.&lt;/p>
+&lt;p>To start we create a project as follows:&lt;/p>
+&lt;pre>&lt;code>scrapy startproject &amp;lt;project_name&amp;gt;
+&lt;/code>&lt;/pre>
+&lt;p>This will create the necessary folder structure. It will also create some boilerplate code which we can customize to our will later on.&lt;/p>
+&lt;blockquote>
+&lt;p>The default folder structure creates a parent folder and child folder with the same name. Do not get confused. All Scrapy commands are executed in the parent folder (where )&lt;/p>
+&lt;/blockquote>
+&lt;p>Ultimately our objective is to perform a web scraping using &lt;code>scrapy crawl&lt;/code> command which looks like the one below:&lt;/p>
+&lt;pre>&lt;code>cd &amp;lt;project_name&amp;gt;
+Scrapy crawl &amp;lt;spider_name&amp;gt; -o &amp;lt;file_name&amp;gt;.csv
+&lt;/code>&lt;/pre>
+&lt;p>In this command, the &lt;code>spider_name&lt;/code> is the name attribute of a spider class. This spider class file should be located under the spiders directory (&amp;lt;project_name&amp;gt;/&amp;lt;project_name&amp;gt;/spiders/*.py). The &lt;code>file_name&lt;/code> is the output file name, csv being our chosen export format. Let us see the steps involved in reaching to this stage.&lt;/p>
+&lt;h3 id="spider-class">Spider class
+&lt;/h3>&lt;p>Start with the skeleton code required for scraping. Here is the skeleton spider class file we will use:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">Scrapy&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">CricinfoSpider&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Scrapy&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">Spider&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">name&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s2">&amp;#34;players&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">start_urls&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span> &lt;span class="c1"># list of starting urls&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">def&lt;/span> &lt;span class="nf">parse&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># do some fancy web scraping&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">pass&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>The file name of this python class is arbitrary&lt;/p>
+&lt;/blockquote>
+&lt;blockquote>
+&lt;p>The spiders directory can contain multiple python file each implementing its own spider logic. The spider name attribute should be unique across all these files.&lt;/p>
+&lt;/blockquote>
+&lt;p>A Spider class should contain the following:&lt;/p>
+&lt;ol>
+&lt;li>name attribute to be called from the Scrapy command line&lt;/li>
+&lt;li>start_urls is a list holding the URLS which act as the starting pages of our scraping.&lt;/li>
+&lt;li>parse function which performs the grunt of scraping the data. The parse function can also recursively call itself to scrape more pages or it can also have a callback function which can be further customized.&lt;/li>
+&lt;/ol>
+&lt;p>The starting page for our scraping should be the one containing links to all player profile pages. In cricinfo, there is no such global directory. However there is a page for players who represented a country. The URL is like this&lt;/p>
+&lt;pre>&lt;code>http://www.espncricinfo.com/ci/content/player/caps.html?country=1;class=1
+&lt;/code>&lt;/pre>
+&lt;p>Notice the &lt;a class="link" href="http://www.ronstauffer.com/blog/understanding-a-url/" target="_blank" rel="noopener"
+>parameters&lt;/a> in the URL which we can manipulate to enumerate all test playing nations. The class parameter represents the game type- for test matches it is 1. Since the list of test playing nations is only a handful, I manually determined that the country code for test playing nations are 1 to 10 and 25 (25 is for Bangladesh, the latest addition to test playing nations). Armed with this info, we can define our start_urls as follows:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">start_urls&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;http://www.espncricinfo.com/ci/content/player/caps.html?country=&lt;/span>&lt;span class="si">{0}&lt;/span>&lt;span class="s1">;class=1&amp;#39;&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">format&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">str&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="p">))&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">x&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">list&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">range&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="p">))&lt;/span>&lt;span class="o">+&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">25&lt;/span>&lt;span class="p">]]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>During a scraping process, Scrapy will issue a GET request to each one of these start_urls. If we get a valid HTTP 200 response, the response body will be passed on to parse function.&lt;/p>
+&lt;h3 id="parse-function">Parse function:
+&lt;/h3>&lt;p>The parse function receives the response object and extracts useful info from it. Our starting page doesn&amp;rsquo;t have the data that we need but contains the links to the player stats page which is what we want. So we will extract the links to player stats page and define another parse function to extract the statistics.&lt;/p>
+&lt;p>To extract the links, we will use CSS selectors. Looking at the source code of the page, we can see that all links to player stats has a class name of &lt;code>ColumnistSmry&lt;/code>. But that is not enough to uniquely identify player links since match links also has the same class name. We can further filter by matching the target URL which is expected to contain the string &amp;ldquo;player&amp;rdquo;. So our CSS selector for extracting relevant URLs would be:&lt;/p>
+&lt;pre>&lt;code>response.css('a.ColumnistSmry[href*=&amp;quot;player&amp;quot;]::attr(href)')
+&lt;/code>&lt;/pre>
+&lt;p>Once we extract the link, Scrapy provides a handy &lt;code>response.follow&lt;/code> function which navigates to the extracted link and can execute a callback function. This callback function will handle all our stats extraction since it will work directly with the player stats page. At this point, rest of the code is just a matter of studying the source code and extracting features using css selectors.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;span class="lnt">26
+&lt;/span>&lt;span class="lnt">27
+&lt;/span>&lt;span class="lnt">28
+&lt;/span>&lt;span class="lnt">29
+&lt;/span>&lt;span class="lnt">30
+&lt;/span>&lt;span class="lnt">31
+&lt;/span>&lt;span class="lnt">32
+&lt;/span>&lt;span class="lnt">33
+&lt;/span>&lt;span class="lnt">34
+&lt;/span>&lt;span class="lnt">35
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">parse&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">response&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1">#follow player links&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">href&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;a.ColumnistSmry[href*=&amp;#34;player&amp;#34;]::attr(href)&amp;#39;&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">yield&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">follow&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">href&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">parse_player&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">parse_player&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">player&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">PlayerItem&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">d&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">{}&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">info&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;.ciPlayerinformationtxt&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">tables&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">response&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;.engineTable&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">values&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;span::text&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">extract&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">info&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">keys&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="n">i&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;b::text&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">extract&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="k">for&lt;/span> &lt;span class="n">i&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">info&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">batting&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">tables&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">batting_keys&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">batting&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;th::text&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">extract&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">batting_values&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">batting&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;tr.data1&amp;#39;&lt;/span>&lt;span class="p">)[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;td::text&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">extract&lt;/span>&lt;span class="p">()[&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nb">len&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">batting_keys&lt;/span>&lt;span class="p">):]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">bowling&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">tables&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">bowling_keys&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">bowling&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;th::text&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">extract&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">bowling_values&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">bowling&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;tr.data1&amp;#39;&lt;/span>&lt;span class="p">)[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">css&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;td::text&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">extract&lt;/span>&lt;span class="p">()[&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="nb">len&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">bowling_keys&lt;/span>&lt;span class="p">):]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">item&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">zip&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">keys&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">values&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;Bio_&amp;#39;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">title_clean&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">][&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">player&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">clean&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">item&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">zip&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">batting_keys&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">batting_values&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;Bat_&amp;#39;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">title_clean&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">player&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">clean&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">for&lt;/span> &lt;span class="n">item&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="nb">zip&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">bowling_keys&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">bowling_values&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">key&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="s1">&amp;#39;Bowl_&amp;#39;&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">title_clean&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">player&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">key&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">clean&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">item&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">player&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>If you find it difficult to define appropriate CSS selector for any element, you can always use inspector tool from Developer tools in Chrome or firefox. You can right click on the interesting code block and copy CSS selector or Xpath (Xpath is also supported in Scrapy)&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="items-class">Items Class:
+&lt;/h3>&lt;p>In the parse function, you can note that I am updating the parsed information in to a class called &lt;code>PlayerItem()&lt;/code>. It is an instance of Scrapy.Item class and its attributes are defined in items.py file. Here is a brief snippet of my &lt;code>items.py&lt;/code> file.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">Scrapy&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">Item&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Field&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">class&lt;/span> &lt;span class="nc">PlayerItem&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Item&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># define the fields for your item here like:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Bio_Full_name&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Field&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Bio_Born&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Field&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Bio_Current_age&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Field&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Bio_Major_teams&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Field&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">Bio_Playing_role&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Field&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>You don&amp;rsquo;t have to always use a Item class. One can simply yield the values from parse function and it will output to CSV just fine. However without an Item class, the fields of the CSV file is determined by the fields in the first record processed. Any new field that may appear in subsequent scraped records will be silently dropped. For that reason, it is preferrable to define the structure of our parsed data ahead using an Item class.&lt;/p>
+&lt;h2 id="conclusion">Conclusion
+&lt;/h2>&lt;p>Finally we can save the result of our hardwork to a precocious CSV file and guard it (Just kidding&amp;hellip; If you lose or corrupt the file, just delete it and scrape again! ).&lt;/p>
+&lt;pre>&lt;code>scrapy crawl players -o players.csv
+&lt;/code>&lt;/pre>
+&lt;p>In the next post we will look at pre-processing this data for our machine learning work. To learn more about Scrapy, do head to its official site. The documentation is excellent and once you grasp hold of the structure, rest falls in to place quite easily.&lt;/p></description></item><item><title>Using Constraint Programming Tools to solve an ancient Chinese math puzzle</title><link>https://example.com/p/2017-12-09-using-constraint-programming-to-solve-an-ancient-chinese-math-puzzle/</link><pubDate>Sat, 09 Dec 2017 12:00:00 +0000</pubDate><guid>https://example.com/p/2017-12-09-using-constraint-programming-to-solve-an-ancient-chinese-math-puzzle/</guid><description>&lt;p>&lt;a class="link" href="https://www.wikiwand.com/en/Constraint_programming" target="_blank" rel="noopener"
+>Constraint programming (CP)&lt;/a> is a subset of Operations Research (OR) where our task is to identify all feasible solutions to a given problem that satisfies a set of constraints. This is different from an optimization problem, where an objective function is defined and we arrive at solutions that either maximizes or minimizes an objective function.&lt;/p>
+&lt;p>CP is mostly well suited for solving logic puzzles, since most logic puzzles are based on constraints and enumerating feasible solutions. But apart from recreational maths, CP also has a lot of practical applications in Scheduling, Resource allocation, Manufacturing etc.,&lt;/p>
+&lt;p>Recently I came across &lt;a class="link" href="https://developers.google.com/optimization/" target="_blank" rel="noopener"
+>or-tools&lt;/a> from Google github repo. It is a suite of libraries for solving Operations Research problems. I wanted to give it a try by solving a simple logic puzzle. The puzzle I chose is called &lt;a class="link" href="https://www.wikiwand.com/en/Hundred_Fowls_Problem" target="_blank" rel="noopener"
+>Hundred Fowls Problem&lt;/a>. Let us see how it goes.&lt;/p>
+&lt;h2 id="hundred-fowls-problem">Hundred Fowls problem
+&lt;/h2>&lt;p>This puzzle found in the sixth-century work of mathematician Chang Chiu-chen called the &amp;ldquo;hundred fowls&amp;rdquo; problem asks:&lt;/p>
+&lt;blockquote>
+&lt;p>If a rooster is worth five coins, a hen three coins, and three chickens together are worth one coin, how many roosters, hens, and chicks totalling 100 can be bought for 100 coins?&lt;/p>
+&lt;/blockquote>
+&lt;p>This translates to solving a set of 2 algebraic equations with 3 variables. In real numbers, there are infinite solutions to this puzzle since we are short by one non-equivalent equation to bind values to 3 variables. However, buying non-integer number of fowls can get tricky, so we can safely assume that we are dealing with 3 integer valued variables here. This reduces the solution space to a finite count, but still there are more than one feasible solution. This is a perfect candidate for constraint programming since we need to identify all feasible solutions and not maximize/minimize an objective function.&lt;/p>
+&lt;h3 id="components-of-an-or-model">Components of an OR model
+&lt;/h3>&lt;p>A model for an optimization problem can be thought to have 3 components:&lt;/p>
+&lt;ul>
+&lt;li>Decision variables&lt;/li>
+&lt;li>Constraints&lt;/li>
+&lt;li>Objectives&lt;/li>
+&lt;/ul>
+&lt;p>Decision variables are the answer an OR problem tries to solve. In our case, it is the valid number of fowls of each type that we can buy. Constraints are the limits imposed on the problem. Here we have total cost and total bird count imposed as limits. An objective is the goal of an OR problem such as maximize profit or minimize project time etc., Most often in Constraint Programming, we don&amp;rsquo;t need to work with objectives and we don&amp;rsquo;t have one for our problem as well.&lt;/p>
+&lt;h3 id="setting-up-the-code">Setting up the code
+&lt;/h3>&lt;p>Let us first import the necessary modules and create a Solver and define our parameters.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">ortools.constraint_solver&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">pywrapcp&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">solver&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">pywrapcp&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">Solver&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;hundred_fowls&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">ROOSTER_COST&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">5&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">HEN_COST&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">3&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">THREE_CHICK_COST&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">total_cost&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">100&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">total_fowls&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">100&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="decision-variables">Decision Variables
+&lt;/h4>&lt;p>Let us first try to define the limits our decision variables can take i.e., the maximum number of roosters, hens or chicks that we need to consider. One can enumerate each fowl type up to the total count (100) but this increases the search domain unnecessarily. For e.g, we cannot buy more than 20 roosters since we would exceed 100 coins nor can we buy 300 chicks for 100 coins. So, we try to establish the upper limit for each of our decision variables as below:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">math&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">floor&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">max_rooster&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">min&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">total_fowls&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">floor&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">total_cost&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">ROOSTER_COST&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">max_hen&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">min&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">total_fowls&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">floor&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">total_cost&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">HEN_COST&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">max_chick_set&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">min&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">total_fowls&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">floor&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">total_cost&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">THREE_CHICK_COST&lt;/span>&lt;span class="p">))&lt;/span> &lt;span class="c1"># a set of 3 chickens &lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Notice that for chick count, we are grouping them in sets of three. This is because the unit cost of a chick is a fraction (1/3) and the solver doesn&amp;rsquo;t allow us to multiply float numbers with IntVar object (which we will come to know later). This is perfectly acceptable for our scenario since chick count always needs to be a multiple of 3 or else the total cost will never be an integer (100 in this case). Besides, this also reduces the search space for chick count by a factor of 3, eliminating obvious non-solutions.&lt;/p>
+&lt;p>We now have to spec out our decision variables. OR-Tools supports different types of decision variables such as Integers, Intervals etc., In our current challenge the decision variable is an integer so we assign it by using IntVar method. The first two values gives the lower and upper bounds for the variables. The last value is an arbitrary string handle for output representation. I am not sure under which scenarios the last variable will come to use, but likely it is an object name required for the underlying C++ code. The python module we use for or-tools is actually a wrapper for the core C++ code.&lt;/p>
+&lt;p>For our problem the decision variables can be defined as below:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># since the puzzle requires us to buy atleast one fowl &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># of each type we will start enumerating from one&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">rooster_count&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">solver&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">IntVar&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">max_rooster&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;Rooster&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">hen_count&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">solver&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">IntVar&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">max_hen&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;Hen&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">chick_set_count&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">solver&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">IntVar&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">max_chick_set&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s2">&amp;#34;Chick&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="constraints">Constraints
+&lt;/h4>&lt;p>Next we add the constraints for our model. It is done using the &amp;ldquo;Add&amp;rdquo; method of Solver object.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">solver&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">Add&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">rooster_count&lt;/span> &lt;span class="o">+&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hen_count&lt;/span> &lt;span class="o">+&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">chick_set_count&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="mi">3&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">total_fowls&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">solver&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">Add&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">rooster_count&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="n">ROOSTER_COST&lt;/span> &lt;span class="o">+&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hen_count&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="n">HEN_COST&lt;/span> &lt;span class="o">+&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">chick_set_count&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="n">THREE_CHICK_COST&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="n">total_cost&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h4 id="navigating-the-search-space">Navigating the search space
+&lt;/h4>&lt;p>Next we create a decision builder which specifies how to iterate through all possible values for our problems. It is done using the Phase method. The first arguemnt is an array of our decision variables. Second argument is how we choose the next value to try for our decision variable. Last argument is how we start assigning value to our variable (from minimum or maximum). We will go with the defauls although for larger problems, we could use some sort of heuristics to search only interesting portions of a search space. You can refer to &lt;a class="link" href="http://www.lia.disi.unibo.it/Staff/MicheleLombardi/or-tools-doc/reference_manual/or-tools/src/constraint_solver/classoperations__research_1_1Solver.html#8bda7ed6e7e533cca4c44eba6efffc8b" target="_blank" rel="noopener"
+>or-tools documentation&lt;/a> for other search strategies.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">db&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">solver&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">Phase&lt;/span>&lt;span class="p">([&lt;/span>&lt;span class="n">rooster_count&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">hen_count&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">chick_set_count&lt;/span>&lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">solver&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">CHOOSE_FIRST_UNBOUND&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">solver&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ASSIGN_MIN_VALUE&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="solving-the-model">Solving the model
+&lt;/h3>&lt;p>Finally we solve our model and iterate through our solutions.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">solver&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">Solve&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">db&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">count&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">while&lt;/span> &lt;span class="n">solver&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">NextSolution&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">count&lt;/span> &lt;span class="o">+=&lt;/span> &lt;span class="mi">1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="si">{0}&lt;/span>&lt;span class="s2"> Roosters, &lt;/span>&lt;span class="si">{1}&lt;/span>&lt;span class="s2"> Hen and &lt;/span>&lt;span class="si">{2}&lt;/span>&lt;span class="s2"> Chicks&amp;#34;&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">format&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">rooster_count&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">hen_count&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">chick_set_count&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">Value&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="mi">3&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Number of unique solutions found - &lt;/span>&lt;span class="si">{0}&lt;/span>&lt;span class="s2">&amp;#34;&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">format&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">count&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>This produces 3 solutions to the puzzle.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Rooster(4) Roosters, Hen(18) Hen and 78 Chicks
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Rooster(8) Roosters, Hen(11) Hen and 81 Chicks
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Rooster(12) Roosters, Hen(4) Hen and 84 Chicks
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">Number of unique solutions found - 3
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="further-reading">Further Reading
+&lt;/h2>&lt;p>or-tools manual on &lt;a class="link" href="https://acrogenesis.com/or-tools/documentation/user_manual/manual/introduction/what_is_cp.html" target="_blank" rel="noopener"
+>Constraint Programming&lt;/a> is quite comprehensive. As always, best way to learn is to study existing code and implementations. In this regards, the &lt;a class="link" href="https://github.com/google/or-tools/tree/master/examples" target="_blank" rel="noopener"
+>example scripts&lt;/a> from or-tools public repo is quite indispensable for learning. There is a good amount of example scripts for some of the most popular OR challenges.&lt;/p></description></item><item><title>Using Monte-Carlo Simulation to model ping test results</title><link>https://example.com/p/2017-11-24-using-monte-carlo-simulation-to-model-ping-test-results/</link><pubDate>Fri, 24 Nov 2017 08:01:28 +0000</pubDate><guid>https://example.com/p/2017-11-24-using-monte-carlo-simulation-to-model-ping-test-results/</guid><description>&lt;p>Recently we had a cabling issue in our core infrastructure which caused around 3 to 12% packet loss across few IP streams. One of my colleagues made an interesting observation that when he tried to ping with large packet size (5000 bytes) the packet loss rose up as high as 40%. In his opinion, that meant some applications were experiencing up to 40% packet loss. I seldom do large packet ping tests unless I am troubleshooting MTU issues, so to me this observation was interesting.&lt;/p>
+&lt;p>At the outset, it may look like an aggravated problem. Yet you know that your network path MTU doesn&amp;rsquo;t support jumbo frames end-to-end. If so, why is there a difference in packet loss rate when you ping with large datagrams? The answer is not too obvious. The important thing to note is that a ping test result is not a measure of ethernet frame loss but ICMP datagram loss. In most cases (when the ICMP datagram is smaller than ethernet MTU) both are the same. But why do large ICMP datagrams have higher loss percentage than individual ethernet frames? Enter Math.&lt;/p>
+&lt;h2 id="normal-ping-vs-large-ping">Normal ping vs Large ping
+&lt;/h2>&lt;p>In windows a normal ping packet size is 32 bytes and in most environments, the default MTU is 1500 bytes. So a single frame is sufficient to transmit a ping packet. Things get weirder when we ping with large packets. In windows, to simulate larger packets you can use the &lt;code>-l&lt;/code> option to specify packet size. Note that this size doesn&amp;rsquo;t include the packet header (20 bytes for IP header + 8 bytes for ICMP header). Which means that we can only fit 1472 bytes of ICMP payload inside a 1500 MTU ethernet frame. Any length above this must be fragmented.&lt;/p>
+&lt;p>We can test this easily. Below is the result when pinging with 1472 as the ping size (&lt;code>ping 8.8.8.8 -n 2 -l 1472&lt;/code>)&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Capturing on &amp;#39;Ethernet 2&amp;#39;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 1 0.000000 10.1.1.1 → 8.8.8.8 ICMP 1514 Echo (ping) request id=0x0001, seq=8/2048, ttl=128
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 2 0.015698 8.8.8.8 → 10.1.1.1 ICMP 106 Echo (ping) reply id=0x0001, seq=8/2048, ttl=45
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">2 packets captured
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>When we ping with just one more byte, you can see that 2 packets are sent in place of 1 ((&lt;code>ping 8.8.8.8 -n 2 -l 1473&lt;/code>)&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">Capturing on &amp;#39;Ethernet 2&amp;#39;
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 1 0.000000 10.1.1.1 → 8.8.8.8 IPv4 1514 Fragmented IP protocol (proto=ICMP 1, off=0, ID=4fab)
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> 2 0.000016 10.1.1.1 → 8.8.8.8 ICMP 35 Echo (ping) request id=0x0001, seq=10/2560, ttl=128
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">2 packets captured
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>So when we ping with 5000 bytes, 4 packets are sent. And ICMP protocol considers a datagram to be lost even when one of them fails. So the probability of the ICMP datagram loss is higher than the probability of single frame loss.&lt;/p>
+&lt;p>Is this what is happening in the ping test result? We can calculate the probability of datagram loss using probability theory but let us defer to it later on and do a numerical simulation first using Monte Carlo simulation.&lt;/p>
+&lt;h2 id="monte-carlo-simulation">Monte Carlo Simulation
+&lt;/h2>&lt;p>&lt;a class="link" href="https://www.wikiwand.com/en/Monte_Carlo_method" target="_blank" rel="noopener"
+>Monte carlo simulation&lt;/a> is a rather fancy title for a simple simulation using random event generator, but it is quite handy and widely used. Usually Monte Carlo simulation is useful for simulating events that are truly random in nature. In a chaotic backbone network, that handles traffic stream of different kinds, we can assume the frame loss to be random.&lt;/p>
+&lt;p>Let us write a short program to simulate random packet loss.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">random&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">numpy&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nn">np&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">sampleCount&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">100000&lt;/span> &lt;span class="c1"># total events in our simulation&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">p&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mf">0.03&lt;/span> &lt;span class="c1"># ethernet frame loss probability&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">grpSize&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">4&lt;/span> &lt;span class="c1"># packet count per datagram, 5000 bytes = 4 packets&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">grpEventCount&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="nb">int&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">sampleCount&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">grpSize&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># datagram count&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># generate random packets with p% packet loss&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">events&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">random&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">choice&lt;/span>&lt;span class="p">([&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">size&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">sampleCount&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">p&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">p&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">p&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># group discrete packets into a datagram&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">grpEvents&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">events&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">reshape&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">grpEventCount&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">grpSize&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># function to determine datagram loss&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">checkFailure&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">grpEvent&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">np&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">count_nonzero&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">grpEvent&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">&amp;lt;&lt;/span> &lt;span class="n">grpSize&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="c1"># Return 1 if the success count is less than 3&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># count the result&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">failCount&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="k">for&lt;/span> &lt;span class="n">grpEvent&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">grpEvents&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">failCount&lt;/span> &lt;span class="o">+=&lt;/span> &lt;span class="n">checkFailure&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">grpEvent&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;The probability of a group failure is &lt;/span>&lt;span class="si">{:.2f}&lt;/span>&lt;span class="s2">%&amp;#34;&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">format&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">failCount&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="nb">len&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">grpEvents&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="mi">100&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;pre>&lt;code>The probability of a group failure is 11.78%
+&lt;/code>&lt;/pre>
+&lt;p>There you see! Even a 3% ethernet frame loss translates to 12% packet loss for jumbo ping test. This is same as what we observed. Now this is just a simulation with random input. Does the math agree?&lt;/p>
+&lt;h2 id="using-probability-theory">Using Probability Theory
+&lt;/h2>&lt;p>If &lt;code>p&lt;/code> is the probability of a single frame loss, &lt;code>(1-p)&lt;/code> is the probability of a successful transfer. And a datagram is successful only if all of its frames are successful. So a 4 frame long ICMP datagram transmission is successful only if 4 consecutive ethernet frame transmissions are successful. The probability is &lt;code>(1-p)**n&lt;/code> where &lt;code>n&lt;/code> is the number of frames. To calculate the failure rate, just take its inverse.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">n&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">4&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="mi">1&lt;/span>&lt;span class="o">-&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="o">-&lt;/span>&lt;span class="n">p&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">**&lt;/span>&lt;span class="n">n&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;pre>&lt;code>0.11470719000000007
+&lt;/code>&lt;/pre>
+&lt;p>As expected the simulation is slightly off from the calculated probability. But it will get closer to the real figure when we increase the simulation count.&lt;/p>
+&lt;h2 id="conclusion">Conclusion
+&lt;/h2>&lt;p>The exactness of our calculation hinges on the assumption of random nature of packet loss. While it happened to be close to true in my case, it need not be the case all the time. The link may have a bursty load and since our ping streams are evenly spaced over time, their chances of failure may not be truly random.&lt;/p>
+&lt;p>Nevertheless, we should be wary of the difference between a datagram loss and ethernet loss while interpreting results. Consider the MTU of the network path while testing with different packet sizes.&lt;/p></description></item></channel></rss>

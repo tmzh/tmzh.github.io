@@ -1,2 +1,215 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DHCP on Ephemeral Dance Of Electrons</title><link>https://tmzh.github.io/tags/dhcp/</link><description>Recent content in DHCP on Ephemeral Dance Of Electrons</description><generator>Hugo</generator><language>en</language><lastBuildDate>Wed, 19 Jul 2017 15:43:13 +0000</lastBuildDate><atom:link href="https://tmzh.github.io/tags/dhcp/index.xml" rel="self" type="application/rss+xml"/><item><title>Dynamic registration of DNS for Linux devices in an Active Directory environment with Windows DNS server</title><link>https://tmzh.github.io/post/2017-07-19-dynamic-registration-of-dns-for-linux-devices-in-an-active-directory-environment-with-windows-dns-server/</link><pubDate>Wed, 19 Jul 2017 15:43:13 +0000</pubDate><guid>https://tmzh.github.io/post/2017-07-19-dynamic-registration-of-dns-for-linux-devices-in-an-active-directory-environment-with-windows-dns-server/</guid><description>&lt;p>While Linux has proliferated extensively in the server arena in the recent past, Windows still dominates client networks. Things that we take for granted in a client environment such as DDNS (Dynamic DNS) are not as matured as they are in Windows environment. One may wonder whether the recent surge in Linux based clients such as IoT devices has changed this equation.&lt;/p>
-&lt;p>So, what does it take to make a Linux client register dynamically in a Windows environment?&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>DHCP on Ephemeral Dance Of Electrons</title><link>https://example.com/tags/dhcp/</link><description>Recent content in DHCP on Ephemeral Dance Of Electrons</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Wed, 19 Jul 2017 15:43:13 +0000</lastBuildDate><atom:link href="https://example.com/tags/dhcp/index.xml" rel="self" type="application/rss+xml"/><item><title>Dynamic registration of DNS for Linux devices in an Active Directory environment with Windows DNS server</title><link>https://example.com/p/2017-07-19-dynamic-registration-of-dns-for-linux-devices-in-an-active-directory-environment-with-windows-dns-server/</link><pubDate>Wed, 19 Jul 2017 15:43:13 +0000</pubDate><guid>https://example.com/p/2017-07-19-dynamic-registration-of-dns-for-linux-devices-in-an-active-directory-environment-with-windows-dns-server/</guid><description>&lt;p>While Linux has proliferated extensively in the server arena in the recent past, Windows still dominates client networks. Things that we take for granted in a client environment such as DDNS (Dynamic DNS) are not as matured as they are in Windows environment. One may wonder whether the recent surge in Linux based clients such as IoT devices has changed this equation.&lt;/p>
+&lt;p>So, what does it take to make a Linux client register dynamically in a Windows environment?&lt;/p>
+&lt;p>At its basic, the entire process relies on Dynamic DNS as explained in &lt;a class="link" href="https://tools.ietf.org/html/rfc2136" target="_blank" rel="noopener"
+>RFC2136&lt;/a>. In a traditional windows environment with AD, this process is taken care by client OS. Every time a Windows PC gets an IP address from DHCP server, it would send a DNS Update (Opcode = 5) request to its registered DNS server. Performed manually, this is same as typing “ipconfig /registerdns” at an elevated command prompt. This behaviour can be modified by accessing DNS section of Advanced TCP/IP settings of a network adapter.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-1-dns-properties.png"
+loading="lazy"
+alt="1 - DNS Properties.png"
+>&lt;/p>
+&lt;p>When we ask a Linux client to do the same (later I will explain how it can be configured to ask), it won’t work unless the DNS server is configured to accept “Insecure updates” (Which is a major security risk if you need to ask).&lt;/p>
+&lt;p>Take a look at the capture of Linux client performing DNS update, you can see that the server comes back with a UPDATE REFUSED response.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-2-linux-dns-update-capture.png"
+loading="lazy"
+alt="2 - Linux DNS Update Capture.png"
+>&lt;/p>
+&lt;p>This is because our DNS server is enabled with secure updates which means only authenticated clients can send update.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-3-dns-secure-updates-option.png"
+loading="lazy"
+alt="3 - DNS Secure Updates option.png"
+>&lt;/p>
+&lt;p>The client is expected to send a transaction signature along with the update request. There are different types of signatures such as a TSIG resource or the SIG(0) or GSS-TSIG signatures. In Windows world however, only GSS-TSIG signatures as described in &lt;a class="link" href="https://tools.ietf.org/html/rfc3645" target="_blank" rel="noopener"
+>RFC3645&lt;/a> are understood and accepted.&lt;/p>
+&lt;p>Looking at a capture from a Windows PC joined to domain, one can see the Windows Device sending Update request with GSS-TSIG resource.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-2-windows-dns-update-capture.png"
+loading="lazy"
+alt="2 - Windows DNS Update Capture.png"
+>&lt;/p>
+&lt;p>Given this background, there are 3 options available to set up DDNS for Linux based clients.&lt;/p>
+&lt;ol>
+&lt;li>Configure DHCP server to perform DNS registration on behalf of the clients&lt;/li>
+&lt;li>Join the Linux devices to AD domain and configure them to dynamically update&lt;/li>
+&lt;li>Setup a new sub-domain running a dedicated Linux BIND server and configure DNS forwarding on Microsoft DNS server.&lt;/li>
+&lt;/ol>
+&lt;p>The first option is the simplest and best resort if you just have a one-off requirement. The other two solutions are more involved but robust. To demonstrate this, let us set up a test environment like below:&lt;/p>
+&lt;ol>
+&lt;li>Microsoft Active Directory environment with DNS server installed in Domain controller and a DHCP server running separately on a different host. All are running on Windows Server 2008 R2.&lt;/li>
+&lt;li>DNS is configured to accept only Secure updates.&lt;/li>
+&lt;li>Two Linux devices running Debian Stretch operating system. One of them will act as DNS server in one of the scenarios.&lt;/li>
+&lt;/ol>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-4-lab-topology.png"
+loading="lazy"
+alt="4 - Lab Topology.png"
+>&lt;/p>
+&lt;p>The solutions we discuss should meet the following objectives:&lt;/p>
+&lt;ol>
+&lt;li>Update DNS when the device gets an IP address&lt;/li>
+&lt;li>Perform periodic updates to DNS server to protect against expiry&lt;/li>
+&lt;li>Fully automated with very little or no hand-coding on client devices, assume no automation tools like Puppet or Chef&lt;/li>
+&lt;li>Scalable to hundreds or thousands of devices&lt;/li>
+&lt;/ol>
+&lt;p>Point 3 is important to me since I had to work out a solution at work where we are using hundreds of Raspberry Pi’s, all booting the same image cloned on to flash disks. So, editing config files on each of them is not an option (we will come to this later).&lt;/p>
+&lt;hr>
+&lt;h2 id="configuring-dhcp-server-to-perform-dns-registration-on-behalf-of-the-clients">Configuring DHCP server to perform DNS registration on behalf of the clients
+&lt;/h2>&lt;p>This method makes use of DHCP option 81 as defined in &lt;a class="link" href="https://tools.ietf.org/html/rfc4702" target="_blank" rel="noopener"
+>RFC4702&lt;/a>, which is used to convey a client’s FQDN to a DHCP server as part of DHCP process.&lt;/p>
+&lt;blockquote>
+&lt;p>An aside: RFC doesn’t mandate whether a DHCP server should register client’s DNS or not. It is left to site-specific policies, which may differ per the security context of the site&lt;/p>
+&lt;/blockquote>
+&lt;p>The default setting in a Microsoft DHCP server scope is as follows (Right click on scope name -&amp;gt; Properties to reach here):&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-5-default-scope-properties.png"
+loading="lazy"
+alt="5 - Default scope properties.png"
+>&lt;/p>
+&lt;p>Understandably, this only updates to DNS server if requested by the client. What happens if we select the option to “Always dynamically update DNS A and PTR records”? Is that what we want?&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-6-always-dynamically-update1.png"
+loading="lazy"
+alt="6 - Always dynamically update.png"
+>&lt;/p>
+&lt;p>If you trigger a DHCP request from the client, you will notice that this doesn’t work.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-7-no-dns-update.png"
+loading="lazy"
+alt="7 - No DNS Update.png"
+>&lt;/p>
+&lt;p>This setting merely controls whether a DHCP server should update ‘A’ record or not.  The label “Always dynamically update DNS A and PTR records” is misleading since it applies only for the clients that request a DNS update. By default, a client is responsible for updating the A record and DHCP server is responsible for updating the PTR record. Selecting the second option forces DHCP server to update A record as well. But the prerequisite is that the client should request for DNS update.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-8-dns-update-options.png"
+loading="lazy"
+alt="8 - DNS Update options.png"
+>&lt;/p>
+&lt;p>The two options above correspond to the two cases discussed in &lt;a class="link" href="https://tools.ietf.org/html/rfc4702" target="_blank" rel="noopener"
+>RFC4702&lt;/a>&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-9-rfc-4702.png"
+loading="lazy"
+alt="9 - RFC 4702.png"
+>&lt;/p>
+&lt;p>For our Linux clients, the option we need is the last check box. Let us turn this on and trigger a DHCP request from our client.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-10-dynamically-update-for-linux-clients.png"
+loading="lazy"
+alt="10 - Dynamically update for Linux clients.png"
+>&lt;/p>
+&lt;p>When we check the DNS server, we can see that the A record successfully is created.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-11-successful-registration.png"
+loading="lazy"
+alt="11 - Successful Registration.png"
+>&lt;/p>
+&lt;p>On the capture, we can see secure DNS update message being sent from the DHCP server (Note that the DNS clients always tries insecure updates first and gets rejected by the server).&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-12-successful-registration-packets.png"
+loading="lazy"
+alt="12 - Successful Registration Packets.png"
+>&lt;/p>
+&lt;p>For a home environment, this is almost enough. But for production environments, with multiple DHCP servers, this is not enough. The problem is that, in such setup the DHCP server becomes the owner of the A and PTR records (see below). It is fine as long as the DHCP server is alive to create and remove records. But when it goes down, its peer DHCP server won’t be able to do anything about those records.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-13-a-record-owner.png"
+loading="lazy"
+alt="13 - A record owner.png"
+>&lt;/p>
+&lt;p>This &lt;a class="link" href="https://technet.microsoft.com/en-us/library/dd334715%28v=ws.10%29.aspx" target="_blank" rel="noopener"
+>link&lt;/a> explains the issue in more detail. Let us follow the advice, create a dedicated user account for updating DNS and delete the old record with DHCP server as owner. Do not grant any extra privilege to this account. Just adding to DNSUpdateProxy group should be sufficient (Right click on IPv4 -&amp;gt; Properties -&amp;gt; Advanced).&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-14-dynamic-update-credentials.png"
+loading="lazy"
+alt="14 - Dynamic update credentials.png"
+>&lt;/p>
+&lt;p>As usual, let us go ahead to trigger an update.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/15-dhcp-request.png"
+loading="lazy"
+alt="15 - DHCP Request.png"
+>&lt;/p>
+&lt;p>As expected, new A and PTR record gets created.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-16-successful-registration.png"
+loading="lazy"
+alt="16 - Successful Registration.png"
+>&lt;/p>
+&lt;p>If we check the ownership, we can find that the record is owned by DNSProxyUpdate group.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-16-dynamic-update-credentials1.png"
+loading="lazy"
+alt="16 - Dynamic update credentials.png"
+>&lt;/p>
+&lt;hr>
+&lt;p>Finally, let us discuss the option called “Name Protection” at the bottom of the dialog box.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-17-name-protection.png"
+loading="lazy"
+alt="17 - Name Protection.png"
+>&lt;/p>
+&lt;p>This forces DHCP server to manage the entire lifecycle of your client’s A and PTR records. If you are going to let your DHCP server manage client’s A record, I don’t see any reason to keep this disabled. It will also protect you from “&lt;a class="link" href="https://technet.microsoft.com/en-us/library/dd759188%28v=ws.11%29.aspx" target="_blank" rel="noopener"
+>Name Squatting&lt;/a>” by offline clients. &lt;a class="link" href="https://tools.ietf.org/html/rfc4701" target="_blank" rel="noopener"
+>RFC4701 &lt;/a>describes the problem as:&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-18-rfc4701.png"
+loading="lazy"
+alt="18 - RFC4701.png"
+>&lt;/p>
+&lt;p>Let us see what it means to turn on this option. First, we keep it disabled and bring two clients online with same hostname, one after other. All is well when the first client comes online and gets an IP address 192.168.179.50.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-19-dhcp-request.png"
+loading="lazy"
+alt="19 - DHCP Request.png"
+>&lt;/p>
+&lt;p>DNS also gets updated accordingly.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-20-dns-update.png"
+loading="lazy"
+alt="20 - DNS Update.png"
+>&lt;/p>
+&lt;p>Let us bring another Linux client online and change the hostname to same as this host. Then perform a DHCP request from this host.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-21-hostname-change.png"
+loading="lazy"
+alt="21 - Hostname change.png"
+>&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-22-dhcp-request.png"
+loading="lazy"
+alt="22 - DHCP Request.png"
+>&lt;/p>
+&lt;p>DHCP server assigns IP address 192.168.179.51 and sends an update to DNS server. Note that the DHCP server makes no fuss about two hosts sharing the same hostname. For all it knows, it could be the same host with multiple interfaces.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-23-dhcp-update.png"
+loading="lazy"
+alt="23 - DHCP Update.png"
+>&lt;/p>
+&lt;p>On the DNS sever side, we see that it accepts this update without any hesitation. The only problem is that this overwrites the existing record, while the client is still online. So, anyone trying to talk the first node ends up talking to the second node.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-24-dns-overwritten.png"
+loading="lazy"
+alt="24 - DNS overwritten.png"
+>&lt;/p>
+&lt;p>Clearly, DHCP server is not a reliable source of identity. RFC4703 briefly mentions the inability of DHCP server to provide any sort of assurance.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-25-rfc4703.png"
+loading="lazy"
+alt="25 - RFC4703.png"
+>&lt;/p>
+&lt;p>Let us see what happens when we enable “Name Protection”.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-26-enable-name-protection.png"
+loading="lazy"
+alt="26 - Enable Name Protection.png"
+>&lt;/p>
+&lt;p>As soon as we enable this option, first thing we notice is that all other options are greyed out. This is because, with Name Protection enabled, it is always the responsibility of DHCP server to perform both A record and PTR record updates.&lt;/p>
+&lt;p>Let us wipe the slate clean, by releasing IP address from both the clients and deleting the existing DNS &amp;amp; DHCP records.&lt;/p>
+&lt;p>Now when you bring the first Linux client online, you can see that the DHCP server performs a new type of record registration called DHCID.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-27-successful-dhcid-capture.png"
+loading="lazy"
+alt="27 - Successful DHCID Capture.png"
+>&lt;/p>
+&lt;p>A new record type DHCID appears in the DNS server.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-28-successful-dhcid-registered.png"
+loading="lazy"
+alt="28 - Successful DHCID registered.png"
+>&lt;/p>
+&lt;p>Let us bring up the impostor and request DHCP address. It gets an IP address of 192.168.179.51.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-29-dns-impersonation.png"
+loading="lazy"
+alt="29 - DNS Impersonation.png"
+>&lt;/p>
+&lt;p>As usual, DHCP server is very generous about having two hosts sharing the same hostname.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-30-duplicate-dhcp-update.png"
+loading="lazy"
+alt="30 - Duplicate DHCP Update.png"
+>&lt;/p>
+&lt;p>But no new DNS entry is created.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-31-name-protection-success.png"
+loading="lazy"
+alt="31 - Name protection success.png"
+>&lt;/p>
+&lt;p>Looking at the capture, we can see that the DNS registration fails with a response that RRset does not exist.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-32-dns-update-refused-capture.png"
+loading="lazy"
+alt="32 - DNS Update refused capture.png"
+>&lt;/p>
+&lt;p>This message means that DHCID value calculated from the new update packet doesn’t match with any DHCID RR’s stored in the server. This behaviour is described in &lt;a class="link" href="https://tools.ietf.org/html/rfc4701" target="_blank" rel="noopener"
+>RFC4701&lt;/a>.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/2017-07-19-33-rfc4701.png"
+loading="lazy"
+alt="33 - RFC4701.png"
+>&lt;/p>
+&lt;p>This is as much as we need to know about configuring a Microsoft DHCP server to perform Dynamic DNS for Linux clients.&lt;/p></description></item></channel></rss>

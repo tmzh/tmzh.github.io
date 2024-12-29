@@ -1,1 +1,1218 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Keras on Ephemeral Dance Of Electrons</title><link>https://tmzh.github.io/tags/keras/</link><description>Recent content in Keras on Ephemeral Dance Of Electrons</description><generator>Hugo</generator><language>en</language><lastBuildDate>Sat, 28 Apr 2018 12:00:00 +0000</lastBuildDate><atom:link href="https://tmzh.github.io/tags/keras/index.xml" rel="self" type="application/rss+xml"/><item><title>Predicting the playing role of a cricketer using Machine Learning (Part 2)</title><link>https://tmzh.github.io/post/2018-04-28-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/</link><pubDate>Sat, 28 Apr 2018 12:00:00 +0000</pubDate><guid>https://tmzh.github.io/post/2018-04-28-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/</guid><description>&lt;p>In the previous &lt;a href="https://tmzh.github.io/machine%20learning/2018/04/23/2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1/">post&lt;/a> we saw how to scrape raw data from a content rich webpage. In this post, we will explore how to process that raw data and use Machine Learning tools to predict the playing role of a cricket player just based on his career statistics.&lt;/p></description></item></channel></rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Keras on Ephemeral Dance Of Electrons</title><link>https://example.com/tags/keras/</link><description>Recent content in Keras on Ephemeral Dance Of Electrons</description><generator>Hugo -- gohugo.io</generator><language>en</language><lastBuildDate>Sat, 28 Apr 2018 12:00:00 +0000</lastBuildDate><atom:link href="https://example.com/tags/keras/index.xml" rel="self" type="application/rss+xml"/><item><title>Predicting the playing role of a cricketer using Machine Learning (Part 2)</title><link>https://example.com/p/2018-04-28-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/</link><pubDate>Sat, 28 Apr 2018 12:00:00 +0000</pubDate><guid>https://example.com/p/2018-04-28-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2/</guid><description>&lt;p>In the previous &lt;a class="link" href="https://tmzh.github.io/machine%20learning/2018/04/23/2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1/" target="_blank" rel="noopener"
+>post&lt;/a> we saw how to scrape raw data from a content rich webpage. In this post, we will explore how to process that raw data and use Machine Learning tools to predict the playing role of a cricket player just based on his career statistics.&lt;/p>
+&lt;p>Here are the tools that we will use for this exercise. For interactive data analysis and number crunching:&lt;/p>
+&lt;ol>
+&lt;li>Jupyter&lt;/li>
+&lt;li>Pandas&lt;/li>
+&lt;li>Numpy&lt;/li>
+&lt;/ol>
+&lt;p>For visualizing data:&lt;/p>
+&lt;ol>
+&lt;li>Seaborn&lt;/li>
+&lt;li>matplotlib&lt;/li>
+&lt;/ol>
+&lt;p>For running Machine Learning models:&lt;/p>
+&lt;ol>
+&lt;li>Tensorflow&lt;/li>
+&lt;li>Keras&lt;/li>
+&lt;li>Scikit-learn&lt;/li>
+&lt;/ol>
+&lt;h2 id="importing-data">Importing data
+&lt;/h2>&lt;p>First let us load the necessary modules:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">matplotlib.pyplot&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nn">plt&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">pandas&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nn">pd&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">numpy&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nn">np&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">seaborn&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nn">sns&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Import the CSV file which we scraped as a pandas data frame and inspect its contents.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">data&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">pd&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">read_csv&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;data/players.csv&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">data&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">dtypes&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&amp;mdash;&amp;ndash;|&amp;mdash;-
+Bat_100|object
+Bat_4s|object
+Bat_50|object
+Bat_6s|object
+Bat_Ave|object
+Bat_BF|object
+Bat_Ct|int64
+Bat_HS|object
+Bat_Inns|object
+Bat_Mat|int64
+Bat_NO|object
+Bat_Runs|object
+Bat_SR|object
+Bat_St|int64
+Bio_Also_known_as|object
+Bio_Batting_style|object
+Bio_Born|object
+Bio_Bowling_style|object
+Bio_Current_age|object
+Bio_Died|object
+Bio_Education|object
+Bio_Fielding_position|object
+Bio_Full_name|object
+Bio_Height|object
+Bio_In_a_nutshell|object
+Bio_Major_teams|object
+Bio_Nickname|object
+Bio_Other|object
+Bio_Playing_role|object
+Bio_Relation|object
+Bowl_10|object
+Bowl_4w|object
+Bowl_5w|object
+Bowl_Ave|object
+Bowl_BBI|object
+Bowl_BBM|object
+Bowl_Balls|object
+Bowl_Econ|object
+Bowl_Inns|object
+Bowl_Mat|int64
+Bowl_Runs|object
+Bowl_SR|object
+Bowl_Wkts|object
+dtype: object|&lt;/p>
+&lt;p>We can see that most of the fields are decoded as &lt;code>object&lt;/code> data type which is a generic pandas datatype. It gets assigned if our data consists of mixed types such as characters and numerals. There are some obvious numerical fields which are getting detected as string. But before we recast all of them as string, we need to preprocess some of them to extract numeric value out of them.&lt;/p>
+&lt;p>For example, let us inspect &lt;code>Bowl_BBI&lt;/code> and &lt;code>Bowl_BBM&lt;/code> which stands for best bowling figures in an innings and a match respectively.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">data&lt;/span>&lt;span class="p">[[&lt;/span>&lt;span class="s1">&amp;#39;Bowl_BBI&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bowl_BBM&amp;#39;&lt;/span>&lt;span class="p">]]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">head&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">n&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>Bowl_BBI&lt;/th>
+&lt;th>Bowl_BBM&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>0&lt;/td>
+&lt;td>-&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1&lt;/td>
+&lt;td>3/31&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2&lt;/td>
+&lt;td>2/35&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>3&lt;/td>
+&lt;td>-&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>4&lt;/td>
+&lt;td>-&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>5&lt;/td>
+&lt;td>-&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>6&lt;/td>
+&lt;td>-&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>7&lt;/td>
+&lt;td>-&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>8&lt;/td>
+&lt;td>6/85&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>9&lt;/td>
+&lt;td>-&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>Either fields can be made sense as a combination of two independent variables- Best Bowling Wickets &amp;amp; Best Bowling Runs. Similarly when we cast the field &lt;code>Bat_HS&lt;/code> as integer, the notout values will be lost since they are suffixed with an asterisk which makes them a string data type. Let us go ahead to fix these potential issues.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Best bowling innings wickets&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">bbi_df&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">pd&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">DataFrame&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bowl_BBI&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">str&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">replace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;-&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">str&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">split&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;/&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">tolist&lt;/span>&lt;span class="p">(),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">columns&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bowl_BBIW&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bowl_BBIR&amp;#39;&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">bbm_df&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">pd&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">DataFrame&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bowl_BBM&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">str&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">replace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;-&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">str&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">split&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;/&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">tolist&lt;/span>&lt;span class="p">(),&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">columns&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bowl_BBMW&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bowl_BBMR&amp;#39;&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">data&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">join&lt;/span>&lt;span class="p">([&lt;/span>&lt;span class="n">bbi_df&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">bbm_df&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Identify numeric columns&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">numeric_cols&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bat_100&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bat_4s&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bat_50&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bat_6s&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bat_Ave&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bat_BF&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;Bat_Ct&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bat_HS&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bat_Inns&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bat_Mat&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bat_NO&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bat_Runs&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;Bat_SR&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bat_St&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bowl_10&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bowl_4w&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bowl_5w&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bowl_Ave&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;Bowl_Balls&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bowl_Econ&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bowl_Inns&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bowl_Mat&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bowl_Runs&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;Bowl_SR&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bowl_Wkts&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bowl_BBIW&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bowl_BBIR&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bowl_BBMW&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bowl_BBMR&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># regex replace * in High scores&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bat_HS&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bat_HS&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">replace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="sa">r&lt;/span>&lt;span class="s1">&amp;#39;\*$&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">regex&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">numeric_cols&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">numeric_cols&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">replace&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;-&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">numeric_cols&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">numeric_cols&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">apply&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">pd&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">to_numeric&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">errors&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;coerce&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">numeric_cols&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">numeric_cols&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">fillna&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>If we check the data type again, we will see that all the numerical fields are interpreted as int or float datatype as expected.&lt;/p>
+&lt;blockquote>
+&lt;p>Be careful when filling NaN with zeroes. Idea is not to introduce false values in to the dataset. In this case, a value of zero is neutral since it represents the same value as absent numbers. But for certain types of data, such as temperature, zero introduces a false value in to the data set since temperature values can be less than zero.&lt;/p>
+&lt;/blockquote>
+&lt;h2 id="pre-processing">Pre-processing
+&lt;/h2>&lt;h3 id="deriving-new-features">Deriving new features
+&lt;/h3>&lt;p>When using data in our models we have to understand the units in which they are represented. Not all features are directly comparable. For instance, Average &amp;amp; Strike rates are already averaged over the number of matches that a player plays. But other aggregate statistics aren&amp;rsquo;t. So in effect it would be meaningless to compare run tally of a player who has played only 10 matches with that of another who has played a hundred matches.&lt;/p>
+&lt;p>To understand better, let us plot runs scored vs the matches played.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">sns&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">jointplot&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;Bat_Runs&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">y&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;Bat_Inns&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://example.com/images/bat-inns-vs-bat-runs.png"
+loading="lazy"
+alt="Bat Inns vs Bat Runs"
+>&lt;/p>
+&lt;p>Obviously there is a strong correlation between no. of matches played and no. of runs scored. Ideally we want our features to be as independent of each other as possible. To separate the influence of number of matches played on the batting runs feature, we will divide the aggregate statistics by number of matches played.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;span class="lnt">17
+&lt;/span>&lt;span class="lnt">18
+&lt;/span>&lt;span class="lnt">19
+&lt;/span>&lt;span class="lnt">20
+&lt;/span>&lt;span class="lnt">21
+&lt;/span>&lt;span class="lnt">22
+&lt;/span>&lt;span class="lnt">23
+&lt;/span>&lt;span class="lnt">24
+&lt;/span>&lt;span class="lnt">25
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># select aggregate stats such as no. of hundreds, runs scored etc.,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">bat_features_raw&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bat_100&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bat_4s&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bat_50&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bat_6s&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;Bat_BF&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bat_Ct&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bat_NO&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bat_Runs&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bat_St&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># column names for scaled features&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">bat_features_scaled&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bat_100_sc&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bat_4s_sc&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bat_50_sc&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bat_6s_sc&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;Bat_BF_sc&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bat_Ct_sc&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bat_NO_sc&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bat_Runs_sc&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bat_St_sc&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># leave aside match and innings count and other aggregate stats such as best bowling figures, strike rate and average&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">bowl_features_raw&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bowl_10&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bowl_4w&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bowl_5w&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;Bowl_Balls&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bowl_Runs&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bowl_Wkts&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># column names for scaled features&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">bowl_features_scaled&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bowl_10_sc&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bowl_4w_sc&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bowl_5w_sc&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="s1">&amp;#39;Bowl_Balls_sc&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bowl_Runs_sc&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bowl_Wkts_sc&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># divide by innings count since it is more relevant than match count&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">bat_features_scaled&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">bat_features_raw&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">apply&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">lambda&lt;/span> &lt;span class="n">x&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">x&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bat_Inns&amp;#39;&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">bowl_features_scaled&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">bowl_features_raw&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">apply&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="k">lambda&lt;/span> &lt;span class="n">x&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="n">x&lt;/span>&lt;span class="o">/&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bowl_Inns&amp;#39;&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># these are the meaningful features which will be the input for our model. &lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">features&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bat_Ave&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bat_HS&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bat_SR&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">bat_features_scaled&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bowl_Ave&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bowl_Econ&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bowl_SR&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bowl_BBIW&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bowl_BBIR&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bowl_BBMW&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bowl_BBMR&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">+&lt;/span> &lt;span class="n">bowl_features_scaled&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># fill numerical features with zero&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">features&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">features&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">fillna&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;blockquote>
+&lt;p>It can be argued that averaging the runs scored duplicates the batting average feature. Leaving aside subtle differences in the way in which batting averages are calculated, we would still keep both features to see how our model learns the difference in both the features and assigns weight accordingly.&lt;/p>
+&lt;/blockquote>
+&lt;p>Now let us plot the scaled runs scored value vs the innings played.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">sns&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">jointplot&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;Bat_Runs_sc&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">y&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;Bat_Inns&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://example.com/images/bat-inns-vs-bat-runs-sc.png"
+loading="lazy"
+alt="Bat Inns vs Bat Runs Scaled"
+>&lt;/p>
+&lt;p>Clearly this is a far better representation of batting capabilities of a player. You can see there is less dependency on the number of innings played. It is not hard to imagine how this scaling affects our final prediction. The impact is obvious when we plot batting runs and bowling wickets (likely to be the most important features) in a KDE plot. Here is the KDE plot before scaling:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">sns&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">jointplot&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;Bowl_Wkts&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">y&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;Bat_Runs&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">df&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">kind&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;kde&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://example.com/images/bat-inns-vs-bat-runs-kde-before.png"
+loading="lazy"
+alt="Bowl Wickets vs Bat Runs KDE plot"
+>&lt;/p>
+&lt;p>There is no clear clustering indicating that our classification is not going to be effective. In comparison, if we generate the same chart for scaled values, there is a clear grouping.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">sns&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">jointplot&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;Bowl_Wkts_sc&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">y&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;Bat_Runs_sc&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">df&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">kind&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;kde&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://example.com/images/bat-inns-vs-bat-runs-kde-after.png"
+loading="lazy"
+alt="Bowl Wickets Scaled vs Bat Runs Scaled KDE plot"
+>&lt;/p>
+&lt;p>This much more promising. Remember, your model will only perform as well as the data you feed in. If the input data is already confused, there is very little a mathematical model can do. Now that we have almost all that we need we will extract those records that have &lt;code>playing role&lt;/code> information and use it for our training &amp;amp; testing. To avoid outliers corrupting our model, we will also exclude players who played less than 5 matches.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># remove players who played less than 5 matches&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">df&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bio_Playing_role&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">notnull&lt;/span>&lt;span class="p">()&lt;/span> &lt;span class="o">&amp;amp;&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bat_Mat&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">)]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="data-transformation">Data Transformation
+&lt;/h3>&lt;p>Next let us look at our target feature which is &lt;code>playing role&lt;/code>. We need to understand the values it can assume. Let us look at the unique values for the player features.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Check the unique playing roles to identify mapping function&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bio_Playing_role&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">unique&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-fallback" data-lang="fallback">&lt;span class="line">&lt;span class="cl">array([nan, &amp;#39;Top-order batsman&amp;#39;, &amp;#39;Bowler&amp;#39;, &amp;#39;Middle-order batsman&amp;#39;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;Wicketkeeper batsman&amp;#39;, &amp;#39;Allrounder&amp;#39;, &amp;#39;Batsman&amp;#39;, &amp;#39;Opening batsman&amp;#39;,
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &amp;#39;Wicketkeeper&amp;#39;, &amp;#39;Bowling allrounder&amp;#39;, &amp;#39;Batting allrounder&amp;#39;], dtype=object)
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>The playing role definiton is too granular. We want fewer variety of roles so that each role gets sufficient sample data points to train the model. Also the role tagging done by Cricinfo is not consistent. For e.g., not all opening batsmen have been tagged with the opening batsman role. So we define a mapping function to group playing roles in to 4 different categories &lt;code>['Batsman','Bowler','Wicketkeeper','Allrounder']&lt;/code>&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;span class="lnt">15
+&lt;/span>&lt;span class="lnt">16
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">get_role&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">role&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="n">pd&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">notnull&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">role&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">if&lt;/span> &lt;span class="s1">&amp;#39;keeper&amp;#39;&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">role&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="s2">&amp;#34;Wicketkeeper&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">elif&lt;/span> &lt;span class="s1">&amp;#39;rounder&amp;#39;&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">role&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="s2">&amp;#34;Allrounder&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">elif&lt;/span> &lt;span class="s1">&amp;#39;atsman&amp;#39;&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">role&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="s2">&amp;#34;Batsman&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">elif&lt;/span> &lt;span class="s1">&amp;#39;owler&amp;#39;&lt;/span> &lt;span class="ow">in&lt;/span> &lt;span class="n">role&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="s2">&amp;#34;Bowler&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">else&lt;/span>&lt;span class="p">:&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="s2">&amp;#34;&amp;#34;&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;role&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bio_Playing_role&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">apply&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">get_role&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Note that this feature is a categorical data. It is different from a numerical data such as height or weight. When we want to use Deep Neural Networks we need to represent the target features as numerical data. We will assign one column for each playing role and set its value to one when that playing role fits the player well. Then the function of our model will be to assign a value close to 1 for one of these columns and a value close to 0 for the rest.&lt;/p>
+&lt;p>It is called One-Hot encoding. Turns out this is a frequent task, so pandas has a handy inbuilt function to perform this.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;span class="lnt">9
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># y is categorical feature&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">y&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">df&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;role&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Convert categorical data into numerical columns&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">y_cat&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">pd&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">get_dummies&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">y&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># X is the input features. We need to covert it from pandas dataframe to numpy array to feed in to our models&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">X&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">df&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">features&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">as_matrix&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Let us see the new &lt;code>y_cat&lt;/code> dataframe&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">y_cat&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">head&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>&lt;/th>
+&lt;th>Allrounder&lt;/th>
+&lt;th>Batsman&lt;/th>
+&lt;th>Bowler&lt;/th>
+&lt;th>Wicketkeeper&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>19&lt;/td>
+&lt;td>0&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>0&lt;/td>
+&lt;td>0&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>20&lt;/td>
+&lt;td>0&lt;/td>
+&lt;td>0&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>0&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>22&lt;/td>
+&lt;td>0&lt;/td>
+&lt;td>0&lt;/td>
+&lt;td>0&lt;/td>
+&lt;td>1&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>25&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>0&lt;/td>
+&lt;td>0&lt;/td>
+&lt;td>0&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>28&lt;/td>
+&lt;td>0&lt;/td>
+&lt;td>1&lt;/td>
+&lt;td>0&lt;/td>
+&lt;td>0&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;blockquote>
+&lt;p>One might be tempted to assign unique numbers for each category ( say 1: Batsman, 2: Bowler etc.,) but that will not work. There is no quantitative relation between categories. Assigning raw numbers implies that there is a numerical progression to the categories. Sometimes it can work for contiguous data such as day of the month, but even then one has to be aware of the bounds and circularity of the target variables.&lt;/p>
+&lt;/blockquote>
+&lt;h3 id="scaling-data">Scaling data
+&lt;/h3>&lt;p>Some fields vary over a larger range compared to the rest. Remember we did a preliminary scaling by dividing these values with the number of innings. But that is not sufficient since it only made sure that one feature (&amp;rsquo;no. of innings&amp;rsquo;) did not overtly influence another feature (&amp;lsquo;runs scored&amp;rsquo;). But each features themselves lie between different extremities. For e.g, &lt;code>Bowling Wickets Scaled&lt;/code> only ranges from 0 to 5 whereas &lt;code>Batting Runs Scaled&lt;/code> ranges from 0 to 50. Most machine learning models works the best when the features are vary within the same range. If we let these datapoints influence our calculation without modification, wickets taken will have negligible influence.&lt;/p>
+&lt;p>So we perform another round of scaling for all input data points. We will use the &lt;code>MinMax Scaler&lt;/code> from Scikit library. This will scale the values such that largest value becomes one and smallest value becomes zero.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">sklearn.preprocessing&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">MinMaxScaler&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">mms&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">MinMaxScaler&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">feature_range&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">1&lt;/span>&lt;span class="p">))&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">fit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">X&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># X_mms will our new input array with all values scaled to be between 0 and 1&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">X_mms&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">mms&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">transform&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">X&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h2 id="training-the-model">Training the model
+&lt;/h2>&lt;h3 id="deep-neural-network">Deep Neural Network
+&lt;/h3>&lt;p>First we will try to run a Deep Neural Network model on this data. Here are the necessary modules to import.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">keras.models&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">Sequential&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">keras.layers&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">Dense&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">keras.optimizers&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">SGD&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Adam&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">Adadelta&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">RMSprop&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">keras.wrappers.scikit_learn&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">KerasClassifier&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="kn">import&lt;/span> &lt;span class="nn">keras.backend&lt;/span> &lt;span class="k">as&lt;/span> &lt;span class="nn">K&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>Create the Keras Sequential model. I am using a DNN with 1 hidden layer and 1 output layer. The hidden layer has 15 nodes. The number of nodes in the output layer should as the number of categories. So we will go with 4.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;span class="lnt">8
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="k">def&lt;/span> &lt;span class="nf">create_baseline&lt;/span>&lt;span class="p">():&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># create model&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">model&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">Sequential&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">model&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">add&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Dense&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">15&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">input_dim&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">25&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">kernel_initializer&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;he_normal&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">activation&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;relu&amp;#39;&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">model&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">add&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">Dense&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="mi">4&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">kernel_initializer&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;he_normal&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">activation&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;softmax&amp;#39;&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="c1"># Compile model&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">model&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">compile&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">loss&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;categorical_crossentropy&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">optimizer&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;adam&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">metrics&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;accuracy&amp;#39;&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="k">return&lt;/span> &lt;span class="n">model&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>The &lt;code>softmax&lt;/code> is a popular activation function for classification problems. In simple words, an activation function is a simple function that decides whether to output TRUE or FALSE for each category. This &lt;code>softmax&lt;/code> function receives an array of values from the previous layer and returns a new array which adds up to 1. The category with the largest value is deemed likely match for our data.&lt;/p>
+&lt;blockquote>
+&lt;p>&lt;code>Softmax&lt;/code> highlights only the likeliest category for a data. Here for simplicity sake, we assume that our categories are mutually exclusive, i.e, a player can only belong to one category at a time. There are other data types where a single entry can belong to more than one category at a time. We may need to use different activation function for that. Again, know your data before deciding on activation function.&lt;/p>
+&lt;/blockquote>
+&lt;p>The loss function is &lt;code>categorical_crossentropy&lt;/code>. A Loss Function can be thought of as a course correction function which measures the perceived error as our model navigates to ideal set of weights over multiple iterations. Categorical Cross-Entropy loss function penalizes weights that are sure to be wrong. It is a common loss function used for classification problems.&lt;/p>
+&lt;p>These are the important attributes that closely follows our problem definition. Most of the other parameters can be fiddled with.&lt;/p>
+&lt;p>Next we will use Keras to train the model. The result is a Keras Classifier function whose weights are trained on our data. We can use this function to predict values for inputs which we haven&amp;rsquo;t seen so far.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># evaluate model with standardized dataset&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">estimator&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">KerasClassifier&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">build_fn&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">create_baseline&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">nb_epoch&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">100&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">batch_size&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">5&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">verbose&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>We cannot use all of the data to train our model. The model will closely follow our existing model. It won&amp;rsquo;t be useful to predict any values we haven&amp;rsquo;t seen so far. This is called overfitting.&lt;/p>
+&lt;p>&lt;img src="https://example.com/images/overfitting.png"
+loading="lazy"
+alt="Overfitting"
+>&lt;/p>
+&lt;p align='center'>Example of overfitting - Source Wikipedia &lt;/p>
+&lt;p>To avoid this, we will split the data into train and test datasets. We will use the former to train the model and compute the scores based on the testing against test data for each iteration of cross-validation. Scikit&amp;rsquo;s provides a helper function called &lt;code>cross_val_score&lt;/code> to assist in this. &lt;code>StratifiedKFold&lt;/code> is the genertor strategy we will use for selecting this train/test datasets. It splits the data into K folds (set to 10 in our case), trains it on K-1 datasets and tests it against the left out dataset, while preserving the class distribution of the data.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># set the random state to a fixed number for reproducing the results&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">kfold&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">StratifiedKFold&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">n_splits&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">shuffle&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">random_state&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">42&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">results&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">cross_val_score&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">estimator&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">X_mms&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">y&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">values&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">cv&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">kfold&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Results: &lt;/span>&lt;span class="si">%.2f%%&lt;/span>&lt;span class="s2"> (&lt;/span>&lt;span class="si">%.2f%%&lt;/span>&lt;span class="s2">)&amp;#34;&lt;/span> &lt;span class="o">%&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">results&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">mean&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="mi">100&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">results&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">std&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="mi">100&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>I got a result of 82.2% accuracy. Not bad for the first attempt, particularly since we employed gross simplifications and trained the model with only with around 450 records. The results that you get may be slightly different since we shuffle the data before generating folds.&lt;/p>
+&lt;h3 id="random-forest-classifier">Random Forest Classifier
+&lt;/h3>&lt;p>This time let us try to model the data using &lt;code>Random Forest classifier&lt;/code>. Random Forest Classifier is a much simpler method than neural networks. It relies on building multiple decision trees and assembling the results of these decision trees.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">sklearn.ensemble&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">RandomForestClassifier&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Instantiate model with 1000 decision trees&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">rf_estimator&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">RandomForestClassifier&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">n_estimators&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">1000&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">random_state&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">42&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">rf_results&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">cross_val_score&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">rf_estimator&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">X_mms&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">y&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">values&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">cv&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">kfold&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="nb">print&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Results: &lt;/span>&lt;span class="si">%.2f%%&lt;/span>&lt;span class="s2"> (&lt;/span>&lt;span class="si">%.2f%%&lt;/span>&lt;span class="s2">)&amp;#34;&lt;/span> &lt;span class="o">%&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">rf_results&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">mean&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="mi">100&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">rf_results&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">std&lt;/span>&lt;span class="p">()&lt;/span>&lt;span class="o">*&lt;/span>&lt;span class="mi">100&lt;/span>&lt;span class="p">))&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>You will notice that Random Forest Classifier has performed significantly better than the DNN classifier. I got 87.28% accuracy, which is amazing since Random Forest is several times faster and less resource intensive than the DNN classifier. And I didn&amp;rsquo;t even have to run it on top of tensorflow and make use of GPU. Decision trees are quite effective at classification tasks but they tend to overfit.&lt;/p>
+&lt;h2 id="reviewing-the-results">Reviewing the results
+&lt;/h2>&lt;p>Since our Random Forest model has performed significantly better, we will use that model to predict the unseen roles of players.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt"> 1
+&lt;/span>&lt;span class="lnt"> 2
+&lt;/span>&lt;span class="lnt"> 3
+&lt;/span>&lt;span class="lnt"> 4
+&lt;/span>&lt;span class="lnt"> 5
+&lt;/span>&lt;span class="lnt"> 6
+&lt;/span>&lt;span class="lnt"> 7
+&lt;/span>&lt;span class="lnt"> 8
+&lt;/span>&lt;span class="lnt"> 9
+&lt;/span>&lt;span class="lnt">10
+&lt;/span>&lt;span class="lnt">11
+&lt;/span>&lt;span class="lnt">12
+&lt;/span>&lt;span class="lnt">13
+&lt;/span>&lt;span class="lnt">14
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Fit the estimator on available data&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">rf_estimator&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">fit&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">X_mms&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">y&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">values&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># np array to hold all of the input data&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">P&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">features&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">as_matrix&lt;/span>&lt;span class="p">()&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># An ugly hack to drop infinity values introduced as part of some of the pre-processing tasks&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">P&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">P&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="mf">1e308&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="mi">0&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Min Max Scaling&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">P_mms&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">min_max_scaler&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">fit_transform&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">P&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="c1"># Prediction based on the Random forest model&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;predicted_role_rf&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">rf_estimator&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">predict&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">P_mms&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;h3 id="confusion-matrix">Confusion Matrix
+&lt;/h3>&lt;p>A score alone is not a good indicator that our model has performed well. We need to review its performance by plotting &lt;code>Confusion Matrix&lt;/code>. It is a simple matrix plot based on known test data with predicted values plotted against the true value. The diagonal entries represent correct prediction, rest represents confused values. Let us plot Confusin Matrix for our data.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;span class="lnt">5
+&lt;/span>&lt;span class="lnt">6
+&lt;/span>&lt;span class="lnt">7
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="kn">from&lt;/span> &lt;span class="nn">sklearn.metrics&lt;/span> &lt;span class="kn">import&lt;/span> &lt;span class="n">confusion_matrix&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">mat&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">confusion_matrix&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[(&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;role&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">!=&lt;/span>&lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="p">)][&lt;/span>&lt;span class="s1">&amp;#39;role&amp;#39;&lt;/span>&lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">data&lt;/span>&lt;span class="p">[(&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;role&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">!=&lt;/span>&lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="p">)][&lt;/span>&lt;span class="s1">&amp;#39;predicted_role_rf&amp;#39;&lt;/span>&lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">labels&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Batsman&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bowler&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Allrounder&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Wicketkeeper&amp;#39;&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">sns&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">heatmap&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">mat&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">T&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">square&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">annot&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">True&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">fmt&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;d&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">cbar&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">False&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">xlabel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;true label&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">ylabel&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;predicted label&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://example.com/images/confusion-matrix.png"
+loading="lazy"
+alt="Confusion Matrix"
+>&lt;/p>
+&lt;p>We can see that the model is quite effective in matching the pure roles such as Batsman or Bowler. When it comes to mixed roles such as Allrounder or Wicketkeeper, it fares not that well. Part of the problem lies in our assumption that the roles are mutually exclusive i.e, a player cannot be both Batsman and Bowler at the same time. So we identify only around 37% of the all rounders succesfully. Later we will see that there are other reasons why the predicted role doesn&amp;rsquo;t match the role marked in cricinfo.&lt;/p>
+&lt;h3 id="reviewing-the-results-1">Reviewing the results
+&lt;/h3>&lt;p>Let us see the cases where our predictions differed from the roles defined in cricinfo:&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">data&lt;/span>&lt;span class="p">[(&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;role&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;predicted_role_rf&amp;#39;&lt;/span>&lt;span class="p">])&lt;/span> &lt;span class="o">&amp;amp;&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;role&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">&amp;amp;&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bat_Mat&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="mi">5&lt;/span> &lt;span class="p">)][[&lt;/span>&lt;span class="s1">&amp;#39;Bio_Full_name&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;predicted_role_rf&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;role&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bio_Playing_role&amp;#39;&lt;/span>&lt;span class="p">]]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>I have extracted the differences for popular players of recent times. Subjectively speaking our model hasn&amp;rsquo;t performed too bad. There seems to be some merit to the classification offered by the model compared to the playing role assigned in cricinfo bio page.&lt;/p>
+&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>&lt;/th>
+&lt;th>Bio_Full_name&lt;/th>
+&lt;th>predicted_role_rf&lt;/th>
+&lt;th>role&lt;/th>
+&lt;th>Bio_Playing_role&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>38&lt;/td>
+&lt;td>Stephen Norman John O&amp;rsquo;Keefe&lt;/td>
+&lt;td>Bowler&lt;/td>
+&lt;td>Allrounder&lt;/td>
+&lt;td>Allrounder&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>44&lt;/td>
+&lt;td>Glenn James Maxwell&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>Allrounder&lt;/td>
+&lt;td>Batting allrounder&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>88&lt;/td>
+&lt;td>Andrew Symonds&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>Allrounder&lt;/td>
+&lt;td>Allrounder&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>227&lt;/td>
+&lt;td>Shai Diego Hope&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>Wicketkeeper&lt;/td>
+&lt;td>Wicketkeeper batsman&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>281&lt;/td>
+&lt;td>Brendon Barrie McCullum&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>Wicketkeeper&lt;/td>
+&lt;td>Wicketkeeper batsman&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>970&lt;/td>
+&lt;td>Angelo Davis Mathews&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>Allrounder&lt;/td>
+&lt;td>Allrounder&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1437&lt;/td>
+&lt;td>Abraham Benjamin de Villiers&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>Wicketkeeper&lt;/td>
+&lt;td>Wicketkeeper batsman&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>In most cases, Cricinfo&amp;rsquo;s playing role is also based on the ODI and T20 formats. Some of the players like ABD Villiers and Brendon McCullum have donned multiple roles but given up gloves for the games longest format. So we can&amp;rsquo;t really fault the model here for identifying them as batsman. Then there are other cases of a player being regarded as All rounder based on the role they play in shorter formats.&lt;/p>
+&lt;p>Next to the most interesting part- let us see how our model behaves for the data it hasn&amp;rsquo;t seen i.e., the classification of those players whose playing role is missing in their bio page. For ease of identification, I have filtered only those players who have played 100 matches or more.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">data&lt;/span>&lt;span class="p">[(&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;role&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">!=&lt;/span> &lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;predicted_role_rf&amp;#39;&lt;/span>&lt;span class="p">])&lt;/span> &lt;span class="o">&amp;amp;&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;role&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">==&lt;/span> &lt;span class="s1">&amp;#39;&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span> &lt;span class="o">&amp;amp;&lt;/span> &lt;span class="p">(&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bat_Mat&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="mi">100&lt;/span> &lt;span class="p">)][[&lt;/span>&lt;span class="s1">&amp;#39;Bio_Full_name&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;predicted_role_rf&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;role&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="s1">&amp;#39;Bio_Playing_role&amp;#39;&lt;/span>&lt;span class="p">]]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>&lt;/th>
+&lt;th>Bio_Full_name&lt;/th>
+&lt;th>predicted_role_rf&lt;/th>
+&lt;th>role&lt;/th>
+&lt;th>Bio_Playing_role&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>134&lt;/td>
+&lt;td>Mark Edward Waugh&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>137&lt;/td>
+&lt;td>Mark Anthony Taylor&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>139&lt;/td>
+&lt;td>Ian Andrew Healy&lt;/td>
+&lt;td>Wicketkeeper&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>599&lt;/td>
+&lt;td>Sourav Chandidas Ganguly&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>743&lt;/td>
+&lt;td>Anil Kumble&lt;/td>
+&lt;td>Bowler&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>925&lt;/td>
+&lt;td>Brian Charles Lara&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>929&lt;/td>
+&lt;td>Carl Llewellyn Hooper&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>937&lt;/td>
+&lt;td>Courtney Andrew Walsh&lt;/td>
+&lt;td>Bowler&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>957&lt;/td>
+&lt;td>Desmond Leo Haynes&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1072&lt;/td>
+&lt;td>Kapildev Ramlal Nikhanj&lt;/td>
+&lt;td>Bowler&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1074&lt;/td>
+&lt;td>Dilip Balwant Vengsarkar&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1088&lt;/td>
+&lt;td>Sunil Manohar Gavaskar&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1257&lt;/td>
+&lt;td>Cuthbert Gordon Greenidge&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1258&lt;/td>
+&lt;td>Isaac Vivian Alexander Richards&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1284&lt;/td>
+&lt;td>Clive Hubert Lloyd&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1326&lt;/td>
+&lt;td>Warnakulasuriya Patabendige Ushantha Joseph Chaminda Vaas&lt;/td>
+&lt;td>Bowler&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1463&lt;/td>
+&lt;td>Makhaya Ntini&lt;/td>
+&lt;td>Bowler&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1474&lt;/td>
+&lt;td>Gary Kirsten&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1676&lt;/td>
+&lt;td>Alec James Stewart&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2020&lt;/td>
+&lt;td>Inzamam-ul-Haq&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2168&lt;/td>
+&lt;td>Graham Alan Gooch&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2205&lt;/td>
+&lt;td>Wasim Akram&lt;/td>
+&lt;td>Bowler&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2216&lt;/td>
+&lt;td>Saleem Malik&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2320&lt;/td>
+&lt;td>Geoffrey Boycott&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2366&lt;/td>
+&lt;td>Michael Colin Cowdrey&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2381&lt;/td>
+&lt;td>Mohammad Javed Miandad Khan&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>&lt;/td>
+&lt;td>NaN&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>Even a cursory look can tell us that our model worked splendidly. It is surprising how many prominent player bio pages has their playing role information missing. Well, it looks like even a simple ML model can fix that gap.&lt;/p>
+&lt;p>Let us see how the two most critical features (&lt;code>Bat_Runs_sc&lt;/code> and &lt;code>Bowl_Wkts_sc&lt;/code>) affects our predicted role.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">sns&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">set_palette&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;bright&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl">&lt;span class="n">sns&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">lmplot&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Bowl_Wkts_sc&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bat_Runs_sc&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bat_Mat&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="mi">5&lt;/span> &lt;span class="p">],&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">hue&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;predicted_role_rf&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">fit_reg&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="kc">False&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="n">size&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="mi">10&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">plt&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">plot&lt;/span>&lt;span class="p">([&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mf">7.0&lt;/span>&lt;span class="p">],[&lt;/span>&lt;span class="mi">100&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="mi">0&lt;/span>&lt;span class="p">])&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://example.com/images/bat-runs-bowl-wkts-roles.png"
+loading="lazy"
+alt="Bat Runs vs Bowl Wkts"
+>&lt;/p>
+&lt;p>I have plotted a diagonal line, below which most of the points are clustered. It represents a kind of pareto-frontier which only exceptional players can breach. Note that there is no statistical basis for my choice of x and y intercepts, I just based it on visual inspection. Let us see the list of players who reside above this threshold.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">[&lt;/span>&lt;span class="s1">&amp;#39;Bat_Mat&amp;#39;&lt;/span>&lt;span class="p">]&lt;/span> &lt;span class="o">&amp;gt;&lt;/span> &lt;span class="mi">5&lt;/span>&lt;span class="p">]&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">query&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s1">&amp;#39;Bowl_Wkts_sc*100 + Bat_Runs_sc*7 &amp;gt; 700 &amp;#39;&lt;/span>&lt;span class="p">)[[&lt;/span>&lt;span class="s1">&amp;#39;Bio_Full_name&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bat_Mat&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;predicted_role_rf&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bowl_Wkts_sc&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>&lt;span class="s1">&amp;#39;Bat_Runs_sc&amp;#39;&lt;/span>&lt;span class="p">]]&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;table>
+&lt;thead>
+&lt;tr>
+&lt;th>&lt;/th>
+&lt;th>Bio_Full_name&lt;/th>
+&lt;th>Bat_Mat&lt;/th>
+&lt;th>predicted_role_rf&lt;/th>
+&lt;th>Bowl_Wkts_sc&lt;/th>
+&lt;th>Bat_Runs_sc&lt;/th>
+&lt;/tr>
+&lt;/thead>
+&lt;tbody>
+&lt;tr>
+&lt;td>62&lt;/td>
+&lt;td>Steven Peter Devereux Smith&lt;/td>
+&lt;td>59&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>0.288136&lt;/td>
+&lt;td>98.237288&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>377&lt;/td>
+&lt;td>Ravindrasinh Anirudhsinh Jadeja&lt;/td>
+&lt;td>35&lt;/td>
+&lt;td>Bowler&lt;/td>
+&lt;td>4.714286&lt;/td>
+&lt;td>33.600000&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>380&lt;/td>
+&lt;td>Ravichandran Ashwin&lt;/td>
+&lt;td>55&lt;/td>
+&lt;td>Bowler&lt;/td>
+&lt;td>5.527273&lt;/td>
+&lt;td>37.363636&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>456&lt;/td>
+&lt;td>Christopher Lance Cairns&lt;/td>
+&lt;td>62&lt;/td>
+&lt;td>Allrounder&lt;/td>
+&lt;td>3.516129&lt;/td>
+&lt;td>53.548387&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>526&lt;/td>
+&lt;td>Shakib Al Hasan&lt;/td>
+&lt;td>51&lt;/td>
+&lt;td>Allrounder&lt;/td>
+&lt;td>3.686275&lt;/td>
+&lt;td>70.470588&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>720&lt;/td>
+&lt;td>Sikandar Raza Butt&lt;/td>
+&lt;td>9&lt;/td>
+&lt;td>Allrounder&lt;/td>
+&lt;td>1.444444&lt;/td>
+&lt;td>84.111111&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>832&lt;/td>
+&lt;td>Donald George Bradman&lt;/td>
+&lt;td>52&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>0.038462&lt;/td>
+&lt;td>134.538462&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1133&lt;/td>
+&lt;td>Herbert Vivian Hordern&lt;/td>
+&lt;td>7&lt;/td>
+&lt;td>Bowler&lt;/td>
+&lt;td>6.571429&lt;/td>
+&lt;td>36.285714&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1177&lt;/td>
+&lt;td>Richard John Hadlee&lt;/td>
+&lt;td>86&lt;/td>
+&lt;td>Bowler&lt;/td>
+&lt;td>5.011628&lt;/td>
+&lt;td>36.325581&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1240&lt;/td>
+&lt;td>Yasir Shah&lt;/td>
+&lt;td>28&lt;/td>
+&lt;td>Bowler&lt;/td>
+&lt;td>5.892857&lt;/td>
+&lt;td>15.892857&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1468&lt;/td>
+&lt;td>Jacques Henry Kallis&lt;/td>
+&lt;td>166&lt;/td>
+&lt;td>Allrounder&lt;/td>
+&lt;td>1.759036&lt;/td>
+&lt;td>80.054217&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1548&lt;/td>
+&lt;td>Charles Thomas Biass Turner&lt;/td>
+&lt;td>17&lt;/td>
+&lt;td>Bowler&lt;/td>
+&lt;td>5.941176&lt;/td>
+&lt;td>19.000000&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1748&lt;/td>
+&lt;td>Garfield St Aubrun Sobers&lt;/td>
+&lt;td>93&lt;/td>
+&lt;td>Allrounder&lt;/td>
+&lt;td>2.526882&lt;/td>
+&lt;td>86.365591&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1825&lt;/td>
+&lt;td>Michael John Procter&lt;/td>
+&lt;td>7&lt;/td>
+&lt;td>Bowler&lt;/td>
+&lt;td>5.857143&lt;/td>
+&lt;td>32.285714&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1838&lt;/td>
+&lt;td>Robert Graeme Pollock&lt;/td>
+&lt;td>23&lt;/td>
+&lt;td>Batsman&lt;/td>
+&lt;td>0.173913&lt;/td>
+&lt;td>98.086957&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1849&lt;/td>
+&lt;td>Edgar John Barlow&lt;/td>
+&lt;td>30&lt;/td>
+&lt;td>Allrounder&lt;/td>
+&lt;td>1.333333&lt;/td>
+&lt;td>83.866667&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>1860&lt;/td>
+&lt;td>Trevor Leslie Goddard&lt;/td>
+&lt;td>41&lt;/td>
+&lt;td>Allrounder&lt;/td>
+&lt;td>3.000000&lt;/td>
+&lt;td>61.365854&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2157&lt;/td>
+&lt;td>Ian Terence Botham&lt;/td>
+&lt;td>102&lt;/td>
+&lt;td>Allrounder&lt;/td>
+&lt;td>3.754902&lt;/td>
+&lt;td>50.980392&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2285&lt;/td>
+&lt;td>Mulvantrai Himmatlal Mankad&lt;/td>
+&lt;td>44&lt;/td>
+&lt;td>Allrounder&lt;/td>
+&lt;td>3.681818&lt;/td>
+&lt;td>47.931818&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2386&lt;/td>
+&lt;td>Imran Khan Niazi&lt;/td>
+&lt;td>88&lt;/td>
+&lt;td>Allrounder&lt;/td>
+&lt;td>4.113636&lt;/td>
+&lt;td>43.261364&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2522&lt;/td>
+&lt;td>George Aubrey Faulkner&lt;/td>
+&lt;td>25&lt;/td>
+&lt;td>Allrounder&lt;/td>
+&lt;td>3.280000&lt;/td>
+&lt;td>70.160000&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2741&lt;/td>
+&lt;td>George Joseph Thompson&lt;/td>
+&lt;td>6&lt;/td>
+&lt;td>Allrounder&lt;/td>
+&lt;td>3.833333&lt;/td>
+&lt;td>45.500000&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2769&lt;/td>
+&lt;td>Sydney Francis Barnes&lt;/td>
+&lt;td>27&lt;/td>
+&lt;td>Bowler&lt;/td>
+&lt;td>7.000000&lt;/td>
+&lt;td>8.962963&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2809&lt;/td>
+&lt;td>Thomas Richardson&lt;/td>
+&lt;td>14&lt;/td>
+&lt;td>Bowler&lt;/td>
+&lt;td>6.285714&lt;/td>
+&lt;td>12.642857&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2821&lt;/td>
+&lt;td>John James Ferris&lt;/td>
+&lt;td>9&lt;/td>
+&lt;td>Bowler&lt;/td>
+&lt;td>6.777778&lt;/td>
+&lt;td>12.666667&lt;/td>
+&lt;/tr>
+&lt;tr>
+&lt;td>2845&lt;/td>
+&lt;td>George Alfred Lohmann&lt;/td>
+&lt;td>18&lt;/td>
+&lt;td>Bowler&lt;/td>
+&lt;td>6.222222&lt;/td>
+&lt;td>11.833333&lt;/td>
+&lt;/tr>
+&lt;/tbody>
+&lt;/table>
+&lt;p>The list is dominated by exceptional all-rounders. Among specialists, bowlers fare better. Perhaps it is my fault that I set the bar for greatness too high. The &lt;code>Bat_Runs_sc&lt;/code> of Bradman is so far ahead of the rest, that it one tends to choose a higher value for y-intercept.&lt;/p>
+&lt;p>Finally let us plot &lt;code>Bat_Runs_sc&lt;/code> against predicted playing role using a violin plot. This will shows distribution of runs scored across the multiple categories of playing role. We can see that for batsmen, the bulk of the violin plot is top heavy whereas for the bowlers it is bottom heavy.&lt;/p>
+&lt;div class="highlight">&lt;div class="chroma">
+&lt;table class="lntable">&lt;tr>&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code>&lt;span class="lnt">1
+&lt;/span>&lt;span class="lnt">2
+&lt;/span>&lt;span class="lnt">3
+&lt;/span>&lt;span class="lnt">4
+&lt;/span>&lt;/code>&lt;/pre>&lt;/td>
+&lt;td class="lntd">
+&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="line">&lt;span class="cl">&lt;span class="n">sns&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">violinplot&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="n">x&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;predicted_role_rf&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">y&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;Bat_Runs_sc&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">data&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="n">data&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;/span>&lt;/span>&lt;span class="line">&lt;span class="cl"> &lt;span class="n">scale&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s1">&amp;#39;width&amp;#39;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;/span>&lt;/span>&lt;/code>&lt;/pre>&lt;/td>&lt;/tr>&lt;/table>
+&lt;/div>
+&lt;/div>&lt;p>&lt;img src="https://example.com/images/bat-runs-roles-violin-plot.png"
+loading="lazy"
+alt="Bat Runs Violin Plot"
+>&lt;/p>
+&lt;h2 id="conclusion">Conclusion
+&lt;/h2>&lt;p>If you review the length of the posts, less than 20% is allocated to running the actual machine learning code. That closely reflects the time spent on this project as well. Bulk of the time is spent in collecting and curating the data. Also the results from RandomForest Classifier is revealing. Right tool for the right job is often more effective than a generic tool which is universally useful.&lt;/p>
+&lt;p>Machine Learning and Data science is a vast subject. Despite the length of this post, I have barely touched the surface of this domain. Apart from the knowledge of tools and procedures, one needs to have a good understanding of the data and be conscious of the inherent biases in the numerical models.&lt;/p>
+&lt;p>Finally, &lt;a class="link" href="http://scikit-learn.org/stable/" target="_blank" rel="noopener"
+>scikit-learn&lt;/a> is an excellent resource for learning and practising Machine learning. It has excellent documentation and helper functions for many of the common tasks. I found &lt;a class="link" href="https://github.com/jakevdp/PythonDataScienceHandbook/" target="_blank" rel="noopener"
+>Python Data Science Handbook&lt;/a> to be another great freely available resource.&lt;/p></description></item></channel></rss>

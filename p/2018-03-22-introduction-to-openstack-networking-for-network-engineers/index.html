@@ -1,0 +1,1196 @@
+<!doctype html><html lang=en dir=ltr><head><meta charset=utf-8><meta name=viewport content='width=device-width,initial-scale=1'><meta name=description content="This post is a gentle introduction to networking with Openstack using the Neutron module. Being an introduction, we will not focus on setting up OpenStack from scratch. Instead we will familiarize ourselves with core concepts of Neutron and common administrative tasks. We will use the latest release of Openstack, Queens.\n"><title>Introduction to OpenStack Networking for Network Engineers</title>
+<link rel=canonical href=https://example.com/p/2018-03-22-introduction-to-openstack-networking-for-network-engineers/><link rel=stylesheet href=/scss/style.min.663803bebe609202d5b39d848f2d7c2dc8b598a2d879efa079fa88893d29c49c.css><meta property='og:title' content="Introduction to OpenStack Networking for Network Engineers"><meta property='og:description' content="This post is a gentle introduction to networking with Openstack using the Neutron module. Being an introduction, we will not focus on setting up OpenStack from scratch. Instead we will familiarize ourselves with core concepts of Neutron and common administrative tasks. We will use the latest release of Openstack, Queens.\n"><meta property='og:url' content='https://example.com/p/2018-03-22-introduction-to-openstack-networking-for-network-engineers/'><meta property='og:site_name' content='Ephemeral Dance Of Electrons'><meta property='og:type' content='article'><meta property='article:section' content='Post'><meta property='article:tag' content='openstack'><meta property='article:tag' content='software defined networking'><meta property='article:tag' content='networking'><meta property='article:published_time' content='2018-03-22T12:00:00+00:00'><meta property='article:modified_time' content='2018-03-22T12:00:00+00:00'><meta name=twitter:title content="Introduction to OpenStack Networking for Network Engineers"><meta name=twitter:description content="This post is a gentle introduction to networking with Openstack using the Neutron module. Being an introduction, we will not focus on setting up OpenStack from scratch. Instead we will familiarize ourselves with core concepts of Neutron and common administrative tasks. We will use the latest release of Openstack, Queens.\n"></head><body class=article-page><script>(function(){const e="StackColorScheme";localStorage.getItem(e)||localStorage.setItem(e,"light")})()</script><script>(function(){const t="StackColorScheme",e=localStorage.getItem(t),n=window.matchMedia("(prefers-color-scheme: dark)").matches===!0;e=="dark"||e==="auto"&&n?document.documentElement.dataset.scheme="dark":document.documentElement.dataset.scheme="light"})()</script><div class="container main-container flex on-phone--column extended"><aside class="sidebar left-sidebar sticky"><button class="hamburger hamburger--spin" type=button id=toggle-menu aria-label="Toggle Menu">
+<span class=hamburger-box><span class=hamburger-inner></span></span></button><header><figure class=site-avatar><a href=/><img src=images/ars_longa.png width=300 height=300 class=site-logo loading=lazy alt=Avatar>
+</a><span class=emoji>🎓</span></figure><div class=site-meta><h1 class=site-name><a href=/>Ephemeral Dance Of Electrons</a></h1><h2 class=site-description>Ars Longa, vita brevis</h2></div></header><ol class=menu-social><li><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank title=GitHub rel=me><svg class="icon icon-tabler icon-tabler-brand-github" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6.0 00-1.3-3.2 4.2 4.2.0 00-.1-3.2s-1.1-.3-3.5 1.3a12.3 12.3.0 00-6.2.0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2.0 00-.1 3.2A4.6 4.6.0 004 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21"/></svg></a></li><li><a href=https://twitter.com target=_blank title=Twitter rel=me><svg class="icon icon-tabler icon-tabler-brand-twitter" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M22 4.01c-1 .49-1.98.689-3 .99-1.121-1.265-2.783-1.335-4.38-.737S11.977 6.323 12 8v1c-3.245.083-6.135-1.395-8-4 0 0-4.182 7.433 4 11-1.872 1.247-3.739 2.088-6 2 3.308 1.803 6.913 2.423 10.034 1.517 3.58-1.04 6.522-3.723 7.651-7.742a13.84 13.84.0 00.497-3.753C20.18 7.773 21.692 5.25 22 4.009z"/></svg></a></li></ol><ol class=menu id=main-menu><li><a href=/archives/><svg class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><rect x="3" y="4" width="18" height="4" rx="2"/><path d="M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+<span>Archives</span></a></li><li><a href=/search/><svg class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="10" cy="10" r="7"/><line x1="21" y1="21" x2="15" y2="15"/></svg>
+<span>Search</span></a></li><li class=menu-bottom-section><ol class=menu><li id=dark-mode-toggle><svg class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="8" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<svg class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="16" cy="12" r="2"/><rect x="2" y="6" width="20" height="12" rx="6"/></svg>
+<span>Dark Mode</span></li></ol></li></ol></aside><aside class="sidebar right-sidebar sticky"><section class="widget archives"><div class=widget-icon><svg class="icon icon-tabler icon-tabler-hash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><line x1="5" y1="9" x2="19" y2="9"/><line x1="5" y1="15" x2="19" y2="15"/><line x1="11" y1="4" x2="7" y2="20"/><line x1="17" y1="4" x2="13" y2="20"/></svg></div><h2 class="widget-title section-title">Table of contents</h2><div class=widget--toc><nav id=TableOfContents><ol><li><a href=#neutron-concepts>Neutron Concepts</a></li><li><a href=#objective>Objective</a></li><li><a href=#preparing-the-environment>Preparing the environment</a></li><li><a href=#building-subnets>Building subnets</a></li><li><a href=#creating-nova-compute-instances>Creating nova compute instances</a></li><li><a href=#neutron-networking-between-hosts>Neutron networking between hosts</a></li><li><a href=#conclusion>Conclusion</a></li></ol></nav></div></section></aside><main class="main full-width"><article class=main-article><header class=article-header><div class=article-details><header class=article-category><a href=/categories/networking/>Networking</a></header><div class=article-title-wrapper><h2 class=article-title><a href=/p/2018-03-22-introduction-to-openstack-networking-for-network-engineers/>Introduction to OpenStack Networking for Network Engineers</a></h2></div><footer class=article-time><div><svg class="icon icon-tabler icon-tabler-calendar-time" width="56" height="56" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><path d="M11.795 21H5a2 2 0 01-2-2V7a2 2 0 012-2h12a2 2 0 012 2v4"/><circle cx="18" cy="18" r="4"/><path d="M15 3v4"/><path d="M7 3v4"/><path d="M3 11h16"/><path d="M18 16.496V18l1 1"/></svg>
+<time class=article-time--published>2018-03-22</time></div><div><svg class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15 15"/></svg>
+<time class=article-time--reading>23 minute read</time></div></footer></div></header><section class=article-content><p>This post is a gentle introduction to networking with Openstack using the Neutron module. Being an introduction, we will not focus on setting up OpenStack from scratch. Instead we will familiarize ourselves with core concepts of Neutron and common administrative tasks. We will use the latest release of Openstack, <strong>Queens</strong>.</p><p>For ease of setup, we will make use of pre-packaged Devstack environment. Devstack is a set of scripts from official OpenStack community that allows us to quickly build an Openstack instance with latest versions of all modules. It is very useful for testing and training purposes.</p><h2 id=neutron-concepts>Neutron Concepts</h2><p>Let us go through the important terms first:</p><ol><li><p><strong>Network</strong> - A Network is a logical container of entities. To think of it in physical networking terms, it can represent a site, a DC, a campus- or anything else termed as a single network. In AWS terms, a network is similar to a VPC. Note that the definition of a Network is not entirely arbitrary as we may encounter some design choices when deciding CIDR, load balancers, routers, external gateway etc.,</p></li><li><p><strong>Subnet</strong> - Subnet is similar to a vlan in traditional networking. All hosts in the same Subnet can talk to each other and share the same address space. For beginners, it is possible to confuse a Subnet with Network since both terms are used interchangeably in traditional networking. But keep in mind that one network can contain many subnets. The concept of a Subnet is similar both in OpenStack and AWS.</p></li><li><p><strong>Port</strong> - A port is a virtual NIC card which is used by resources to access network. A port is tied to a subnet and assigned with a Security group (introduced below). In AWS terms, it is similar to ENI (Elastic Network Interface)</p></li><li><p><strong>Security Group</strong> - Security groups are like port ACL in traditional networking, except that the filtering happens at the hypervisor level. Multiple ports can share the same security group. By default, entities assigned to the same Security Group can talk to each other. It is also similar in scope and function to the Security Group in AWS.</p></li><li><p><strong>Floating IP</strong> - This is similar to elastic IP in AWS. These are not tied to any port and can be re-assigned to other ports dynamically. The closest feature in traditional networking would be a static NAT. In AWS terms, it is called Elastic IP.</p></li></ol><h2 id=objective>Objective</h2><p>We will create the below topology on Openstack. Hosts <code>host-1</code> & <code>host-2</code> will be on same subnet while <code>host-3</code> will be on another subnet. We will enable reachability between all 3 hosts. Finally, we will also enable bi-directional connectivity to <code>host-1</code> from internet.</p><p><img src=/images/topology.png loading=lazy alt=topology></p><h2 id=preparing-the-environment>Preparing the environment</h2><p>Make home directory for our devstack installation and download the latest copy of DevStack there. I am using Ubuntu 16.04 for my environment.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>$ sudo mkdir -p /opt/stack &amp;&amp; cd /opt/stack
+</span></span><span class=line><span class=cl>$ sudo git clone https://git.openstack.org/openstack-dev/devstack
+</span></span></code></pre></td></tr></table></div></div><p>Switch to devstack folder and create a user account using the pre-built script. The script grants passwordless root privilege to this account. Switch to the stack account to proceed with rest of the steps.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-gdscript3 data-lang=gdscript3><span class=line><span class=cl><span class=o>$</span> <span class=n>cd</span> <span class=n>devstack</span>
+</span></span><span class=line><span class=cl><span class=o>$</span> <span class=n>sudo</span> <span class=n>bash</span> <span class=n>tools</span><span class=o>/</span><span class=n>create</span><span class=o>-</span><span class=n>stack</span><span class=o>-</span><span class=n>user</span><span class=o>.</span><span class=n>sh</span>
+</span></span></code></pre></td></tr></table></div></div><p>Switch to <code>stack</code> user and create a config file. Provide your preferred password which will be used for rest of the setup. The local.conf should be present in the root directory of devstack (same location as stack.sh)</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>$ sudo su stack
+</span></span><span class=line><span class=cl>$ vi local.conf
+</span></span><span class=line><span class=cl>[[local|localrc]]
+</span></span><span class=line><span class=cl>ADMIN_PASSWORD=password
+</span></span><span class=line><span class=cl>DATABASE_PASSWORD=$ADMIN_PASSWORD
+</span></span><span class=line><span class=cl>RABBIT_PASSWORD=$ADMIN_PASSWORD
+</span></span><span class=line><span class=cl>SERVICE_PASSWORD=$ADMIN_PASSWORD
+</span></span></code></pre></td></tr></table></div></div><p>Run the setup script <code>stack.sh</code> and watch the magic happen. It takes a while since the script installs almost every component of Openstack.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>./stack.sh
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>DevStack also provides convenient script to tear down the environment and start from scratch. So once we are done with our testing, we can run <code>unstack.sh</code> to bring the environment back to a blank state.</p></blockquote><p>After the installation is complete, source the openrc file to import openstack commands in your searchpath.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>source openrc
+</span></span></code></pre></td></tr></table></div></div><h2 id=building-subnets>Building subnets</h2><p>Before we create new subnets, let us list the set of pre-built subnets that were setup as part of devstack deployment.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack network list -f yaml
+</span></span><span class=line><span class=cl>  - ID: 1fe4e71c-d94e-400c-bcee-8067b621c827
+</span></span><span class=line><span class=cl>    Name: public
+</span></span><span class=line><span class=cl>    Subnets: c0718110-7493-46bf-ba48-720762e47934, fab15575-ae4f-4528-bf0d-ac40d2000484
+</span></span><span class=line><span class=cl>  - ID: 2ebe2084-6dae-40dd-8704-7954944238d7
+</span></span><span class=line><span class=cl>    Name: private
+</span></span><span class=line><span class=cl>    Subnets: 244ed014-8b9f-4e4d-ab12-9931ecec4238, 265de598-d881-4d58-a185-1a69be39b2fd
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>The default output format is table. To simplify horizontal scrolling, I have selected yaml output using the -f switch.</p></blockquote><p>Create a new network called <code>inside</code>.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack network create inside
+</span></span><span class=line><span class=cl>  +---------------------------+--------------------------------------+
+</span></span><span class=line><span class=cl>  | Field                     | Value                                |
+</span></span><span class=line><span class=cl>  +---------------------------+--------------------------------------+
+</span></span><span class=line><span class=cl>  | admin_state_up            | UP                                   |
+</span></span><span class=line><span class=cl>  | availability_zone_hints   |                                      |
+</span></span><span class=line><span class=cl>  | availability_zones        |                                      |
+</span></span><span class=line><span class=cl>  | created_at                | 2018-04-01T09:14:41Z                 |
+</span></span><span class=line><span class=cl>  | description               |                                      |
+</span></span><span class=line><span class=cl>  | dns_domain                | None                                 |
+</span></span><span class=line><span class=cl>  | id                        | a0fc23dd-f1a5-4e9b-9d58-ea63b30d076b |
+</span></span><span class=line><span class=cl>  | ipv4_address_scope        | None                                 |
+</span></span><span class=line><span class=cl>  | ipv6_address_scope        | None                                 |
+</span></span><span class=line><span class=cl>  | is_default                | False                                |
+</span></span><span class=line><span class=cl>  | is_vlan_transparent       | None                                 |
+</span></span><span class=line><span class=cl>  | mtu                       | 1450                                 |
+</span></span><span class=line><span class=cl>  | name                      | inside                               |
+</span></span><span class=line><span class=cl>  | port_security_enabled     | True                                 |
+</span></span><span class=line><span class=cl>  | project_id                | 9d390c83cc4e46c7a40167dee68075f0     |
+</span></span><span class=line><span class=cl>  | provider:network_type     | None                                 |
+</span></span><span class=line><span class=cl>  | provider:physical_network | None                                 |
+</span></span><span class=line><span class=cl>  | provider:segmentation_id  | None                                 |
+</span></span><span class=line><span class=cl>  | qos_policy_id             | None                                 |
+</span></span><span class=line><span class=cl>  | revision_number           | 2                                    |
+</span></span><span class=line><span class=cl>  | router:external           | Internal                             |
+</span></span><span class=line><span class=cl>  | segments                  | None                                 |
+</span></span><span class=line><span class=cl>  | shared                    | False                                |
+</span></span><span class=line><span class=cl>  | status                    | ACTIVE                               |
+</span></span><span class=line><span class=cl>  | subnets                   |                                      |
+</span></span><span class=line><span class=cl>  | tags                      |                                      |
+</span></span><span class=line><span class=cl>  | updated_at                | 2018-04-01T09:14:41Z                 |
+</span></span><span class=line><span class=cl>  +---------------------------+--------------------------------------+
+</span></span></code></pre></td></tr></table></div></div><p>Next we will create new subnets. Before that, let us list down the existing subnets for reference.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>stack@openstack-instance-2:~/devstack$ openstack subnet list -f yaml
+</span></span><span class=line><span class=cl>- ID: 244ed014-8b9f-4e4d-ab12-9931ecec4238
+</span></span><span class=line><span class=cl>  Name: private-subnet
+</span></span><span class=line><span class=cl>  Network: 2ebe2084-6dae-40dd-8704-7954944238d7
+</span></span><span class=line><span class=cl>  Subnet: 10.0.0.0/26
+</span></span><span class=line><span class=cl>- ID: 265de598-d881-4d58-a185-1a69be39b2fd
+</span></span><span class=line><span class=cl>  Name: ipv6-private-subnet
+</span></span><span class=line><span class=cl>  Network: 2ebe2084-6dae-40dd-8704-7954944238d7
+</span></span><span class=line><span class=cl>  Subnet: fd7b:34b0:9a57::/64
+</span></span></code></pre></td></tr></table></div></div><p>Create a new subnet within the network. We will call it <code>net-01</code> and assign a subnet range of <code>10.1.1.0/24</code></p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack subnet create net-01 --network inside --subnet-range 10.1.1.0/24
+</span></span><span class=line><span class=cl>  +-------------------+--------------------------------------+
+</span></span><span class=line><span class=cl>  | Field             | Value                                |
+</span></span><span class=line><span class=cl>  +-------------------+--------------------------------------+
+</span></span><span class=line><span class=cl>  | allocation_pools  | 10.1.1.2-10.1.1.254                  |
+</span></span><span class=line><span class=cl>  | cidr              | 10.1.1.0/24                          |
+</span></span><span class=line><span class=cl>  | created_at        | 2018-04-01T09:20:13Z                 |
+</span></span><span class=line><span class=cl>  | description       |                                      |
+</span></span><span class=line><span class=cl>  | dns_nameservers   |                                      |
+</span></span><span class=line><span class=cl>  | enable_dhcp       | True                                 |
+</span></span><span class=line><span class=cl>  | gateway_ip        | 10.1.1.1                             |
+</span></span><span class=line><span class=cl>  | host_routes       |                                      |
+</span></span><span class=line><span class=cl>  | id                | 0317aa4a-84d3-44df-8781-3f04d558a473 |
+</span></span><span class=line><span class=cl>  | ip_version        | 4                                    |
+</span></span><span class=line><span class=cl>  | ipv6_address_mode | None                                 |
+</span></span><span class=line><span class=cl>  | ipv6_ra_mode      | None                                 |
+</span></span><span class=line><span class=cl>  | name              | net-01                               |
+</span></span><span class=line><span class=cl>  | network_id        | a0fc23dd-f1a5-4e9b-9d58-ea63b30d076b |
+</span></span><span class=line><span class=cl>  | project_id        | 9d390c83cc4e46c7a40167dee68075f0     |
+</span></span><span class=line><span class=cl>  | revision_number   | 0                                    |
+</span></span><span class=line><span class=cl>  | segment_id        | None                                 |
+</span></span><span class=line><span class=cl>  | service_types     |                                      |
+</span></span><span class=line><span class=cl>  | subnetpool_id     | None                                 |
+</span></span><span class=line><span class=cl>  | tags              |                                      |
+</span></span><span class=line><span class=cl>  | updated_at        | 2018-04-01T09:20:13Z                 |
+</span></span><span class=line><span class=cl>  +-------------------+--------------------------------------+
+</span></span></code></pre></td></tr></table></div></div><p>As mentioned earlier, the relation between subnet and network is many-to-one. So we can create another subnet <code>net-02</code> within the same <code>inside</code> network.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack subnet create net-02 --network inside --subnet-range 10.1.2.0/24
+</span></span><span class=line><span class=cl>  +-------------------+--------------------------------------+
+</span></span><span class=line><span class=cl>  | Field             | Value                                |
+</span></span><span class=line><span class=cl>  +-------------------+--------------------------------------+
+</span></span><span class=line><span class=cl>  | allocation_pools  | 10.1.2.2-10.1.2.254                  |
+</span></span><span class=line><span class=cl>  | cidr              | 10.1.2.0/24                          |
+</span></span><span class=line><span class=cl>  | created_at        | 2018-04-01T09:21:07Z                 |
+</span></span><span class=line><span class=cl>  | description       |                                      |
+</span></span><span class=line><span class=cl>  | dns_nameservers   |                                      |
+</span></span><span class=line><span class=cl>  | enable_dhcp       | True                                 |
+</span></span><span class=line><span class=cl>  | gateway_ip        | 10.1.2.1                             |
+</span></span><span class=line><span class=cl>  | host_routes       |                                      |
+</span></span><span class=line><span class=cl>  | id                | 6e5f2220-29da-4679-962f-22934f2c3d49 |
+</span></span><span class=line><span class=cl>  | ip_version        | 4                                    |
+</span></span><span class=line><span class=cl>  | ipv6_address_mode | None                                 |
+</span></span><span class=line><span class=cl>  | ipv6_ra_mode      | None                                 |
+</span></span><span class=line><span class=cl>  | name              | net-02                               |
+</span></span><span class=line><span class=cl>  | network_id        | a0fc23dd-f1a5-4e9b-9d58-ea63b30d076b |
+</span></span><span class=line><span class=cl>  | project_id        | 9d390c83cc4e46c7a40167dee68075f0     |
+</span></span><span class=line><span class=cl>  | revision_number   | 0                                    |
+</span></span><span class=line><span class=cl>  | segment_id        | None                                 |
+</span></span><span class=line><span class=cl>  | service_types     |                                      |
+</span></span><span class=line><span class=cl>  | subnetpool_id     | None                                 |
+</span></span><span class=line><span class=cl>  | tags              |                                      |
+</span></span><span class=line><span class=cl>  | updated_at        | 2018-04-01T09:21:07Z                 |
+</span></span><span class=line><span class=cl>  +-------------------+--------------------------------------+
+</span></span></code></pre></td></tr></table></div></div><h2 id=creating-nova-compute-instances>Creating nova compute instances</h2><p>We need to know the image names available before creating an instance. List the images available.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack image list -f yaml
+</span></span><span class=line><span class=cl>  - ID: 2a5fbb6b-b694-4f76-ac19-4af358d1c7e8
+</span></span><span class=line><span class=cl>    Name: cirros-0.3.5-x86_64-disk
+</span></span><span class=line><span class=cl>    Status: active
+</span></span></code></pre></td></tr></table></div></div><p>Cirros is a tiny image available as part of devstack, useful for testing purpose. Let us create two instances under inside network running cirros image.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack server create /
+</span></span><span class=line><span class=cl>  --flavor m1.tiny --image cirros-0.3.5-x86_64-disk --network inside host --min 2 --max 2
+</span></span><span class=line><span class=cl>  +-----------------------------+-----------------------------------------------------------------+
+</span></span><span class=line><span class=cl>  | Field                       | Value                                                           |
+</span></span><span class=line><span class=cl>  +-----------------------------+-----------------------------------------------------------------+
+</span></span><span class=line><span class=cl>  | OS-DCF:diskConfig           | MANUAL                                                          |
+</span></span><span class=line><span class=cl>  | OS-EXT-AZ:availability_zone |                                                                 |
+</span></span><span class=line><span class=cl>  | OS-EXT-STS:power_state      | NOSTATE                                                         |
+</span></span><span class=line><span class=cl>  | OS-EXT-STS:task_state       | scheduling                                                      |
+</span></span><span class=line><span class=cl>  | OS-EXT-STS:vm_state         | building                                                        |
+</span></span><span class=line><span class=cl>  | OS-SRV-USG:launched_at      | None                                                            |
+</span></span><span class=line><span class=cl>  | OS-SRV-USG:terminated_at    | None                                                            |
+</span></span><span class=line><span class=cl>  | accessIPv4                  |                                                                 |
+</span></span><span class=line><span class=cl>  | accessIPv6                  |                                                                 |
+</span></span><span class=line><span class=cl>  | addresses                   |                                                                 |
+</span></span><span class=line><span class=cl>  | adminPass                   | odJy58yPdHnz                                                    |
+</span></span><span class=line><span class=cl>  | config_drive                |                                                                 |
+</span></span><span class=line><span class=cl>  | created                     | 2018-04-01T09:25:55Z                                            |
+</span></span><span class=line><span class=cl>  | flavor                      | m1.tiny (1)                                                     |
+</span></span><span class=line><span class=cl>  | hostId                      |                                                                 |
+</span></span><span class=line><span class=cl>  | id                          | dbda4926-4ca6-40be-b673-d0c811ae43c2                            |
+</span></span><span class=line><span class=cl>  | image                       | cirros-0.3.5-x86_64-disk (2a5fbb6b-b694-4f76-ac19-4af358d1c7e8) |
+</span></span><span class=line><span class=cl>  | key_name                    | None                                                            |
+</span></span><span class=line><span class=cl>  | name                        | host-1                                                          |
+</span></span><span class=line><span class=cl>  | progress                    | 0                                                               |
+</span></span><span class=line><span class=cl>  | project_id                  | 9d390c83cc4e46c7a40167dee68075f0                                |
+</span></span><span class=line><span class=cl>  | properties                  |                                                                 |
+</span></span><span class=line><span class=cl>  | security_groups             | name=&#39;default&#39;                                                  |
+</span></span><span class=line><span class=cl>  | status                      | BUILD                                                           |
+</span></span><span class=line><span class=cl>  | updated                     | 2018-04-01T09:25:55Z                                            |
+</span></span><span class=line><span class=cl>  | user_id                     | dfd4e794f59f48549016de1263c30dbb                                |
+</span></span><span class=line><span class=cl>  | volumes_attached            |                                                                 |
+</span></span><span class=line><span class=cl>  +-----------------------------+-----------------------------------------------------------------+
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>Either min or max parameter is necessary. or else server build fails miserably with no clue as to what went wrong.</p></blockquote><p>Note that in the above command we specified only the network and not subnet. But this network has two subnets. So let us see which subnet is chosen to run the nova compute instances.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack server list -f yaml
+</span></span><span class=line><span class=cl>  - Flavor: m1.tiny
+</span></span><span class=line><span class=cl>    ID: 5ea3d968-aa29-4911-b658-e0b6498b09f4
+</span></span><span class=line><span class=cl>    Image: cirros-0.3.5-x86_64-disk
+</span></span><span class=line><span class=cl>    Name: host-2
+</span></span><span class=line><span class=cl>    Networks: inside=10.1.1.9
+</span></span><span class=line><span class=cl>    Status: ACTIVE
+</span></span><span class=line><span class=cl>  - Flavor: m1.tiny
+</span></span><span class=line><span class=cl>    ID: dbda4926-4ca6-40be-b673-d0c811ae43c2
+</span></span><span class=line><span class=cl>    Image: cirros-0.3.5-x86_64-disk
+</span></span><span class=line><span class=cl>    Name: host-1
+</span></span><span class=line><span class=cl>    Networks: inside=10.1.1.10
+</span></span><span class=line><span class=cl>    Status: ACTIVE
+</span></span></code></pre></td></tr></table></div></div><p>It turns out the first subnet <code>net-01</code> we created is being used. But if we want to specify <code>net-02</code> for instance creation, it is more tricky. We need to create a port in that subnet and attach its nic during instance creation.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack port create \
+</span></span><span class=line><span class=cl>  --network a0fc23dd-f1a5-4e9b-9d58-ea63b30d076b --fixed-ip subnet=6e5f2220-29da-4679-962f-22934f2c3d49 if-host-02
+</span></span><span class=line><span class=cl>  +-----------------------+-------------------------------------------------------------------------+
+</span></span><span class=line><span class=cl>  | Field                 | Value                                                                   |
+</span></span><span class=line><span class=cl>  +-----------------------+-------------------------------------------------------------------------+
+</span></span><span class=line><span class=cl>  | admin_state_up        | UP                                                                      |
+</span></span><span class=line><span class=cl>  | allowed_address_pairs |                                                                         |
+</span></span><span class=line><span class=cl>  | binding_host_id       | None                                                                    |
+</span></span><span class=line><span class=cl>  | binding_profile       | None                                                                    |
+</span></span><span class=line><span class=cl>  | binding_vif_details   | None                                                                    |
+</span></span><span class=line><span class=cl>  | binding_vif_type      | None                                                                    |
+</span></span><span class=line><span class=cl>  | binding_vnic_type     | normal                                                                  |
+</span></span><span class=line><span class=cl>  | created_at            | 2018-04-01T09:32:31Z                                                    |
+</span></span><span class=line><span class=cl>  | data_plane_status     | None                                                                    |
+</span></span><span class=line><span class=cl>  | description           |                                                                         |
+</span></span><span class=line><span class=cl>  | device_id             |                                                                         |
+</span></span><span class=line><span class=cl>  | device_owner          |                                                                         |
+</span></span><span class=line><span class=cl>  | dns_assignment        | None                                                                    |
+</span></span><span class=line><span class=cl>  | dns_domain            | None                                                                    |
+</span></span><span class=line><span class=cl>  | dns_name              | None                                                                    |
+</span></span><span class=line><span class=cl>  | extra_dhcp_opts       |                                                                         |
+</span></span><span class=line><span class=cl>  | fixed_ips             | ip_address=&#39;10.1.2.5&#39;, subnet_id=&#39;6e5f2220-29da-4679-962f-22934f2c3d49&#39; |
+</span></span><span class=line><span class=cl>  | id                    | 2b9635bf-8f93-4663-9c6d-f40f0492195c                                    |
+</span></span><span class=line><span class=cl>  | ip_address            | None                                                                    |
+</span></span><span class=line><span class=cl>  | mac_address           | fa:16:3e:40:08:73                                                       |
+</span></span><span class=line><span class=cl>  | name                  | if-host-02                                                              |
+</span></span><span class=line><span class=cl>  | network_id            | a0fc23dd-f1a5-4e9b-9d58-ea63b30d076b                                    |
+</span></span><span class=line><span class=cl>  | option_name           | None                                                                    |
+</span></span><span class=line><span class=cl>  | option_value          | None                                                                    |
+</span></span><span class=line><span class=cl>  | port_security_enabled | True                                                                    |
+</span></span><span class=line><span class=cl>  | project_id            | 9d390c83cc4e46c7a40167dee68075f0                                        |
+</span></span><span class=line><span class=cl>  | qos_policy_id         | None                                                                    |
+</span></span><span class=line><span class=cl>  | revision_number       | 6                                                                       |
+</span></span><span class=line><span class=cl>  | security_group_ids    | bd41b78c-974c-4854-b808-dec11575964b                                    |
+</span></span><span class=line><span class=cl>  | status                | DOWN                                                                    |
+</span></span><span class=line><span class=cl>  | subnet_id             | None                                                                    |
+</span></span><span class=line><span class=cl>  | tags                  |                                                                         |
+</span></span><span class=line><span class=cl>  | trunk_details         | None                                                                    |
+</span></span><span class=line><span class=cl>  | updated_at            | 2018-04-01T09:32:31Z                                                    |
+</span></span><span class=line><span class=cl>  +-----------------------+-------------------------------------------------------------------------+
+</span></span></code></pre></td></tr></table></div></div><p>Now create an instance in this subnet. Use the port id from above output to specify the nic.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack server create --flavor m1.tiny \
+</span></span><span class=line><span class=cl>  --image cirros-0.3.5-x86_64-disk --nic port-id=2b9635bf-8f93-4663-9c6d-f40f0492195c  host-3 --max 1
+</span></span><span class=line><span class=cl>  +-----------------------------+-----------------------------------------------------------------+
+</span></span><span class=line><span class=cl>  | Field                       | Value                                                           |
+</span></span><span class=line><span class=cl>  +-----------------------------+-----------------------------------------------------------------+
+</span></span><span class=line><span class=cl>  | OS-DCF:diskConfig           | MANUAL                                                          |
+</span></span><span class=line><span class=cl>  | OS-EXT-AZ:availability_zone |                                                                 |
+</span></span><span class=line><span class=cl>  | OS-EXT-STS:power_state      | NOSTATE                                                         |
+</span></span><span class=line><span class=cl>  | OS-EXT-STS:task_state       | scheduling                                                      |
+</span></span><span class=line><span class=cl>  | OS-EXT-STS:vm_state         | building                                                        |
+</span></span><span class=line><span class=cl>  | OS-SRV-USG:launched_at      | None                                                            |
+</span></span><span class=line><span class=cl>  | OS-SRV-USG:terminated_at    | None                                                            |
+</span></span><span class=line><span class=cl>  | accessIPv4                  |                                                                 |
+</span></span><span class=line><span class=cl>  | accessIPv6                  |                                                                 |
+</span></span><span class=line><span class=cl>  | addresses                   |                                                                 |
+</span></span><span class=line><span class=cl>  | adminPass                   | hnN294KgUTrY                                                    |
+</span></span><span class=line><span class=cl>  | config_drive                |                                                                 |
+</span></span><span class=line><span class=cl>  | created                     | 2018-04-01T09:52:23Z                                            |
+</span></span><span class=line><span class=cl>  | flavor                      | m1.tiny (1)                                                     |
+</span></span><span class=line><span class=cl>  | hostId                      |                                                                 |
+</span></span><span class=line><span class=cl>  | id                          | 376c3d59-f74c-4b3b-a4c7-5b9fb9d3eef7                            |
+</span></span><span class=line><span class=cl>  | image                       | cirros-0.3.5-x86_64-disk (2a5fbb6b-b694-4f76-ac19-4af358d1c7e8) |
+</span></span><span class=line><span class=cl>  | key_name                    | None                                                            |
+</span></span><span class=line><span class=cl>  | name                        | host-3                                                          |
+</span></span><span class=line><span class=cl>  | progress                    | 0                                                               |
+</span></span><span class=line><span class=cl>  | project_id                  | 9d390c83cc4e46c7a40167dee68075f0                                |
+</span></span><span class=line><span class=cl>  | properties                  |                                                                 |
+</span></span><span class=line><span class=cl>  | security_groups             | name=&#39;default&#39;                                                  |
+</span></span><span class=line><span class=cl>  | status                      | BUILD                                                           |
+</span></span><span class=line><span class=cl>  | updated                     | 2018-04-01T09:52:23Z                                            |
+</span></span><span class=line><span class=cl>  | user_id                     | dfd4e794f59f48549016de1263c30dbb                                |
+</span></span><span class=line><span class=cl>  | volumes_attached            |                                                                 |
+</span></span><span class=line><span class=cl>  +-----------------------------+-----------------------------------------------------------------+
+</span></span></code></pre></td></tr></table></div></div><p>Before we move on to next section, tet us check the server instances we have created so far.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack server list -f yaml
+</span></span><span class=line><span class=cl>  - Flavor: m1.tiny
+</span></span><span class=line><span class=cl>    ID: 376c3d59-f74c-4b3b-a4c7-5b9fb9d3eef7
+</span></span><span class=line><span class=cl>    Image: cirros-0.3.5-x86_64-disk
+</span></span><span class=line><span class=cl>    Name: host-3
+</span></span><span class=line><span class=cl>    Networks: inside=10.1.2.5
+</span></span><span class=line><span class=cl>    Status: ACTIVE
+</span></span><span class=line><span class=cl>  - Flavor: m1.tiny
+</span></span><span class=line><span class=cl>    ID: 5ea3d968-aa29-4911-b658-e0b6498b09f4
+</span></span><span class=line><span class=cl>    Image: cirros-0.3.5-x86_64-disk
+</span></span><span class=line><span class=cl>    Name: host-2
+</span></span><span class=line><span class=cl>    Networks: inside=10.1.1.9
+</span></span><span class=line><span class=cl>    Status: ACTIVE
+</span></span><span class=line><span class=cl>  - Flavor: m1.tiny
+</span></span><span class=line><span class=cl>    ID: dbda4926-4ca6-40be-b673-d0c811ae43c2
+</span></span><span class=line><span class=cl>    Image: cirros-0.3.5-x86_64-disk
+</span></span><span class=line><span class=cl>    Name: host-1
+</span></span><span class=line><span class=cl>    Networks: inside=10.1.1.10
+</span></span><span class=line><span class=cl>    Status: ACTIVE
+</span></span></code></pre></td></tr></table></div></div><h2 id=neutron-networking-between-hosts>Neutron networking between hosts</h2><p>Let us see the subnet membership of each ports.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack port list -f yaml --fixed-ip subnet=net-01
+</span></span><span class=line><span class=cl>  - Fixed IP Addresses: &#39;ip_address=&#39;&#39;10.1.1.2&#39;&#39;, subnet_id=&#39;&#39;0317aa4a-84d3-44df-8781-3f04d558a473&#39;&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      ip_address=&#39;&#39;10.1.2.2&#39;&#39;, subnet_id=&#39;&#39;6e5f2220-29da-4679-962f-22934f2c3d49&#39;&#39;&#39;
+</span></span><span class=line><span class=cl>    ID: 6764de9f-deec-494b-a9b4-0903bfbfefea
+</span></span><span class=line><span class=cl>    MAC Address: fa:16:3e:8f:47:41
+</span></span><span class=line><span class=cl>    Name: &#39;&#39;
+</span></span><span class=line><span class=cl>    Status: ACTIVE
+</span></span><span class=line><span class=cl>  - Fixed IP Addresses: ip_address=&#39;10.1.1.9&#39;, subnet_id=&#39;0317aa4a-84d3-44df-8781-3f04d558a473&#39;
+</span></span><span class=line><span class=cl>    ID: ab283b4a-5738-48c9-8a53-343a1e5c795d
+</span></span><span class=line><span class=cl>    MAC Address: fa:16:3e:9d:b6:7f
+</span></span><span class=line><span class=cl>    Name: &#39;&#39;
+</span></span><span class=line><span class=cl>    Status: ACTIVE
+</span></span><span class=line><span class=cl>  - Fixed IP Addresses: ip_address=&#39;10.1.1.10&#39;, subnet_id=&#39;0317aa4a-84d3-44df-8781-3f04d558a473&#39;
+</span></span><span class=line><span class=cl>    ID: de7ee5de-e694-4ff3-9763-d7fb86e0038c
+</span></span><span class=line><span class=cl>    MAC Address: fa:16:3e:7a:ce:84
+</span></span><span class=line><span class=cl>    Name: &#39;&#39;
+</span></span><span class=line><span class=cl>    Status: ACTIVE
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack port list -f yaml --fixed-ip subnet=net-02
+</span></span><span class=line><span class=cl>  - Fixed IP Addresses: ip_address=&#39;10.1.2.5&#39;, subnet_id=&#39;6e5f2220-29da-4679-962f-22934f2c3d49&#39;
+</span></span><span class=line><span class=cl>    ID: 2b9635bf-8f93-4663-9c6d-f40f0492195c
+</span></span><span class=line><span class=cl>    MAC Address: fa:16:3e:40:08:73
+</span></span><span class=line><span class=cl>    Name: if-host-02
+</span></span><span class=line><span class=cl>    Status: ACTIVE
+</span></span><span class=line><span class=cl>  - Fixed IP Addresses: &#39;ip_address=&#39;&#39;10.1.1.2&#39;&#39;, subnet_id=&#39;&#39;0317aa4a-84d3-44df-8781-3f04d558a473&#39;&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>      ip_address=&#39;&#39;10.1.2.2&#39;&#39;, subnet_id=&#39;&#39;6e5f2220-29da-4679-962f-22934f2c3d49&#39;&#39;&#39;
+</span></span><span class=line><span class=cl>    ID: 6764de9f-deec-494b-a9b4-0903bfbfefea
+</span></span><span class=line><span class=cl>    MAC Address: fa:16:3e:8f:47:41
+</span></span><span class=line><span class=cl>    Name: &#39;&#39;
+</span></span><span class=line><span class=cl>    Status: ACTIVE
+</span></span></code></pre></td></tr></table></div></div><p>We can see that one port appears in both the subnets (MAC address: <code>fa:16:3e:8f:47:41</code>). This is the default DNS server of the network and gets attached to the subnet automatically unless we explicitly specify otherwise.</p><p>To test connectivity we need to console in to the hosts. We will use <code>virsh</code> to console in to the instances. First let us list the hosts.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ sudo virsh list
+</span></span><span class=line><span class=cl>   Id    Name                           State
+</span></span><span class=line><span class=cl>  ----------------------------------------------------
+</span></span><span class=line><span class=cl>   1     instance-00000001              running
+</span></span><span class=line><span class=cl>   2     instance-00000002              running
+</span></span><span class=line><span class=cl>   3     instance-00000003              running
+</span></span></code></pre></td></tr></table></div></div><p>Console to the first instance <code>host-1</code>.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-gdscript3 data-lang=gdscript3><span class=line><span class=cl>  <span class=n>stack</span><span class=err>@</span><span class=n>openstack</span><span class=o>-</span><span class=n>instance</span><span class=o>-</span><span class=mi>2</span><span class=p>:</span><span class=o>~/</span><span class=n>devstack</span><span class=o>$</span> <span class=n>sudo</span> <span class=n>virsh</span> <span class=n>console</span> <span class=mi>1</span>
+</span></span><span class=line><span class=cl>  <span class=n>Connected</span> <span class=n>to</span> <span class=n>domain</span> <span class=n>instance</span><span class=o>-</span><span class=mi>00000001</span>
+</span></span><span class=line><span class=cl>  <span class=n>Escape</span> <span class=n>character</span> <span class=n>is</span> <span class=o>^</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=n>login</span> <span class=n>as</span> <span class=s1>&#39;cirros&#39;</span> <span class=n>user</span><span class=o>.</span> <span class=n>default</span> <span class=n>password</span><span class=p>:</span> <span class=s1>&#39;cubswin:)&#39;</span><span class=o>.</span> <span class=n>use</span> <span class=s1>&#39;sudo&#39;</span> <span class=k>for</span> <span class=n>root</span><span class=o>.</span>
+</span></span><span class=line><span class=cl>  <span class=n>cirros</span> <span class=n>login</span><span class=p>:</span> <span class=n>cirros</span>
+</span></span><span class=line><span class=cl>  <span class=n>Password</span><span class=p>:</span> 
+</span></span><span class=line><span class=cl>  <span class=o>$</span> <span class=n>ip</span> <span class=n>add</span> <span class=o>|</span> <span class=n>grep</span> <span class=s1>&#39;inet.*10&#39;</span>
+</span></span><span class=line><span class=cl>      <span class=n>inet</span> <span class=mf>10.1</span><span class=o>.</span><span class=mf>1.10</span><span class=o>/</span><span class=mi>24</span> <span class=n>brd</span> <span class=mf>10.1</span><span class=o>.</span><span class=mf>1.255</span> <span class=n>scope</span> <span class=n>global</span> <span class=n>eth0</span>
+</span></span><span class=line><span class=cl>  <span class=o>$</span> <span class=n>sudo</span> <span class=n>hostname</span> <span class=n>cirros</span><span class=o>-</span><span class=mi>1</span><span class=o>-</span><span class=mi>1</span><span class=o>-</span><span class=mi>1</span><span class=o>-</span><span class=mi>10</span>
+</span></span><span class=line><span class=cl>  <span class=o>$</span> <span class=k>export</span> <span class=n>PS1</span><span class=o>=</span><span class=s2>&#34;\h$ &#34;</span>
+</span></span></code></pre></td></tr></table></div></div><p>We will see that this host can talk to other host <code>host-2</code> within the same subnet.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span><span class=lnt>9
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>cirros-1-1-1-10$ ping 10.1.1.9
+</span></span><span class=line><span class=cl>PING 10.1.1.9 (10.1.1.9): 56 data bytes
+</span></span><span class=line><span class=cl>64 bytes from 10.1.1.9: seq=0 ttl=64 time=4.409 ms
+</span></span><span class=line><span class=cl>64 bytes from 10.1.1.9: seq=1 ttl=64 time=1.070 ms
+</span></span><span class=line><span class=cl>64 bytes from 10.1.1.9: seq=2 ttl=64 time=1.437 ms
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>--- 10.1.1.9 ping statistics ---
+</span></span><span class=line><span class=cl>3 packets transmitted, 3 packets received, 0% packet loss
+</span></span><span class=line><span class=cl>round-trip min/avg/max = 1.070/2.305/4.409 ms
+</span></span></code></pre></td></tr></table></div></div><p>But it cannot reach host-3 which is a different subnet (<code>net-02</code>)</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>cirros-1-1-1-10$ ping 10.1.2.5
+</span></span><span class=line><span class=cl>PING 10.1.2.5 (10.1.2.5): 56 data bytes
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>--- 10.1.2.5 ping statistics ---
+</span></span><span class=line><span class=cl>3 packets transmitted, 0 packets received, 100% packet loss
+</span></span></code></pre></td></tr></table></div></div><p>Likewise, the host cannot reach external network such as internet.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>cirros-1-1-1-10$ ping 8.8.8.8
+</span></span><span class=line><span class=cl>PING 8.8.8.8 (8.8.8.8): 56 data bytes
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>--- 8.8.8.8 ping statistics ---
+</span></span><span class=line><span class=cl>3 packets transmitted, 0 packets received, 100% packet loss
+</span></span></code></pre></td></tr></table></div></div><p>Like in any tradional network, we need a router to allow traffic between different subnets. OpenStack Neutron provides a software defined router which can attach to multiple subnets and provide the same functionality.</p><p>Let us go ahead and create a router.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>stack@openstack-instance-2:~/devstack$ openstack router create demo_router
+</span></span><span class=line><span class=cl>+-------------------------+--------------------------------------+
+</span></span><span class=line><span class=cl>| Field                   | Value                                |
+</span></span><span class=line><span class=cl>+-------------------------+--------------------------------------+
+</span></span><span class=line><span class=cl>| admin_state_up          | UP                                   |
+</span></span><span class=line><span class=cl>| availability_zone_hints |                                      |
+</span></span><span class=line><span class=cl>| availability_zones      |                                      |
+</span></span><span class=line><span class=cl>| created_at              | 2018-04-02T00:14:29Z                 |
+</span></span><span class=line><span class=cl>| description             |                                      |
+</span></span><span class=line><span class=cl>| distributed             | False                                |
+</span></span><span class=line><span class=cl>| external_gateway_info   | None                                 |
+</span></span><span class=line><span class=cl>| flavor_id               | None                                 |
+</span></span><span class=line><span class=cl>| ha                      | False                                |
+</span></span><span class=line><span class=cl>| id                      | f36a24b0-e4a3-41de-9fdd-73f85df9dbaa |
+</span></span><span class=line><span class=cl>| name                    | demo_router                          |
+</span></span><span class=line><span class=cl>| project_id              | 9d390c83cc4e46c7a40167dee68075f0     |
+</span></span><span class=line><span class=cl>| revision_number         | 1                                    |
+</span></span><span class=line><span class=cl>| routes                  |                                      |
+</span></span><span class=line><span class=cl>| status                  | ACTIVE                               |
+</span></span><span class=line><span class=cl>| tags                    |                                      |
+</span></span><span class=line><span class=cl>| updated_at              | 2018-04-02T00:14:29Z                 |
+</span></span><span class=line><span class=cl>+-------------------------+--------------------------------------+
+</span></span></code></pre></td></tr></table></div></div><p>List the routers visible to validate the result. You can see an existing pre-built router and the one we created just now.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack router list -f yaml
+</span></span><span class=line><span class=cl>  - Distributed: false
+</span></span><span class=line><span class=cl>    HA: false
+</span></span><span class=line><span class=cl>    ID: 58cc905f-4c8b-4641-ba92-a1a491d818ab
+</span></span><span class=line><span class=cl>    Name: router1
+</span></span><span class=line><span class=cl>    Project: 9d390c83cc4e46c7a40167dee68075f0
+</span></span><span class=line><span class=cl>    State: UP
+</span></span><span class=line><span class=cl>    Status: ACTIVE
+</span></span><span class=line><span class=cl>  - Distributed: false
+</span></span><span class=line><span class=cl>    HA: false
+</span></span><span class=line><span class=cl>    ID: f36a24b0-e4a3-41de-9fdd-73f85df9dbaa
+</span></span><span class=line><span class=cl>    Name: demo_router
+</span></span><span class=line><span class=cl>    Project: 9d390c83cc4e46c7a40167dee68075f0
+</span></span><span class=line><span class=cl>    State: UP
+</span></span><span class=line><span class=cl>    Status: ACTIVE
+</span></span></code></pre></td></tr></table></div></div><p>Now we will attach our subnets to the router.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack router add subnet demo_router net-01
+</span></span><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack router add subnet demo_router net-02
+</span></span></code></pre></td></tr></table></div></div><p>You can see one new port from each subnet getting attached to the router.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl> stack@openstack-instance-2:~/devstack$ openstack port list -f yaml --router demo_router
+</span></span><span class=line><span class=cl> - Fixed IP Addresses: ip_address=&#39;10.1.1.1&#39;, subnet_id=&#39;0317aa4a-84d3-44df-8781-3f04d558a473&#39;
+</span></span><span class=line><span class=cl>   ID: 468ff846-fb1d-4ef2-85b0-3957885c59a8
+</span></span><span class=line><span class=cl>   MAC Address: fa:16:3e:b1:31:fa
+</span></span><span class=line><span class=cl>   Name: &#39;&#39;
+</span></span><span class=line><span class=cl>   Status: ACTIVE
+</span></span><span class=line><span class=cl> - Fixed IP Addresses: ip_address=&#39;10.1.2.1&#39;, subnet_id=&#39;6e5f2220-29da-4679-962f-22934f2c3d49&#39;
+</span></span><span class=line><span class=cl>   ID: ee15064b-26f2-46ae-bc09-02db440edd3b
+</span></span><span class=line><span class=cl>   MAC Address: fa:16:3e:7c:62:28
+</span></span><span class=line><span class=cl>   Name: &#39;&#39;
+</span></span><span class=line><span class=cl>   Status: ACTIVE
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>To reduce the output I have filtered the port list with an argument &ndash;router <router name>. Most list commands have ability to filter output like this. Use the interactive help menu to figure out the filter options.</p></blockquote><p>Let us try to reach the host on the other network.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  cirros-1-1-1-10$ ping 10.1.2.5
+</span></span><span class=line><span class=cl>  PING 10.1.2.5 (10.1.2.5): 56 data bytes
+</span></span><span class=line><span class=cl>  64 bytes from 10.1.2.5: seq=0 ttl=63 time=4.141 ms
+</span></span><span class=line><span class=cl>  64 bytes from 10.1.2.5: seq=1 ttl=63 time=1.499 ms
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  --- 10.1.2.5 ping statistics ---
+</span></span><span class=line><span class=cl>  2 packets transmitted, 2 packets received, 0% packet loss
+</span></span><span class=line><span class=cl>  round-trip min/avg/max = 1.499/2.820/4.141 ms
+</span></span></code></pre></td></tr></table></div></div><p>Success! As expected, the host is one hop away.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  cirros-1-1-1-10$ traceroute 10.1.2.5
+</span></span><span class=line><span class=cl>  traceroute to 10.1.2.5 (10.1.2.5), 30 hops max, 46 byte packets
+</span></span><span class=line><span class=cl>   1  host-10-1-1-1.openstacklocal (10.1.1.1)  2.217 ms  0.360 ms  0.301 ms
+</span></span><span class=line><span class=cl>   2  host-10-1-2-5.openstacklocal (10.1.2.5)  1.568 ms  1.155 ms  0.803 ms
+</span></span></code></pre></td></tr></table></div></div><p>But the outside world connection is not ready yet. For that we need to attach it to a public network. Recall that there was a pre-built public network as part of devstack setup. We will use this network to communicate to outside world.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack router set --external-gateway public demo_router
+</span></span><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack router show demo_router -f yaml
+</span></span><span class=line><span class=cl>  admin_state_up: UP
+</span></span><span class=line><span class=cl>  availability_zone_hints: &#39;&#39;
+</span></span><span class=line><span class=cl>  availability_zones: nova
+</span></span><span class=line><span class=cl>  created_at: &#39;2018-04-02T00:14:29Z&#39;
+</span></span><span class=line><span class=cl>  description: &#39;&#39;
+</span></span><span class=line><span class=cl>  distributed: false
+</span></span><span class=line><span class=cl>  external_gateway_info: &#39;{&#34;network_id&#34;: &#34;1fe4e71c-d94e-400c-bcee-8067b621c827&#34;, &#34;enable_snat&#34;:
+</span></span><span class=line><span class=cl>    true, &#34;external_fixed_ips&#34;: [{&#34;subnet_id&#34;: &#34;c0718110-7493-46bf-ba48-720762e47934&#34;,
+</span></span><span class=line><span class=cl>    &#34;ip_address&#34;: &#34;172.24.4.3&#34;}, {&#34;subnet_id&#34;: &#34;fab15575-ae4f-4528-bf0d-ac40d2000484&#34;,
+</span></span><span class=line><span class=cl>    &#34;ip_address&#34;: &#34;2001:db8::6&#34;}]}&#39;
+</span></span><span class=line><span class=cl>  flavor_id: null
+</span></span><span class=line><span class=cl>  ha: false
+</span></span><span class=line><span class=cl>  id: f36a24b0-e4a3-41de-9fdd-73f85df9dbaa
+</span></span><span class=line><span class=cl>  interfaces_info: &#39;[{&#34;subnet_id&#34;: &#34;0317aa4a-84d3-44df-8781-3f04d558a473&#34;, &#34;ip_address&#34;:
+</span></span><span class=line><span class=cl>    &#34;10.1.1.1&#34;, &#34;port_id&#34;: &#34;468ff846-fb1d-4ef2-85b0-3957885c59a8&#34;}, {&#34;subnet_id&#34;: &#34;6e5f2220-29da-4679-962f-22934f2c3d49&#34;,
+</span></span><span class=line><span class=cl>    &#34;ip_address&#34;: &#34;10.1.2.1&#34;, &#34;port_id&#34;: &#34;ee15064b-26f2-46ae-bc09-02db440edd3b&#34;}]&#39;
+</span></span><span class=line><span class=cl>  name: demo_router
+</span></span><span class=line><span class=cl>  project_id: 9d390c83cc4e46c7a40167dee68075f0
+</span></span><span class=line><span class=cl>  revision_number: 5
+</span></span><span class=line><span class=cl>  routes: &#39;&#39;
+</span></span><span class=line><span class=cl>  status: ACTIVE
+</span></span><span class=line><span class=cl>  tags: &#39;&#39;
+</span></span><span class=line><span class=cl>  updated_at: &#39;2018-04-02T00:32:54Z&#39;
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>The show command is similar to list command, but can show more detailed information about a single resource. As expected, it requires an additional unique identifier argument to identify the resource which we want to display.</p></blockquote><p>See that there is a new external_gateway_info section. Now let us try to reach the internet.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ sudo virsh console 1
+</span></span><span class=line><span class=cl>  Connected to domain instance-00000001
+</span></span><span class=line><span class=cl>  Escape character is ^]
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  cirros-1-1-1-10$ ping 8.8.8.8
+</span></span><span class=line><span class=cl>  PING 8.8.8.8 (8.8.8.8): 56 data bytes
+</span></span><span class=line><span class=cl>  64 bytes from 8.8.8.8: seq=0 ttl=50 time=7.129 ms
+</span></span><span class=line><span class=cl>  64 bytes from 8.8.8.8: seq=1 ttl=51 time=1.483 ms
+</span></span><span class=line><span class=cl>  64 bytes from 8.8.8.8: seq=2 ttl=51 time=1.137 ms
+</span></span><span class=line><span class=cl>  
+</span></span><span class=line><span class=cl>  --- 8.8.8.8 ping statistics ---
+</span></span><span class=line><span class=cl>  3 packets transmitted, 3 packets received, 0% packet loss
+</span></span><span class=line><span class=cl>  round-trip min/avg/max = 1.137/3.249/7.129 ms
+</span></span></code></pre></td></tr></table></div></div><p>Success! To see how this traffic reaches out to internet, we will do tcpdump on the hypervisor.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/ sudo tcpdump &#39;host 8.8.8.8&#39; -X
+</span></span><span class=line><span class=cl>  tcpdump: verbose output suppressed, use -v or -vv for full protocol decode
+</span></span><span class=line><span class=cl>  listening on br-ex, link-type EN10MB (Ethernet), capture size 262144 bytes
+</span></span><span class=line><span class=cl>  00:37:14.019550 IP 172.24.4.3 &gt; google-public-dns-a.google.com: ICMP echo request, id 49153, seq 0, length 64
+</span></span><span class=line><span class=cl>    0x0000:  4500 0054 0979 4000 3f01 7205 ac18 0403  E..T.y@.?.r.....
+</span></span><span class=line><span class=cl>    0x0010:  0808 0808 0800 5076 c001 0000 73cd 73ba  ......Pv....s.s.
+</span></span><span class=line><span class=cl>    0x0020:  0000 0000 0000 0000 0000 0000 0000 0000  ................
+</span></span><span class=line><span class=cl>    0x0030:  0000 0000 0000 0000 0000 0000 0000 0000  ................
+</span></span><span class=line><span class=cl>    0x0040:  0000 0000 0000 0000 0000 0000 0000 0000  ................
+</span></span><span class=line><span class=cl>    0x0050:  0000 0000                                ....
+</span></span><span class=line><span class=cl>  00:37:14.020493 IP google-public-dns-a.google.com &gt; 172.24.4.3: ICMP echo reply, id 49153, seq 0, length 64
+</span></span><span class=line><span class=cl>    0x0000:  4500 0054 0000 0000 3401 c67e 0808 0808  E..T....4..~....
+</span></span><span class=line><span class=cl>    0x0010:  ac18 0403 0000 5876 c001 0000 73cd 73ba  ......Xv....s.s.
+</span></span><span class=line><span class=cl>    0x0020:  0000 0000 0000 0000 0000 0000 0000 0000  ................
+</span></span><span class=line><span class=cl>    0x0030:  0000 0000 0000 0000 0000 0000 0000 0000  ................
+</span></span><span class=line><span class=cl>    0x0040:  0000 0000 0000 0000 0000 0000 0000 0000  ................
+</span></span><span class=line><span class=cl>    0x0050:  0000 0000    
+</span></span></code></pre></td></tr></table></div></div><p>The traffic from the host is being source NAT by the router to go out to the internet (recall from the earlier output that 172.24.4.3 belongs to the external gateway of the router). In traditional networking term this is called NAT overloading. This can provide only outbound connectivity for the host.</p><p>In order to provide inbound connectivity to the host, we need to create a floating ip. This is similar to elastic IP in AWS or staic NAT in traditional networking.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack floating ip create public
+</span></span><span class=line><span class=cl>  +---------------------+--------------------------------------+
+</span></span><span class=line><span class=cl>  | Field               | Value                                |
+</span></span><span class=line><span class=cl>  +---------------------+--------------------------------------+
+</span></span><span class=line><span class=cl>  | created_at          | 2018-04-02T00:44:14Z                 |
+</span></span><span class=line><span class=cl>  | description         |                                      |
+</span></span><span class=line><span class=cl>  | fixed_ip_address    | None                                 |
+</span></span><span class=line><span class=cl>  | floating_ip_address | 172.24.4.5                           |
+</span></span><span class=line><span class=cl>  | floating_network_id | 1fe4e71c-d94e-400c-bcee-8067b621c827 |
+</span></span><span class=line><span class=cl>  | id                  | e2ff37e4-f8f5-4413-98aa-e0df516c1a3b |
+</span></span><span class=line><span class=cl>  | name                | 172.24.4.5                           |
+</span></span><span class=line><span class=cl>  | port_id             | None                                 |
+</span></span><span class=line><span class=cl>  | project_id          | 9d390c83cc4e46c7a40167dee68075f0     |
+</span></span><span class=line><span class=cl>  | qos_policy_id       | None                                 |
+</span></span><span class=line><span class=cl>  | revision_number     | 0                                    |
+</span></span><span class=line><span class=cl>  | router_id           | None                                 |
+</span></span><span class=line><span class=cl>  | status              | DOWN                                 |
+</span></span><span class=line><span class=cl>  | subnet_id           | None                                 |
+</span></span><span class=line><span class=cl>  | tags                | []                                   |
+</span></span><span class=line><span class=cl>  | updated_at          | 2018-04-02T00:44:14Z                 |
+</span></span><span class=line><span class=cl>  +---------------------+--------------------------------------+
+</span></span></code></pre></td></tr></table></div></div><p>Attach this to our <code>host-1</code> instance. You can now see the floating IP also listed in the <code>openstack server list</code> output.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span><span class=lnt>6
+</span><span class=lnt>7
+</span><span class=lnt>8
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack server add floating ip host-1 172.24.4.5
+</span></span><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack server list --name host-1 -f yaml
+</span></span><span class=line><span class=cl>  - Flavor: m1.tiny
+</span></span><span class=line><span class=cl>    ID: dbda4926-4ca6-40be-b673-d0c811ae43c2
+</span></span><span class=line><span class=cl>    Image: cirros-0.3.5-x86_64-disk
+</span></span><span class=line><span class=cl>    Name: host-1
+</span></span><span class=line><span class=cl>    Networks: inside=10.1.1.10, 172.24.4.5
+</span></span><span class=line><span class=cl>    Status: ACTIVE
+</span></span></code></pre></td></tr></table></div></div><p>Here you can see the floating ip is mapped to our port-id.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack floating ip show 172.24.4.5
+</span></span><span class=line><span class=cl>  +---------------------+--------------------------------------+
+</span></span><span class=line><span class=cl>  | Field               | Value                                |
+</span></span><span class=line><span class=cl>  +---------------------+--------------------------------------+
+</span></span><span class=line><span class=cl>  | created_at          | 2018-04-02T00:44:14Z                 |
+</span></span><span class=line><span class=cl>  | description         |                                      |
+</span></span><span class=line><span class=cl>  | fixed_ip_address    | 10.1.1.10                            |
+</span></span><span class=line><span class=cl>  | floating_ip_address | 172.24.4.5                           |
+</span></span><span class=line><span class=cl>  | floating_network_id | 1fe4e71c-d94e-400c-bcee-8067b621c827 |
+</span></span><span class=line><span class=cl>  | id                  | e2ff37e4-f8f5-4413-98aa-e0df516c1a3b |
+</span></span><span class=line><span class=cl>  | name                | 172.24.4.5                           |
+</span></span><span class=line><span class=cl>  | port_id             | de7ee5de-e694-4ff3-9763-d7fb86e0038c |
+</span></span><span class=line><span class=cl>  | project_id          | 9d390c83cc4e46c7a40167dee68075f0     |
+</span></span><span class=line><span class=cl>  | qos_policy_id       | None                                 |
+</span></span><span class=line><span class=cl>  | revision_number     | 2                                    |
+</span></span><span class=line><span class=cl>  | router_id           | f36a24b0-e4a3-41de-9fdd-73f85df9dbaa |
+</span></span><span class=line><span class=cl>  | status              | ACTIVE                               |
+</span></span><span class=line><span class=cl>  | subnet_id           | None                                 |
+</span></span><span class=line><span class=cl>  | tags                | []                                   |
+</span></span><span class=line><span class=cl>  | updated_at          | 2018-04-02T00:47:14Z                 |
+</span></span><span class=line><span class=cl>  +---------------------+--------------------------------------+
+</span></span></code></pre></td></tr></table></div></div><p>We require one last step to initiate inbound connections to the host. Recall that each ports are assigned with a security group. Since this is an inbound connection, we need to explicitly permit access in security group.</p><p>Check the Security Group assigned to our port.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack port 
+</span></span><span class=line><span class=cl>    \show de7ee5de-e694-4ff3-9763-d7fb86e0038c -c &#39;security_group_ids&#39; -f yaml
+</span></span><span class=line><span class=cl>  security_group_ids: bd41b78c-974c-4854-b808-dec11575964b
+</span></span></code></pre></td></tr></table></div></div><p>Let us see the rules which are permitted by this security group.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack security group show bd41b78c-974c-4854-b808-dec11575964b  -f yaml
+</span></span><span class=line><span class=cl>  created_at: &#39;2018-04-01T09:01:20Z&#39;
+</span></span><span class=line><span class=cl>  description: Default security group
+</span></span><span class=line><span class=cl>  id: bd41b78c-974c-4854-b808-dec11575964b
+</span></span><span class=line><span class=cl>  name: default
+</span></span><span class=line><span class=cl>  project_id: 9d390c83cc4e46c7a40167dee68075f0
+</span></span><span class=line><span class=cl>  revision_number: 6
+</span></span><span class=line><span class=cl>  rules: &#39;created_at=&#39;&#39;2018-04-01T09:01:20Z&#39;&#39;, direction=&#39;&#39;ingress&#39;&#39;, ethertype=&#39;&#39;IPv4&#39;&#39;,
+</span></span><span class=line><span class=cl>    id=&#39;&#39;2ab4f8a5-43ed-4f3e-8c43-cc854bc8feb3&#39;&#39;, remote_group_id=&#39;&#39;bd41b78c-974c-4854-b808-dec11575964b&#39;&#39;,
+</span></span><span class=line><span class=cl>    updated_at=&#39;&#39;2018-04-01T09:01:20Z&#39;&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    created_at=&#39;&#39;2018-04-01T09:01:20Z&#39;&#39;, direction=&#39;&#39;egress&#39;&#39;, ethertype=&#39;&#39;IPv6&#39;&#39;, id=&#39;&#39;5c33d0ac-8ee9-4bd7-951c-dca998931828&#39;&#39;,
+</span></span><span class=line><span class=cl>    updated_at=&#39;&#39;2018-04-01T09:01:20Z&#39;&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    created_at=&#39;&#39;2018-04-01T09:01:20Z&#39;&#39;, direction=&#39;&#39;ingress&#39;&#39;, ethertype=&#39;&#39;IPv6&#39;&#39;,
+</span></span><span class=line><span class=cl>    id=&#39;&#39;d7c7a642-485b-482e-8d26-a958aaafa19e&#39;&#39;, remote_group_id=&#39;&#39;bd41b78c-974c-4854-b808-dec11575964b&#39;&#39;,
+</span></span><span class=line><span class=cl>    updated_at=&#39;&#39;2018-04-01T09:01:20Z&#39;&#39;
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>    created_at=&#39;&#39;2018-04-01T09:01:20Z&#39;&#39;, direction=&#39;&#39;egress&#39;&#39;, ethertype=&#39;&#39;IPv4&#39;&#39;, id=&#39;&#39;f41405df-d0c9-4427-ba11-f0a26b025c3e&#39;&#39;,
+</span></span><span class=line><span class=cl>    updated_at=&#39;&#39;2018-04-01T09:01:20Z&#39;&#39;&#39;
+</span></span><span class=line><span class=cl>  tags: []
+</span></span><span class=line><span class=cl>  updated_at: &#39;2018-04-02T01:56:25Z&#39;
+</span></span></code></pre></td></tr></table></div></div><p>Here you can see 4 rules, two each for IPv4 and IPv6. For egress rules, you can see that there is no remote prefix or group id configured. It means all outbound connections are permitted. For ingress traffic, you can see that the remote_group_id references to self. It means that all ports assigned to the same security group can send inbound traffic unhindered.</p><p>Let us add more rules to permit ICMP and SSH</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack security group rule create \
+</span></span><span class=line><span class=cl>  --protocol icmp --ingress --remote-ip 0.0.0.0/0 default
+</span></span><span class=line><span class=cl>  +-------------------+--------------------------------------+
+</span></span><span class=line><span class=cl>  | Field             | Value                                |
+</span></span><span class=line><span class=cl>  +-------------------+--------------------------------------+
+</span></span><span class=line><span class=cl>  | created_at        | 2018-04-02T01:54:12Z                 |
+</span></span><span class=line><span class=cl>  | description       |                                      |
+</span></span><span class=line><span class=cl>  | direction         | ingress                              |
+</span></span><span class=line><span class=cl>  | ether_type        | IPv4                                 |
+</span></span><span class=line><span class=cl>  | id                | df23fec9-b87a-47ef-8f38-67472de46071 |
+</span></span><span class=line><span class=cl>  | name              | None                                 |
+</span></span><span class=line><span class=cl>  | port_range_max    | None                                 |
+</span></span><span class=line><span class=cl>  | port_range_min    | None                                 |
+</span></span><span class=line><span class=cl>  | project_id        | 9d390c83cc4e46c7a40167dee68075f0     |
+</span></span><span class=line><span class=cl>  | protocol          | icmp                                 |
+</span></span><span class=line><span class=cl>  | remote_group_id   | None                                 |
+</span></span><span class=line><span class=cl>  | remote_ip_prefix  | 0.0.0.0/0                            |
+</span></span><span class=line><span class=cl>  | revision_number   | 0                                    |
+</span></span><span class=line><span class=cl>  | security_group_id | bd41b78c-974c-4854-b808-dec11575964b |
+</span></span><span class=line><span class=cl>  | updated_at        | 2018-04-02T01:54:12Z                 |
+</span></span><span class=line><span class=cl>  +-------------------+--------------------------------------+
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack security group rule create \
+</span></span><span class=line><span class=cl>  --protocol tcp --dst-port 22 --ingress --remote-ip 0.0.0.0/0 default
+</span></span><span class=line><span class=cl>  +-------------------+--------------------------------------+
+</span></span><span class=line><span class=cl>  | Field             | Value                                |
+</span></span><span class=line><span class=cl>  +-------------------+--------------------------------------+
+</span></span><span class=line><span class=cl>  | created_at        | 2018-04-02T01:56:25Z                 |
+</span></span><span class=line><span class=cl>  | description       |                                      |
+</span></span><span class=line><span class=cl>  | direction         | ingress                              |
+</span></span><span class=line><span class=cl>  | ether_type        | IPv4                                 |
+</span></span><span class=line><span class=cl>  | id                | adee3f3f-a5a0-497f-a12d-644e64c7015e |
+</span></span><span class=line><span class=cl>  | name              | None                                 |
+</span></span><span class=line><span class=cl>  | port_range_max    | 22                                   |
+</span></span><span class=line><span class=cl>  | port_range_min    | 22                                   |
+</span></span><span class=line><span class=cl>  | project_id        | 9d390c83cc4e46c7a40167dee68075f0     |
+</span></span><span class=line><span class=cl>  | protocol          | tcp                                  |
+</span></span><span class=line><span class=cl>  | remote_group_id   | None                                 |
+</span></span><span class=line><span class=cl>  | remote_ip_prefix  | 0.0.0.0/0                            |
+</span></span><span class=line><span class=cl>  | revision_number   | 0                                    |
+</span></span><span class=line><span class=cl>  | security_group_id | bd41b78c-974c-4854-b808-dec11575964b |
+</span></span><span class=line><span class=cl>  | updated_at        | 2018-04-02T01:56:25Z                 |
+</span></span><span class=line><span class=cl>  +-------------------+--------------------------------------+
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>Note that I am using the security group name <code>default</code> as argument instead of security group id. As with most other arguments, we can use either name or the id. We can find the name from the output of previous show command.</p></blockquote><p>Now you can see 2 new rules added to the group</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ openstack security group rule list -c &#39;IP Protocol&#39; -c &#39;IP Range&#39; -c &#39;Port Range&#39; -f yaml
+</span></span><span class=line><span class=cl>  - IP Protocol: null
+</span></span><span class=line><span class=cl>    IP Range: null
+</span></span><span class=line><span class=cl>    Port Range: &#39;&#39;
+</span></span><span class=line><span class=cl>  - IP Protocol: null
+</span></span><span class=line><span class=cl>    IP Range: null
+</span></span><span class=line><span class=cl>    Port Range: &#39;&#39;
+</span></span><span class=line><span class=cl>  - IP Protocol: tcp
+</span></span><span class=line><span class=cl>    IP Range: 0.0.0.0/0
+</span></span><span class=line><span class=cl>    Port Range: &#39;22:22&#39;
+</span></span><span class=line><span class=cl>  - IP Protocol: null
+</span></span><span class=line><span class=cl>    IP Range: null
+</span></span><span class=line><span class=cl>    Port Range: &#39;&#39;
+</span></span><span class=line><span class=cl>  - IP Protocol: icmp
+</span></span><span class=line><span class=cl>    IP Range: 0.0.0.0/0
+</span></span><span class=line><span class=cl>    Port Range: &#39;&#39;
+</span></span><span class=line><span class=cl>  - IP Protocol: null
+</span></span><span class=line><span class=cl>    IP Range: null
+</span></span><span class=line><span class=cl>    Port Range: &#39;&#39;
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>Note that in the previous list command output, there were lot of fields. Here I have used -c argument to select the interesting fields. To select multiple columns, we have to repeat this -c argument.</p></blockquote><p>Now we can initiate SSH and ICMP connections to this VM host using floating ip address.</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ ping 172.24.4.5
+</span></span><span class=line><span class=cl>  PING 172.24.4.5 (172.24.4.5) 56(84) bytes of data.
+</span></span><span class=line><span class=cl>  64 bytes from 172.24.4.5: icmp_seq=1 ttl=63 time=0.628 ms
+</span></span><span class=line><span class=cl>  64 bytes from 172.24.4.5: icmp_seq=2 ttl=63 time=0.529 ms
+</span></span><span class=line><span class=cl>  ^C
+</span></span><span class=line><span class=cl>  --- 172.24.4.5 ping statistics ---
+</span></span><span class=line><span class=cl>  2 packets transmitted, 2 received, 0% packet loss, time 1003ms
+</span></span><span class=line><span class=cl>  rtt min/avg/max/mdev = 0.529/0.578/0.628/0.055 ms
+</span></span><span class=line><span class=cl>  stack@openstack-instance-2:~/devstack$ ssh cirros@172.24.4.5
+</span></span><span class=line><span class=cl>  cirros@172.24.4.5&#39;s password:
+</span></span><span class=line><span class=cl>  cirros-1-1-1-10$ 
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>Recall that the hosts were able to ping each other even before we updated the security group. It is because all the ports were assigned to the default security group and hosts on security group can talk to each other by virtue of an implicit rule.</p></blockquote><h2 id=conclusion>Conclusion</h2><p>I have barely scratched the surface of things possible with Openstack. However, this post should give a good idea about the general command structure and operation procedures in Openstack. For further learning, dig around the <a class=link href=https://docs.openstack.org/neutron/queens/admin/ target=_blank rel=noopener>official documentation</a> (pay attention to openstack version in the docs, there can be major differences between each versions) or setup a lab environment and play around.</p><p>On the Neutron front, there are a lot of topics to explore such as ML2 network types, virtual switch types, L3 agents etc., Redhat&rsquo;s <a class=link href=https://access.redhat.com/documentation/en-us/red_hat_openstack_platform/9/html-single/networking_guide/ target=_blank rel=noopener>official documentation</a> provides a good introduction to many of these components.</p></section><footer class=article-footer><section class=article-tags><a href=/tags/openstack/>Openstack</a>
+<a href=/tags/software-defined-networking/>Software Defined Networking</a>
+<a href=/tags/networking/>Networking</a></section><section class=article-copyright><svg class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentcolor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z"/><circle cx="12" cy="12" r="9"/><path d="M14.5 9a3.5 4 0 100 6"/></svg>
+<span>Licensed under CC BY-NC-SA 4.0</span></section></footer></article><div class=disqus-container></div><style>.disqus-container{background-color:var(--card-background);border-radius:var(--card-border-radius);box-shadow:var(--shadow-l1);padding:var(--card-padding)}</style><script>window.addEventListener("onColorSchemeChange",e=>{typeof DISQUS=="object"&&DISQUS.reset({reload:!0})})</script><footer class=site-footer><section class=copyright>&copy;
+2020 -
+2024 Ephemeral Dance Of Electrons</section><section class=powerby>Built with <a href=https://gohugo.io/ target=_blank rel=noopener>Hugo</a><br>Theme <b><a href=https://github.com/CaiJimmy/hugo-theme-stack target=_blank rel=noopener data-version=3.29.0>Stack</a></b> designed by <a href=https://jimmycai.com target=_blank rel=noopener>Jimmy</a></section></footer><div class=pswp tabindex=-1 role=dialog aria-hidden=true><div class=pswp__bg></div><div class=pswp__scroll-wrap><div class=pswp__container><div class=pswp__item></div><div class=pswp__item></div><div class=pswp__item></div></div><div class="pswp__ui pswp__ui--hidden"><div class=pswp__top-bar><div class=pswp__counter></div><button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+<button class="pswp__button pswp__button--share" title=Share></button>
+<button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+<button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button><div class=pswp__preloader><div class=pswp__preloader__icn><div class=pswp__preloader__cut><div class=pswp__preloader__donut></div></div></div></div></div><div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap"><div class=pswp__share-tooltip></div></div><button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+</button>
+<button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)"></button><div class=pswp__caption><div class=pswp__caption__center></div></div></div></div></div><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo=" crossorigin=anonymous defer></script><script src=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU=" crossorigin=anonymous defer></script><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.min.css crossorigin=anonymous><link rel=stylesheet href=https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.css crossorigin=anonymous></main></div><script src=https://cdn.jsdelivr.net/npm/node-vibrant@3.1.6/dist/vibrant.min.js integrity="sha256-awcR2jno4kI5X0zL8ex0vi2z+KMkF24hUW8WePSA9HM=" crossorigin=anonymous></script><script type=text/javascript src=/ts/main.1e9a3bafd846ced4c345d084b355fb8c7bae75701c338f8a1f8a82c780137826.js defer></script><script>(function(){const e=document.createElement("link");e.href="https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap",e.type="text/css",e.rel="stylesheet",document.head.appendChild(e)})()</script></body></html>
