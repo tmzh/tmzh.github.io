@@ -160,7 +160,7 @@ In the previous strategy, we kind of adopted an exploration-exploitation strateg
 
 One thing to note from Master Mind algorithm is that at every turn, we also learn more information about the target word. We can choose words that gives us more information about the target there by reducing our solution space at each turn.
 
-As we are talking about expected information available from a probability distribution, we can use Claude Shannon's defintion of information entropy to assign a score. Here is how it is calculated:
+As we are talking about expected information available from a probability distribution, we can use Claude Shannon's definition of information entropy to assign a score. Here is how it is calculated:
 
 1. Let _n_ be the number of words in the solution space
 2. Group the words into _k_ partitions based on the pattern it generates when compared with our guess word i.e, if our guess word is `east` group `['fast', 'last']` into same partition as they would output a pattern `rggg` with our guess word.

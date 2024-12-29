@@ -42,7 +42,7 @@ Function calling is not limited to simple tasks like calculator operations or we
 
 ### Example: TMDB Movie Explorer 
 
-I have implemented a simple Flask application both with traditional UI and a Natural Language that uses the function calling mechanism. The traditional UI of the application allows users to query movies by cast, genre, or title, whereas the Natural Language Interface allows users to ask in natural language
+I have implemented a simple Flask application both with traditional UI and a Natural Language Interface that uses the function calling mechanism. The traditional UI of the application allows users to query movies by cast, genre, or title, whereas the Natural Language Interface allows users to ask in natural language
 
 
 ![TMDB Movie Explorer](/images/2024-12-04-movies-app.gif)
@@ -57,9 +57,8 @@ To handle user queries, we employ a chain of thought (CoT) reasoning approach. T
 
 For example, for the query "List comedy movies with Tom Cruise in it," the reasoning chain might be:
 * Search for the person ID of Tom Cruise using the `search_person` function.
-* Use the `discover_movie` function to find comedy movies that Tom Cruise has been in.
-
-When a user submits a query, we pass the query to LLM and ask it to generate a reasoning chain that outlines the logical steps required to gather the necessary information. This  involves analyzing the user's request, recognizing relevant functions, and deciding on the order in which these functions should be called. 
+* Search for the genre ID of comedy using the `search_genre` function.
+* Call the `discover_movie` function with the person ID and genre ID to find comedy movies that Tom Cruise has been in.
 
 ```python
 def generate_reasoning_chain(user_prompt: str) -> Any:
@@ -143,7 +142,7 @@ def discover_movie(include_adult=False, include_video=False, language="en-US", p
     return response
 ```
 
-Here is an example of the reasoning chain generated for the query "What movies did Tom Hanks star in?"
+Here is an example of the reasoning chain generated for the query "List comedy movies with Tom Cruise in it"
 
 ```python
 [
