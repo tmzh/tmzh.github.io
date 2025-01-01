@@ -21,15 +21,13 @@ This post focuses on the latter.
 
 ## What is Function Calling?
 
-Function Calling enables LLMs to interact with external tools or APIs, thereby supplementing their knowledge and capabilities. This process involves:
+Function Calling enables LLMs to interact with external tools or APIs, thereby supplementing their knowledge and capabilities. The process is illustrated in the diagram below:
 
-1. **Defining Functions**: Specify the functions the model can call, along with their parameters.
-2. **Generating Function Calls**: The model generates function calls based on the user's input.
-3. **Executing Functions**: The external tools execute these function calls and return the results.
-4. **Incorporating Results**: The results are fed back into the model to generate a final response.
-
-
-![](/images/2024-12-04-function-calling-diagram.png)
+<figure>
+    <img src="/images/2024-12-27-function-calling-aws-diagram.png"
+         alt="Function Calling Diagram">
+    <figcaption><i>Source: AWS re:Invent 2024</i></figcaption>
+</figure>
 
 This approach helps overcome the limitations of knowledge cutoff and abstract reasoning by allowing LLMs to leverage external knowledge sources or tools.  Although the function specifications can be passed as part of the prompt, it's more effective to use an internalized template known by the model.
 
@@ -37,7 +35,7 @@ This approach helps overcome the limitations of knowledge cutoff and abstract re
 
 Function calling is not limited to simple tasks like calculator operations or weather API queries. It can be used to create an alternative, intuitive natural language interfaces for existing applications. This eliminates the need for complex UIs, as users can interact with the application using plain English.
 
-![](/images/27-10-2024-function_calling.excalidraw.png)
+![](/images/2024-10-27-function_calling.excalidraw.png)
 
 
 ### Example: TMDB Movie Explorer 
@@ -55,22 +53,23 @@ To handle user queries, we employ a chain of thought (CoT) reasoning approach. T
 2. Generating a Reasoning Chain: Outline the logical steps required to gather the necessary information.
 3. Identifying Relevant Functions: Recognize which functions and the order in which they need to be called to fulfill the request
 
-For example, for the query "List comedy movies with Tom Cruise in it," the reasoning chain might be:
-* Search for the person ID of Tom Cruise using the `search_person` function.
-* Search for the genre ID of comedy using the `search_genre` function.
-* Call the `discover_movie` function with the person ID and genre ID to find comedy movies that Tom Cruise has been in.
-
 ```python
 def generate_reasoning_chain(user_prompt: str) -> Any:
     messages = [
         {
-            "role": "system", 
+            "role": "system",
             "content": "You are a movie search assistant bot who uses TMDB to help users find movies. Think step by step and identify the sequence of reasoning steps that will help to answer the user's query."
-        ],
-        {"role": "user", "content": user_prompt},
+    ],
+    {"role": "user", "content": user_prompt},
     ]
     return messages
 ```
+
+For example, for the query "List comedy movies with Tom Cruise in it," the generated reasoning chain might be:
+* Search for the person ID of Tom Cruise using the `search_person` function.
+* Search for the genre ID of comedy using the `search_genre` function.
+* Call the `discover_movie` function with the person ID and genre ID to find comedy movies that Tom Cruise has been in.
+
 
 ### Tool Definitions
 
