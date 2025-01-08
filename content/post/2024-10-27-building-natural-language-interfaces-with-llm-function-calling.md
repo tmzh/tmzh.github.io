@@ -5,6 +5,7 @@ date: 2024-10-27
 categories: [Generative AI, Machine Learning]
 tags: [LLM, Function Calling, Natural Language Interface]
 slug: building-natural-language-interfaces-with-llm-function-calling
+image: /images/2024-12-04-movies-app.gif
 ---
 
 ## Introduction
