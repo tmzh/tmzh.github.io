@@ -1,18 +1,15 @@
 ---
 author: tmzh
 categories:
-- Generative AI 
+- generative-ai
 comments: true
 date: "2023-06-24T12:00:00Z"
 slug: 2023-06-24-llm-powered-faq-chat-bot
 tags:
 - llama
 - langchain
-
-title: "Exploring Retrieval-Augmentated Generation with Open Source Large Language Models"
-
+title: "Exploring Retrieval-Augmented Generation with Open Source Large Language Models"
 mathjax: true
-autoCollapseToc: true
 ---
 
 # Introduction
@@ -22,14 +19,8 @@ This is where large language models (LLMs) can provide value. LLMs are better eq
 
 When considering Generative AI use cases in an Enterprise context, it is hard to look past Chatbots utilizing Large Language Models (LLMs). Traditional chatbots can feel impersonal and inadequate due to their reliance on pattern matching and limited context understanding. In contrast, interacting with LLMs can feel natural since due to their improved understanding of context and personalized responses. This chatbot an ideal use case to explore Generate AI in enterprises.
 
-<figure>
-    <img src="/images/2023-06-25-decision-flow-for-chosing-llm.png"
-         alt="Decision Flow for choosing LLM"
-         width="80%">
-    <figcaption><i>Source: Harnessing the Power of LLMs in Practice: A Survey on ChatGPT and Beyond 
-(<a href="https://arxiv.org/pdf/2304.13712.pdf">arXiv:2304.13712</a>)
-</i></figcaption>
-</figure>
+![Decision Flow for choosing LLM](/images/2023-06-25-decision-flow-for-chosing-llm.png)
+*Source: Harnessing the Power of LLMs in Practice: A Survey on ChatGPT and Beyond ([arXiv:2304.13712](https://arxiv.org/pdf/2304.13712.pdf))*
 
 To help an LLM answer based on internal knowledge base, one approach utilizes prompting i.e., inserting knowledge corpora into the prompt along with user queries. 
 
@@ -44,13 +35,8 @@ The retrieval model searches external knowledge bases to extract facts relevant 
 
 The generation model—typically a large language model—accepts the retrieved information as input. It produces natural language responses guided by this context without direct access to the raw knowledge base. This anchoring to concrete facts mitigates generation of incorrect statements compared to relying solely on the LLM.
 
-<figure>
-    <img src="/images/2023-06-25-retrieval-qa.gif"
-         alt="decision flow for choosing llm"
-         width="80%">
-    <figcaption><i>source: <a href="https://www.newsletter.swirlai.com/p/sai-notes-08-llm-based-chatbots-to">llm based chatbots to query your private knowledge base</a>
-</i></figcaption>
-</figure>
+![RAG workflow](/images/2023-06-25-retrieval-qa.gif)
+*Source: [LLM based chatbots to query your private knowledge base](https://www.newsletter.swirlai.com/p/sai-notes-08-llm-based-chatbots-to)*
 
 
 ## Advantages of RAG
@@ -218,7 +204,7 @@ This is done by disabling the default system prompt and configuring the tokenize
 
 ```python
 chat = []
-system_message = "You are a helpful, respectful and honest support executive. Always be as helpfully as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information."
+system_message = "You are a helpful, respectful and honest support executive. Always be as helpful as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information."
 
 for d in docs['metadatas'][0]:
     # append context to system message
@@ -232,7 +218,7 @@ prompt = tokenizer.apply_chat_template(chat, tokenize=False)
 This will insert a set of relevant questions and answers as additional context within the prompt so that the model can use this information to give an answer. For our example the constructed prompt looks like this:
 
     <s>[INST] <<SYS>>
-    You are a helpful, respectful and honest support executive. Always be as helpfully as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information.
+    You are a helpful, respectful and honest support executive. Always be as helpful as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information.
     Question: How can I create an account?
     Answer: To create an account, click on the 'Sign Up' button on the top right corner of our website and follow the instructions to complete the registration process.
     Question: Can I order without creating an account?
@@ -257,7 +243,7 @@ generated_ids = model.generate(model_inputs, max_new_tokens=100, do_sample=True)
 answer = tokenizer.batch_decode(generated_ids[:, model_inputs.shape[1]:])[0]
 ```
     <s>[INST] <<SYS>>
-    You are a helpful, respectful and honest support executive. Always be as helpfully as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information.
+    You are a helpful, respectful and honest support executive. Always be as helpful as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information.
     Question: How can I create an account?
     Answer: To create an account, click on the 'Sign Up' button on the top right corner of our website and follow the instructions to complete the registration process.
     Question: Can I order without creating an account?
@@ -317,7 +303,7 @@ def respond(query):
     related_questions = []
     references = "## References\n"
 
-    system_message = "You are a helpful, respectful and honest support executive. Always be as helpfully as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information."
+    system_message = "You are a helpful, respectful and honest support executive. Always be as helpful as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information."
 
     for d in docs['metadatas'][0]:
         # prepare chat template

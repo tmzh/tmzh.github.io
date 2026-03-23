@@ -2,9 +2,10 @@
 author: tmzh
 categories:
 - solver
+- games
 comments: true
 date: "2022-03-07T12:00:00Z"
-image: https://tmzh.github.io/images/2022-03-07-frequency_count.png
+image: /images/2022-03-07-frequency_count.png
 slug: 2022-03-07-solvers-for-the-wordle-game-evaluation-of-different-strategies
 tags:
 - games
@@ -112,7 +113,7 @@ True enough, it works well most of the time. Almost half the time, it only takes
 
 ![Most frequent characters strategy](/images/2022-03-07-frequency_count.png)
 
-But we can do better. If we look at the words that took ong to solve, there are multiple candidates which are too similar to them. For example, it takes 13 attempts to predict the word `wares`
+But we can do better. If we look at the words that took long to solve, there are multiple candidates which are too similar to them. For example, it takes 13 attempts to predict the word `wares`
 
 ```
 time_solve('wares', word_list)

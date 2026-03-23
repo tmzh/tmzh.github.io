@@ -1,7 +1,7 @@
 ---
 author: tmzh
 categories:
-- Image recognition
+- image-recognition
 comments: true
 date: "2019-03-02T12:00:00Z"
 slug: 2019-03-02-using-opencv-object-detection-to-keep-kids-away-from-tv
@@ -18,7 +18,7 @@ This was John Watson, one of the founders of [Behaviorism](https://www.wikiwand.
 
 ## Problem statement
 
-I play YouTube rhymes on my HTPC which is connected to our living room TV. While watching they sometimes get down from the couch and walk to the TV. When they do, I want to turn off the video automatically to let them know that they have gone too close and not resume the playback until they get back to the couch. For my setup, that means pausing the youtube player and minimzing the browser. 
+I play YouTube rhymes on my HTPC which is connected to our living room TV. While watching they sometimes get down from the couch and walk to the TV. When they do, I want to turn off the video automatically to let them know that they have gone too close and not resume the playback until they get back to the couch. For my setup, that means pausing the youtube player and minimizing the browser. 
 
 Fortunately this is easy to do with a camera and [OpenCV](https://github.com/opencv/opencv). Let us see how.
 
@@ -88,7 +88,7 @@ And there you go! The naughty infiltrator is caught.
 
 For controlling the playback, I used a combination of pyautogui and win32con libraries. Since I didn't want to interrupt playbacks on normal times, the object detection is activated only when Youtube is one among the foreground windows. 
 
-Now without much adieu, here is the full code. 
+Now without much ado, here is the full code. 
 
 ```python
 #!C:\Python

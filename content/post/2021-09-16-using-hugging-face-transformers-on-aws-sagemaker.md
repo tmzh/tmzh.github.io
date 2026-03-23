@@ -1,10 +1,10 @@
 ---
 author: tmzh
 categories:
-- Machine Learning
+- machine learning
 comments: true
 date: "2021-09-16T12:00:00Z"
-image: https://huggingface.co/blog/assets/17_the_partnership_amazon_sagemaker_and_hugging_face/cover.png
+image: /images/2021-09-16-huggingface-sagemaker.png
 slug: 2021-09-16-using-hugging-face-transformers-on-aws-sagemaker
 tags:
 - aws

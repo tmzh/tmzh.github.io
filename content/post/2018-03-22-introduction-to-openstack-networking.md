@@ -1,7 +1,7 @@
 ---
 author: tmzh
 categories:
-- Networking
+- networking
 comments: true
 date: "2018-03-22T12:00:00Z"
 slug: 2018-03-22-introduction-to-openstack-networking-for-network-engineers
@@ -362,7 +362,7 @@ Now create an instance in this subnet. Use the port id from above output to spec
   +-----------------------------+-----------------------------------------------------------------+
 ```
 
-Before we move on to next section, tet us check the server instances we have created so far.
+Before we move on to next section, let us check the server instances we have created so far.
 
 ```
   stack@openstack-instance-2:~/devstack$ openstack server list -f yaml

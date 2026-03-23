@@ -1,7 +1,7 @@
 ---
 author: tmzh
 categories:
-- Big Data
+- big-data
 comments: true
 date: "2019-01-05T12:00:00Z"
 slug: 2019-01-05-using-spark-and-matplotlib-to-visualize-air-routes-for-major-airports-around-the-world
@@ -15,7 +15,7 @@ In 2nd Century AD, Hellenic Cartographer Ptolemy was beset with an arbitrary cho
 
 <!--more-->
 
-Similarly, I am always fascinated about the distribution of population masses and economic activities acrosss the globe and what sort of external signals gets influenced by this distribution. Flight routes in major airports would be one such signal. For instance, closer you get to north pole , most of your businesses will be facing south and vice versa. Or across the Atlantic, it would be interesting to note whether east-west trans-atlantic traffic volume dominates over domestic air traffic in America. I tried to visualize this flight path orientation across important airports in the globe. This post is partly inspired by another beautiful piece of visualization of [street orientation of major cities across the world](http://geoffboeing.com/2018/07/comparing-city-street-orientations/) by Goef Boeing. 
+Similarly, I am always fascinated about the distribution of population masses and economic activities across the globe and what sort of external signals gets influenced by this distribution. Flight routes in major airports would be one such signal. For instance, closer you get to north pole , most of your businesses will be facing south and vice versa. Or across the Atlantic, it would be interesting to note whether east-west trans-atlantic traffic volume dominates over domestic air traffic in America. I tried to visualize this flight path orientation across important airports in the globe. This post is partly inspired by another beautiful piece of visualization of [street orientation of major cities across the world](http://geoffboeing.com/2018/07/comparing-city-street-orientations/) by Goef Boeing. 
 
 
 ## The Data and tools

@@ -1,22 +1,16 @@
 ---
 author: tmzh
 categories:
-- Generative AI 
-date: 2024-01-22T12:00:00Z
-images: 
-- /images/2024-01-29-visual_anagrams-loop.gif
-slug: 
-- 2024-01-22-running-deep-floyd-with-limited-memory
-
+- generative-ai
+date: "2024-01-22T12:00:00Z"
+image: /images/2024-01-29-visual_anagrams-loop.gif
+slug: 2024-01-22-running-deep-floyd-with-limited-memory
 tags:
-- deep_floyd
-- generative_ai
-
+- deep-floyd
+- generative-ai
 title: "Generating Visual Illusions Using Diffusion Models On Low VRAM"
-
-mathjaxEnableSingleDollar: true
 mathjax: true
-autoCollapseToc: true
+comments: true
 ---
 
 # Introduction
@@ -34,13 +28,8 @@ Behind the scenes, Visual Anagrams utilizes the DeepFloyd IF model, which takes 
 
 However, these advantages come at a cost of significantly higher memory requirements. DeepFloyd IF is a modular model composed of a frozen text encoder and three cascaded pixel diffusion modules. Running the model in full float32 precision would require at least 37GB of memory.
 
-<figure>
-    <img src="/images/2024-01-28-deep-floyd-if-scheme.jpg"
-         alt="DeepFloyd-IF model card"
-         width="80%">
-    <figcaption><i>source: <a href="https://huggingface.co/DeepFloyd/IF-I-XL-v1.0">DeepFloyd-IF model card</a>
-</i></figcaption>
-</figure>
+![DeepFloyd-IF model card](/images/2024-01-28-deep-floyd-if-scheme.jpg)
+*Source: [DeepFloyd-IF model card](https://huggingface.co/DeepFloyd/IF-I-XL-v1.0)*
 
 Fortunately, it is possible to run this model on Google Colab or even on consumer hardware for free. The Diffusers API from HuggingFace allows us to load individual components modularly, reducing the memory requirements by loading components selectively.
 

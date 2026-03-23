@@ -1,10 +1,9 @@
 ---
 author: tmzh
 categories:
-- tips
+- tools
 comments: true
 date: "2021-03-26T12:00:00Z"
-image: https://raw.githubusercontent.com/cucumber/godog/master/logo.png
 slug: 2021-03-26-previewing-command-line-json-output-using-firefox
 tags:
 - command-line

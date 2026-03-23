@@ -1,14 +1,13 @@
 ---
 author: tmzh
 categories:
-- Machine Learning
+- machine learning
 comments: true
 date: "2018-04-28T12:00:00Z"
 slug: 2018-04-28-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-2
 tags:
 - pandas
 - keras
-- machine learning
 - visualization
 title: Predicting the playing role of a cricketer using Machine Learning (Part 2)
 ---
@@ -233,7 +232,7 @@ array([nan, 'Top-order batsman', 'Bowler', 'Middle-order batsman',
        'Wicketkeeper', 'Bowling allrounder', 'Batting allrounder'], dtype=object)
 ```
 
-The playing role definiton is too granular. We want fewer variety of roles so that each role gets sufficient sample data points to train the model. Also the role tagging done by Cricinfo is not consistent. For e.g., not all opening batsmen have been tagged with the opening batsman role. So we define a mapping function to group playing roles in to 4 different categories `['Batsman','Bowler','Wicketkeeper','Allrounder']`
+The playing role definition is too granular. We want fewer variety of roles so that each role gets sufficient sample data points to train the model. Also the role tagging done by Cricinfo is not consistent. For e.g., not all opening batsmen have been tagged with the opening batsman role. So we define a mapping function to group playing roles in to 4 different categories `['Batsman','Bowler','Wicketkeeper','Allrounder']`
 
 ```python
 def get_role(role):
@@ -343,7 +342,7 @@ estimator = KerasClassifier(build_fn=create_baseline, nb_epoch=100, batch_size=5
 We cannot use all of the data to train our model. The model will closely follow our existing model. It won't be useful to predict any values we haven't seen so far. This is called overfitting. 
 
 ![Overfitting](/images/overfitting.png)
-<p align='center'>Example of overfitting - Source Wikipedia </p>
+<figcaption style="text-align: center;">Example of overfitting - Source Wikipedia</figcaption>
 
 To avoid this, we will split the data into train and test datasets. We will use the former to train the model and compute the scores based on the testing against test data for each iteration of cross-validation. Scikit's provides a helper function called `cross_val_score` to assist in this. `StratifiedKFold` is the genertor strategy we will use for selecting this train/test datasets. It splits the data into K folds (set to 10 in our case), trains it on K-1 datasets and tests it against the left out dataset, while preserving the class distribution of the data. 
 
@@ -393,7 +392,7 @@ data['predicted_role_rf'] = rf_estimator.predict(P_mms)
 ```
 
 ### Confusion Matrix
-A score alone is not a good indicator that our model has performed well. We need to review its performance by plotting `Confusion Matrix`. It is a simple matrix plot based on known test data with predicted values plotted against the true value. The diagonal entries represent correct prediction, rest represents confused values. Let us plot Confusin Matrix for our data.
+A score alone is not a good indicator that our model has performed well. We need to review its performance by plotting `Confusion Matrix`. It is a simple matrix plot based on known test data with predicted values plotted against the true value. The diagonal entries represent correct prediction, rest represents confused values. Let us plot Confusion Matrix for our data.
 
 ```python
 from sklearn.metrics import confusion_matrix
@@ -407,7 +406,7 @@ plt.ylabel('predicted label')
 
 ![Confusion Matrix](/images/confusion-matrix.png)
 
-We can see that the model is quite effective in matching the pure roles such as Batsman or Bowler. When it comes to mixed roles such as Allrounder or Wicketkeeper, it fares not that well. Part of the problem lies in our assumption that the roles are mutually exclusive i.e, a player cannot be both Batsman and Bowler at the same time. So we identify only around 37% of the all rounders succesfully. Later we will see that there are other reasons why the predicted role doesn't match the role marked in cricinfo.
+We can see that the model is quite effective in matching the pure roles such as Batsman or Bowler. When it comes to mixed roles such as Allrounder or Wicketkeeper, it fares not that well. Part of the problem lies in our assumption that the roles are mutually exclusive i.e, a player cannot be both Batsman and Bowler at the same time. So we identify only around 37% of the all rounders successfully. Later we will see that there are other reasons why the predicted role doesn't match the role marked in cricinfo.
 
 ### Reviewing the results
 

@@ -1,26 +1,22 @@
 ---
 author: tmzh
 categories:
-- Artificial Intelligence
+- artificial-intelligence
 comments: true
 date: "2023-03-15T12:00:00Z"
-image: /images/2020-09-26-meta-learning.png
+image: /images/2023-03-15-gpt-4-performance.png
 slug: 2023-03-15-gpt-4-stable-diffusion-and-beyond
 tags:
-- chatGPT
+- chatgpt
 - philosophy
 title: "GPT-4, Stable Diffusion, and Beyond: How Generative AI Will Shape Human Society"
 ---
 In 2020, I [wrote](/post/2020-09-20-gpt-3-and-prospects-of-artificial-general-intelligence/) about GPT-3 model. Late last year, OpenAI released ChatGPT which was based on GPT-3 but trained using Reinforcement Learning from Human Feedback (RLHF). And now GPT-4 has been released. It has only been out for a few days, but it is already seeing incredible applications such as [creating office documents](https://youtu.be/S7xTBa93TX8), turning sketches into [functional apps](https://twitter.com/blader/status/1635792905628712960), creating [personal tutors](https://www.youtube.com/watch?v=yEgHrxvLsz0),  and [more](https://twitter.com/rowancheung/status/1636017917136367617).
 
-And not just GPT-based models, StableDiffusion and Dall-E are also pushing the boundaries of art, creating stunning visuals from mere textual descriptions. Professional ad agencies, too, are exploring how to use AI, as seen in this [Coca-Cola ad](https://youtu.be/951q69P0La) and this [Crocs ad](https://twitter.com/nonmayorpete/status/163516240862815846) which apparently took only 28 minutes to create from scratch.
+And not just GPT-based models, StableDiffusion and Dall-E are also pushing the boundaries of art, creating stunning visuals from mere textual descriptions. Professional ad agencies, too, are exploring how to use AI, as seen in this [Coca-Cola ad](https://youtu.be/951q69P0La8) and this [Crocs ad](https://twitter.com/nonmayorpete/status/1635162408628158467) which apparently took only 28 minutes to create from scratch.
 
-<figure>
-    <img src="/images/2023-03-15-gpt-4-performance.png"
-         alt="GPT-4 performance"
-         width="80%">
-    <figcaption><i>The newly released GPT-4 exhibits human-level performance on a variety of common and professional academic exams. Source: <a href="https://cdn.openai.com/papers/gpt-4.pdf">OpenAI GPT-4 Technical Report</a></i></figcaption>
-</figure>
+![GPT-4 performance](/images/2023-03-15-gpt-4-performance.png)
+*The newly released GPT-4 exhibits human-level performance on a variety of common and professional academic exams. Source: [OpenAI GPT-4 Technical Report](https://cdn.openai.com/papers/gpt-4.pdf)*
 
 Suddenly, the pace of advancements in AI has accelerated from a sluggish seep to a torrent, some might say it is not something we can control anymore. The dread of hyper-intelligence has long been a staple of our fears, for if an AI were to improve itself recursively, it would have no perceivable ceiling to the extent of its intelligence. Yet, such concerns remain speculations, given our limited understanding of AI's internal workings (more on this below). We tend to project our apprehensions and anthropocentric tendencies onto AI and assume that it would act as a sentient being would. Rather than fretting over future possibilities, we should focus on the present: AI capabilities are already advanced enough to disrupt society.
 
@@ -50,7 +46,7 @@ Furthermore, the resources required for training such large-scale models keep it
 ## Cultural Norms Redefined
 As mentioned before, large-scale models are largely homogeneous, derived from very few foundation models; training data is often lopsided and only represents a tiny percentage of languages. The embedded social and political factors in these models lead to the entrenchment of a pre-dominant value system and undermine plurality. The prevalence of homogeneous LLMs in society can lead to cultural conformity where individual expression and differences are lost on several levels ranging from the individual to society.
 
-In the past, LLMs have also produced inaccurate or harmful outputs. While these have been somewhat mitigated through fine-tuning, the notion that a mere handful of individuals could define the parameters of morality with any confidence is problematic. The obscure and hermetic nature of these large-scale models only amplifies our concerns. Chomsky in his NY Times piece [argues](https://dnyuz.com/2023/03/08/noam-chomsky-the-false-promise-of-chatgpt) that fine-tuning their ability to be original and opinionated. Thus, engineers "sacrificed creativity for a kind of amorality"
+In the past, LLMs have also produced inaccurate or harmful outputs. While these have been somewhat mitigated through fine-tuning, the notion that a mere handful of individuals could define the parameters of morality with any confidence is problematic. The obscure and hermetic nature of these large-scale models only amplifies our concerns. Chomsky in his NY Times piece [argues](https://dnyuz.com/2023/03/08/noam-chomsky-the-false-promise-of-chatgpt) that fine-tuning sacrifices their ability to be original and opinionated. Thus, engineers "sacrificed creativity for a kind of amorality"
 
 
 ## The Future of Work in an AI Dominated World
@@ -61,12 +57,8 @@ The increasing ability of AI to outperform humans in certain tasks has raised co
 ## The Intersection Of AI and Art 
 With the advent of DALL-E and Stable Diffusion, AI-generated art has now been thrust into the mainstream, and as such, concerns have arisen over the potential for plagiarism and disrespect for intellectual property rights. This is like the ancient paradox of "Ship of Theseus" - when does art transcend beyond its origins to become something entirely new? How do you distinguish and attribute ownership to your own contributions.
 
-<figure>
-    <img src="/images/2023-03-15-surrealist-art-stable-diffusion.png"
-         witdth="50%"
-         alt="Surrealist art generated using Stable Diffusion">
-    <figcaption><i>Surrealist art generated using Stable Diffusion (MidJourney v4)</i></figcaption>
-</figure>
+![Surrealist art generated using Stable Diffusion](/images/2023-03-15-surrealist-art-stable-diffusion.png)
+*Surrealist art generated using Stable Diffusion (MidJourney v4)*
 
 Irrespective of how we address the plagiarism problem, I don't see AI-generated art diminishing the need or impact of artists. Art in its purest form serves as a counterpoint to the cultural norms of contemporary society. If everyone is producing StableDiffusion art, certain predictable patterns begin to emerge that can feel soulless. The same can be said of ChatGPT or any AI-derived work. Folks have already [noted](https://twitter.com/bildoperationen/status/1633082030178050048) that in StableDiffusion "the default mode of these images is to shine and sparkle, as if illuminated from within". True art will find voice to shine through these mimics. On the other hand, mainstream artists who adopt derivative, orthodox forms of expression may become obsolete and be replaced by a new generation of artists who integrate technology into their art.
 

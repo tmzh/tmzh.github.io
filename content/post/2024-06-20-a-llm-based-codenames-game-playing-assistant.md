@@ -1,18 +1,16 @@
 ---
 author: tmzh
 categories:
-- Generative AI 
-- Games
-date: 2024-06-20T12:00:00Z
-images: 
-- /images/2024-06-20-game-clues.png
-slug: 
-- 2024-06-20-llm-based-codenames-game-playing-assistant
+- generative-ai
+- games
+date: "2024-06-20T12:00:00Z"
+image: /images/2024-06-20-game-clues.png
+slug: 2024-06-20-llm-based-codenames-game-playing-assistant
 tags:
 - llm
-- generative_ai
-
+- generative-ai
 title: "Building a Codenames AI Assistant with Multi-Modal LLMs"
+comments: true
 ---
 
 # Introduction
@@ -193,4 +191,4 @@ generator(prompt, max_tokens=100)
 ```
 
 # Reflections and the Road Ahead
-Initially, I underestimated the LLM approach, considering it excessive for what seemed like a straightforward issue. However, I was mistaken. Leveraging LLM significantly expedited the generation of usable outcomes, saving considerable time. Over time, despite its substantial size and computational demands, this ease of use aspect will boost its acceptance. As momentum builds, further research and optimization will ensue, resulting in more compact, effective, and intelligent models. Although optimized algorithms and specialized models will retain significance in particular domains, LLMs are positioned to transform numerous sectors with their adaptability and potency.
+Initially, I underestimated the LLM approach, considering it excessive for what seemed like a straightforward issue. However, I was mistaken. Leveraging LLM significantly expedited the process of generating usable outcomes, saving considerable time. Over time, despite its substantial size and computational demands, this ease of use aspect will boost its acceptance. As momentum builds, further research and optimization will ensue, resulting in more compact, effective, and intelligent models. Although optimized algorithms and specialized models will retain significance in particular domains, LLMs are positioned to transform numerous sectors with their adaptability and potency.

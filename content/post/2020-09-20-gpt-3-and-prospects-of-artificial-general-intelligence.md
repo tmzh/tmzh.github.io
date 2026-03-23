@@ -1,10 +1,10 @@
 ---
 author: tmzh
 categories:
-- Artificial Intelligence
+- artificial-intelligence
 comments: true
 date: "2020-09-20T12:00:00Z"
-image: /images/2020-09-26-meta-learning.png
+image: /images/2020-09-26-gpt-3-training-size.png
 slug: 2020-09-20-gpt-3-and-prospects-of-artificial-general-intelligence
 tags:
 - gpt-3

@@ -1,7 +1,7 @@
 ---
 author: tmzh
 categories:
-- Generative AI 
+- generative-ai
 comments: true
 date: "2023-05-16T12:00:00Z"
 image: /images/2023-05-16-stable-diffusion-art.png
@@ -9,7 +9,7 @@ slug: 2023-05-16-paint-like-bob-ross-using-stable-diffusion
 tags:
 - stable-diffusion
 - art
-title: "Create Beautiful Paintings From Rough Sketches Using Stable diffusion"
+title: "Create Beautiful Paintings From Rough Sketches Using Stable Diffusion"
 ---
 
 ## Introduction

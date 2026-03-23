@@ -1,7 +1,7 @@
 ---
 author: tmzh
 categories:
-- Scripting
+- scripting
 comments: true
 date: "2017-10-29T12:08:28Z"
 slug: 2017-10-29-emulating-angryip-scanner-with-nmap-scripting-engine-a-lua-scripting-primer
@@ -19,7 +19,7 @@ On my Windows PC, I wrap it around in a batch script and place it in the search 
 
 <!--more-->
 
-It is handy, but not complete. I would like to have some extra information such as hostnames (collected by various means not just DNS reverse lookup), platform info etc., Such details are available in tools such as AngryIP scanner, but I don't prefer to launch a GUI tool for single task and keep it running until the task is done. 
+It is handy, but not complete. I would like to have some extra information such as hostnames (collected by various means not just DNS reverse lookup), platform info etc., Additional details are available in tools such as AngryIP scanner, but I don't prefer to launch a GUI tool for single task and keep it running until the task is done. 
 
 So let us try to implement a similar function using nmap script. There are existing scripts in nmap which performs advanced discovery and reconnaissance, but we want something lightweight, more generic and customizable to support more protocols. Nmap scripts run on top of Nmap Scripting Engine which runs on Lua. Learning it would expand the scope of these tools from just being a capable tool to a powerful tool with limitless possibilities. 
 
@@ -57,7 +57,7 @@ Now run this script against your local network as below:
 
 Now take a minute or two to let this sink in... we just created our very own NETBIOS scanner, all in just 7 lines of functional code. There are dedicated standalone [tools](http://unixwiz.net/tools/nbtscan.html) that performs this singular task and we managed to do it using nmap. With just a little more effort, we can add more bells and whistles to this.
 
-The magic that enables this are the excellent inbuilt scanning mechanisms of nmap and hot-pluggable libraries that carry out much of the grunt. By scripting in NSE, we can tap in to this massive capabilities of nmap and automate to our needs. Let us now see how this script works.
+The magic that enables this are the excellent inbuilt scanning mechanisms of nmap and hot-pluggable libraries that carry out much of the grunt work. By scripting in NSE, we can tap in to this massive capabilities of nmap and automate to our needs. Let us now see how this script works.
 
 ## Code Walkthrough
 In this script there is no HEAD section. So we start by importing the libraries needed for our script. In Lua, modules are included using `require` function. And we assign the module to a local variable in order to access its namespace (i.e, call the methods that belong to the module). 
@@ -73,7 +73,7 @@ Next we move to the RULE section. Notice that in Lua, comments are prepended by 
 
 As mentioned earlier, RULE section acts as filter to identify hosts or ports relevant to our script. Since our script is only interested with NETBIOS query, we have to pick only the hosts that are listening on port UDP/137.
 
-Since this is a common check, nmap includes a 'shortport' module that provides shorthand functions to check port states. `shortport.portnumber` is one such function which will return true only for those ports and protocols listed in its arguements. Refer to online [documentation](https://nmap.org/nsedoc/lib/shortport.html) for exact syntax of this function.
+Since this is a common check, nmap includes a 'shortport' module that provides shorthand functions to check port states. `shortport.portnumber` is one such function which will return true only for those ports and protocols listed in its arguments. Refer to online [documentation](https://nmap.org/nsedoc/lib/shortport.html) for exact syntax of this function.
 
 ```lua
 -- The Rule Section --
