@@ -1,0 +1,12 @@
+{{/*  
+  Back navigation for single pages
+  Shows "← All Posts" link when on a post page
+*/}}
+
+{{ if eq .Type "post" }}
+<div class="back-nav">
+  <a href="/post/" aria-label="Back to all posts">
+    <span class="back-arrow">←</span>All Posts
+  </a>
+</div>
+{{ end }}
