@@ -19,7 +19,7 @@ In this post, we will go through a high level overview of Hugging Face Transform
 
 <!--more-->
 
-# Introduction to Hugging Face Transformers
+## Introduction to Hugging Face Transformers
 The Hugging Face Transformers is a library that makes it easy to use NLP models. It allows developers to leverage hundreds of pretrained models for Natural Language Understanding (NLU) tasks as well as making it simple to train new transformer models. The API of this library is based around 3 broad classes:
 
 1. **Model** - PyTorch or Keras models that we can use in training loop or for prediction
@@ -79,7 +79,7 @@ Here is the process:
 * Pass this sequence through the model to get the logits
 * Compute the softmax of the result to get probabilities over the classes
 
-## Tokenizer
+### Tokenizer
 
 Tokenizer's job is to preprocess your text into tokens suitable for training or inference. Tokens can be a word (`predict`) or a subword (`##ly`). For example, a tokenizer may split the word `Transformers` into (`transform`, `##ers`) so that the model's vocabulary doesn't explode. The tokenizer can also take care of other pre-processing tasks such as normalizing cases and punctuations.
 
@@ -105,7 +105,7 @@ Note that the tokens also consists of some special tokens which encodes special 
  }
  ```
 
-## Hugging Face Model
+### Hugging Face Model
 
 Once the input text has been  preprocessed by the tokenizer, we can pass it directly to the model
 
@@ -134,12 +134,12 @@ trainer.train()
 
 This covers a high level overview of the Hugging Face Transformers library. Next we will see how to use the library along with Sagemaker.
 
-# Using Hugging Face on Sagemaker
+## Using Hugging Face on Sagemaker
 Hugging Face in collaboration with AWS released Sagemaker Hugging Face Deep Learning Containers (DLCs) that makes it easy to train and deploy Hugging Face models using AWS platform. In the following section, we will see how to use these DLCs to train and deploy Hugging Face Transformer models in AWS.
 
-## Running a Training job
+### Running a Training job
 
-### Preparing a training script
+#### Preparing a training script
 First we need to prepare the training script. This would be similar to any Transformers training script. A minimal training script would look like this:
 
 ```python
@@ -205,7 +205,7 @@ test_dataset = load_from_disk(args.test_dir)
 trainer.save_model(args.model_dir)
 ```
 
-### Run training using Hugging Face estimator
+#### Run training using Hugging Face estimator
 
 First we create a Hugging Face estimator which exposes methods similar to other Sagemaker Estimator. Note that the `entry_point` attribute matches the file name of our training script.
 
@@ -252,7 +252,7 @@ model.tar.gz/
 |- special_tokens_map.json
 ```
 
-## Deploying the model for inference
+### Deploying the model for inference
 
 Once the training is completed, we can deploy a `Hugging Face` model directly from the `Estimator` object. 
 
@@ -331,7 +331,7 @@ Remember to delete the endpoint at the end of experiments.
 predictor.delete_endpoint()
 ```
 
-### Advanced features of the Inference toolkit
+#### Advanced features of the Inference toolkit
 We can also pass additional environment variables to the inference model that simplifies deployment.
 
 ```python
@@ -350,7 +350,7 @@ huggingface_model = HuggingFaceModel(
 
 Here, `HF_TASK` variable defines the task for the Transformers pipeline and `HF_MODEL_ID` defines the model id to load from [huggingface.co/models](https://huggingface.co/models). For the full list of supported environment variables refer to [here](https://github.com/aws/sagemaker-huggingface-inference-toolkit#%EF%B8%8F-environment-variables).
 
-### Customizing Inference script
+#### Customizing Inference script
 
 When creating an inference model, we can specify use defined code/modules that allows us to customize the inference process. 
 
@@ -436,7 +436,7 @@ predictor.predict(data)
 
 For further instructions on how to customize inference, refer to [this](https://github.com/aws/sagemaker-huggingface-inference-toolkit#%EF%B8%8F-environment-variables)
 
-# Additional resources
+## Additional resources
 
 To learn more, you can refer to:
 * [Philosophy of Hugging Face transformers library](https://huggingface.co/transformers/philosophy.html)

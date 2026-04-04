@@ -13,7 +13,7 @@ title: "Building a Codenames AI Assistant with Multi-Modal LLMs"
 comments: true
 ---
 
-# Introduction
+## Introduction
 
 Codenames is a word association game where two teams guess secret words based on one-word clues. The game involves a 25-word grid, with each team identifying their words while avoiding the opposing team's words and the "assassin" word. 
 
@@ -23,7 +23,7 @@ I knew that word embeddings could be used to group words based on their semantic
 
 I have published a demo of this Gradio app along with its code in [HF Spaces](https://huggingface.co/spaces/tmzh/codenames-phi3).
 
-# Initial attempts
+## Initial attempts
 
 My initial experiments with sentence embedding models did not yield satisfactory results. These models required a more context beyond individual words to deliver precise outcomes. Transitioning to word embedding models proved to be more effective; however, I still encountered challenges in filtering out undesired outputs such as foreign language terms and compound words. Additionally, employing similarity search techniques like kNN and Cosine similarity did not yield optimal results.
 
@@ -31,14 +31,14 @@ I switched to word embedding models, which were better, but I still had to filte
 
 Extracting the game words using OpenCV also turned out to be more involved than I expected. I had to deal with shadows, uneven exposure, grid detection, and draw bounding boxes. The upside-down clue words also caused problems for the character recognition model.
 
-# Multi-Modal LLM Solution
+## Multi-Modal LLM Solution
 
 This is when I decided to try a small local Large Language Model (LLM) for this. I used [microsoft/Phi-3-Mini-4K-Instruct](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct) which is a 3.8B parameters, lightweight LLM by Microsoft. Surprisingly this model consistently produced high-quality results with minimal effort. I split the task into 3 sections:
 1. Identifying words in the game using OCR
 2. Grouping of words
 3. Generating clues for each groups
 
-## OCR for text extraction
+### OCR for text extraction
 The Phi-3 model family also has a multimodal version called [microsoft/Phi-3-vision-128k-instruct](https://huggingface.co/microsoft/Phi-3-vision-128k-instruct) with a focus on very high-quality, reasoning dense data both on text and vision. I used this model for OCR. It worked like a charm, eliminating the need for complex image processing techniques. Unfortunately the structured output generation library I used (Outlines, explained later) doesn't yet support Vision models so I couldn't use this as a single model for both OCR and text generation.  So I leveraged Nvidia hosted LLM service (NIM) to perform the OCR task.
 
 ```python
@@ -85,7 +85,7 @@ def process_image(img):
         return gr.update(choices=words, value=words)
 ```
 
-## Grouping of words
+### Grouping of words
 I employed few-shot prompting technique along with a custom system prompt to cluster words that share common characteristics. I observed that when we instruct the Language Model (LLM) to group words, the resulting clusters are often random, regardless of the initial instructions. However, prompting the LLM to group words and then explain the rationale behind the grouping led to more coherent and meaningful word groupings.
 
 ```python
@@ -125,7 +125,7 @@ def group_words(words):
     return [group.words for group in generations.groups]
 ```
 
-## Generation of Clues
+### Generation of Clues
 I split the clue generation logic separately even though LLMs could generate them at the time of grouping the words together. This is because I wanted to be able to regenerate better clues for individual groups without having to regroup the entire word list every time.
 
 ```python
@@ -164,7 +164,7 @@ def generate_clues(group):
     return response
 ```
 
-## Outlines
+### Outlines
 One reason why I tried other options before LLMs because LLMs generations are stochastic and I needed parsable output for my web page i.e, I need guarantee that the output text will have a certain format. That's when I came across the Outlines library which is one among the many popular guided generations libraries. It helped me generate structured text consistently, making it easy to integrate with my app's interface.
 
 The basic idea of Outlines is simple: in each state, it gets a list of symbols that correspond to completions that partially match the regular expression. It masks the other symbols in the logits returned by a large language model, so we derive a new FSM whose alphabet is the model's vocabulary. We can do this in only one pass over the vocabulary.
@@ -190,5 +190,5 @@ generator = generate.json(model, Clue)
 generator(prompt, max_tokens=100)
 ```
 
-# Reflections and the Road Ahead
+## Reflections and the Road Ahead
 Initially, I underestimated the LLM approach, considering it excessive for what seemed like a straightforward issue. However, I was mistaken. Leveraging LLM significantly expedited the process of generating usable outcomes, saving considerable time. Over time, despite its substantial size and computational demands, this ease of use aspect will boost its acceptance. As momentum builds, further research and optimization will ensue, resulting in more compact, effective, and intelligent models. Although optimized algorithms and specialized models will retain significance in particular domains, LLMs are positioned to transform numerous sectors with their adaptability and potency.
