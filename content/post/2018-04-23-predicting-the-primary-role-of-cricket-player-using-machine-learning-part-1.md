@@ -1,7 +1,7 @@
 ---
 author: tmzh
 categories:
-- Machine Learning
+- machine learning
 comments: true
 date: "2018-04-23T12:00:00Z"
 slug: 2018-04-23-predicting-the-playing-role-of-a-cricketer-using-machine-learning-part-1
@@ -16,7 +16,7 @@ In this project, we will apply Machine Learning techniques to predict whether a 
 
 <!--more-->
 
-For the uninitiated, Cricket is a game of bat and ball, much similar to baseball. Cricket players have different roles to play in a game. Batsman's role is to score runs while not losing their wicket, bowlers role is to get the batsman's wicket while restricting their run score in due process. Allrounders can do both batting and bowling role well. A wicketkeeper is a specialist role whose purpose is to catch behind the wickets during the bowling innings. If you really intend to understand tne data behind this exercise, my half-baked explanations are barely sufficient. I suggest to refer to better reference such as [this](https://www.britannica.com/sports/cricket-sport).
+For the uninitiated, Cricket is a game of bat and ball, much similar to baseball. Cricket players have different roles to play in a game. Batsman's role is to score runs while not losing their wicket, bowlers role is to get the batsman's wicket while restricting their run score in due process. Allrounders can do both batting and bowling role well. A wicketkeeper is a specialist role whose purpose is to catch behind the wickets during the bowling innings. If you really intend to understand the data behind this exercise, my half-baked explanations are barely sufficient. I suggest to refer to better reference such as [this](https://www.britannica.com/sports/cricket-sport).
 
 For the sake of consistency, we will consider only test players. Apart from being a puritan choice, the playing role of a player may differ from format to format and so we can't expect a consistent prediction. The cricinfo player bio page has this `playing role` information, but that covers only around 20% of the test players. For vast majority of players we only have numerical stats but no description whether the player is a batsman or a bowler. 
 

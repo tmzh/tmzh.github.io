@@ -2,6 +2,7 @@
 author: tmzh
 categories:
 - solver
+- modelling
 comments: true
 date: "2017-12-09T12:00:00Z"
 slug: 2017-12-09-using-constraint-programming-to-solve-an-ancient-chinese-math-puzzle
@@ -62,7 +63,7 @@ max_chick_set = min(total_fowls, floor(total_cost/THREE_CHICK_COST)) # a set of 
 ```
 Notice that for chick count, we are grouping them in sets of three. This is because the unit cost of a chick is a fraction (1/3) and the solver doesn't allow us to multiply float numbers with IntVar object (which we will come to know later). This is perfectly acceptable for our scenario since chick count always needs to be a multiple of 3 or else the total cost will never be an integer (100 in this case). Besides, this also reduces the search space for chick count by a factor of 3, eliminating obvious non-solutions.
 
-We now have to spec out our decision variables. OR-Tools supports different types of decision variables such as Integers, Intervals etc., In our current challenge the decision variable is an integer so we assign it by using IntVar method. The first two values gives the lower and upper bounds for the variables. The last value is an arbitrary string handle for output representation. I am not sure under which scenarios the last variable will come to use, but likely it is an object name required for the underlying C++ code. The python module we use for or-tools is actually a wrapper for the core C++ code.
+We now have to spec out our decision variables. OR-Tools supports different types of decision variables such as Integers, Intervals etc., In our current challenge, the decision variable is an integer, so we assign it by using the IntVar method. The first two values gives the lower and upper bounds for the variables. The last value is an arbitrary string handle for output representation. I am not sure under which scenarios the last variable will come to use, but likely it is an object name required for the underlying C++ code. The python module we use for or-tools is actually a wrapper for the core C++ code.
 
 For our problem the decision variables can be defined as below:
 ```python
@@ -85,7 +86,7 @@ solver.Add(rooster_count*ROOSTER_COST +
            chick_set_count*THREE_CHICK_COST == total_cost)
 ```
 #### Navigating the search space
-Next we create a decision builder which specifies how to iterate through all possible values for our problems. It is done using the Phase method. The first arguemnt is an array of our decision variables. Second argument is how we choose the next value to try for our decision variable. Last argument is how we start assigning value to our variable (from minimum or maximum). We will go with the defauls although for larger problems, we could use some sort of heuristics to search only interesting portions of a search space. You can refer to [or-tools documentation](http://www.lia.disi.unibo.it/Staff/MicheleLombardi/or-tools-doc/reference_manual/or-tools/src/constraint_solver/classoperations__research_1_1Solver.html#8bda7ed6e7e533cca4c44eba6efffc8b) for other search strategies.
+Next we create a decision builder which specifies how to iterate through all possible values for our problems. It is done using the Phase method. The first argument is an array of our decision variables. Second argument is how we choose the next value to try for our decision variable. Last argument is how we start assigning value to our variable (from minimum or maximum). We will go with the defauls although for larger problems, we could use some sort of heuristics to search only interesting portions of a search space. You can refer to [or-tools documentation](http://www.lia.disi.unibo.it/Staff/MicheleLombardi/or-tools-doc/reference_manual/or-tools/src/constraint_solver/classoperations__research_1_1Solver.html#8bda7ed6e7e533cca4c44eba6efffc8b) for other search strategies.
 
 ```python
 db = solver.Phase([rooster_count, hen_count, chick_set_count], 

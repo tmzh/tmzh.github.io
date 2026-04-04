@@ -1,18 +1,23 @@
 ---
-layout: post
+author: tmzh
 title: "Building Natural Language Interfaces with LLM Function Calling"
-date: 2024-10-27
-categories: [Generative AI, Machine Learning]
-tags: [LLM, Function Calling, Natural Language Interface]
-slug: building-natural-language-interfaces-with-llm-function-calling
+date: "2024-10-27T12:00:00Z"
+categories:
+- generative-ai
+tags:
+- llm
+- function-calling
+- natural-language-interface
+slug: 2024-10-27-building-natural-language-interfaces-with-llm-function-calling
 image: /images/2024-12-04-movies-app.gif
+comments: true
 ---
 
 ## Introduction
 Large Language Models (LLMs) are good at generating coherent text, but they have few inherent limitations:
 1. **Hallucinations**: They learn and generate information in terms of likelihood and  may produce information that is not grounded in facts
 2. **Knowledge Cutoff**: LLMs are trained on a fixed dataset and do not have access to real-time information or the ability to perform complex tasks like web browsing or executing code.
-3. **Abstraction and Reasoning**: LLMs may struggle with abstract reasoning and complex tasks that require logical steps or mathematical operations. Their output is not precise enough for tasks with fixed rule-sets w/o interfacing with external tools
+3. **Abstraction and Reasoning**: LLMs may struggle with abstract reasoning and complex tasks that require logical steps or mathematical operations. Their output is not precise enough for tasks with fixed rule-sets without interfacing with external tools
 
 There are two ways to address these limitations: 
 1. Retrieval Augmented Generation (RAG) 
@@ -24,11 +29,8 @@ This post focuses on the latter.
 
 Function Calling enables LLMs to interact with external tools or APIs, thereby supplementing their knowledge and capabilities. The process is illustrated in the diagram below:
 
-<figure>
-    <img src="/images/2024-12-27-function-calling-aws-diagram.png"
-         alt="Function Calling Diagram">
-    <figcaption><i>Source: AWS re:Invent 2024</i></figcaption>
-</figure>
+![Function Calling Diagram](/images/2024-12-27-function-calling-aws-diagram.png)
+*Source: AWS re:Invent 2024*
 
 This approach helps overcome the limitations of knowledge cutoff and abstract reasoning by allowing LLMs to leverage external knowledge sources or tools.  Although the function specifications can be passed as part of the prompt, it's more effective to use an internalized template known by the model.
 

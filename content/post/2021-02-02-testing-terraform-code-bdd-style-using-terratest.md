@@ -1,10 +1,9 @@
 ---
 author: tmzh
 categories:
-- Cloud Computing
+- cloud-computing
 comments: true
 date: "2021-02-02T12:00:00Z"
-image: https://raw.githubusercontent.com/cucumber/godog/master/logo.png
 slug: 2021-02-02-testing-terraform-code-using-terratest
 tags:
 - terraform
@@ -425,7 +424,7 @@ func (o *godogFeaturesScenario) destroyTerraform(sc *godog.Scenario, err error) 
 }
 ```
 
-Now we are ready to run the test.  You should see the below output indicating that 1 scenario was executed with 3 succesful steps.
+Now we are ready to run the test.  You should see the below output indicating that 1 scenario was executed with 3 successful steps.
 
 ```
 1 scenarios (1 passed)

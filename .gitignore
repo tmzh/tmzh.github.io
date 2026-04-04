@@ -18,3 +18,9 @@ hugo.linux
 
 # references
 *.ref
+
+# devenv / direnv
+.devenv/
+.direnv/
+.devenv.flake.nix
+

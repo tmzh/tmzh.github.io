@@ -1,7 +1,7 @@
 ---
 author: tmzh
 categories:
-- Notes
+- notes
 comments: true
 date: "2017-08-24T15:41:28Z"
 slug: 2017-08-24-using-a-bluetooth-serial-console-with-linux

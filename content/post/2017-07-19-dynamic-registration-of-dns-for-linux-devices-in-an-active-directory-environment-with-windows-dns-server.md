@@ -1,7 +1,7 @@
 ---
 author: tmzh
 categories:
-- SysAdmin
+- sysadmin
 comments: true
 date: "2017-07-19T15:43:13Z"
 slug: 2017-07-19-dynamic-registration-of-dns-for-linux-devices-in-an-active-directory-environment-with-windows-dns-server
@@ -25,7 +25,7 @@ At its basic, the entire process relies on Dynamic DNS as explained in [RFC2136]
 
 ![1 - DNS Properties.png](/images/2017-07-19-1-dns-properties.png)
 
-When we ask a Linux client to do the same (later I will explain how it can be configured to ask), it won’t work unless the DNS server is configured to accept “Insecure updates” (Which is a major security risk if you need to ask).
+When we ask a Linux client to do the same (later I will explain how it can be configured to be asked), it won’t work unless the DNS server is configured to accept “Insecure updates” (Which is a major security risk if you need to ask).
 
 Take a look at the capture of Linux client performing DNS update, you can see that the server comes back with a UPDATE REFUSED response.
 

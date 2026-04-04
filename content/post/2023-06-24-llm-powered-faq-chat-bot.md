@@ -1,35 +1,26 @@
 ---
 author: tmzh
 categories:
-- Generative AI 
+- generative-ai
 comments: true
 date: "2023-06-24T12:00:00Z"
 slug: 2023-06-24-llm-powered-faq-chat-bot
 tags:
 - llama
 - langchain
-
-title: "Exploring Retrieval-Augmentated Generation with Open Source Large Language Models"
-
+title: "Exploring Retrieval-Augmented Generation with Open Source Large Language Models"
 mathjax: true
-autoCollapseToc: true
 ---
 
-# Introduction
+## Introduction
 While chatbots have grown common in applications like customer service, they have several shortcomings which disrupts user experience. Traditional chatbots rely on pattern matching and database lookups, which are ineffective when a user's question deviates from what was expected. Responses may feel impersonal and fail to address the true intent when questions deviate slightly from pattern matching rules. 
 
 This is where large language models (LLMs) can provide value. LLMs are better equipped to handle out-of-scope questions due to their ability to understand context and previous exchanges. They can generate more personalized responses compared to typical rule-based chatbots. As such, chatbots represent a prime use case for generative AI in enterprises.
 
 When considering Generative AI use cases in an Enterprise context, it is hard to look past Chatbots utilizing Large Language Models (LLMs). Traditional chatbots can feel impersonal and inadequate due to their reliance on pattern matching and limited context understanding. In contrast, interacting with LLMs can feel natural since due to their improved understanding of context and personalized responses. This chatbot an ideal use case to explore Generate AI in enterprises.
 
-<figure>
-    <img src="/images/2023-06-25-decision-flow-for-chosing-llm.png"
-         alt="Decision Flow for choosing LLM"
-         width="80%">
-    <figcaption><i>Source: Harnessing the Power of LLMs in Practice: A Survey on ChatGPT and Beyond 
-(<a href="https://arxiv.org/pdf/2304.13712.pdf">arXiv:2304.13712</a>)
-</i></figcaption>
-</figure>
+![Decision Flow for choosing LLM](/images/2023-06-25-decision-flow-for-chosing-llm.png)
+*Source: Harnessing the Power of LLMs in Practice: A Survey on ChatGPT and Beyond ([arXiv:2304.13712](https://arxiv.org/pdf/2304.13712.pdf))*
 
 To help an LLM answer based on internal knowledge base, one approach utilizes prompting i.e., inserting knowledge corpora into the prompt along with user queries. 
 
@@ -37,23 +28,18 @@ However, using LLMs in this manner can lead to responses that lack constraints, 
 
 To address this, knowledge retrieval can be incorporated to ground the LLM's responses in factual information from curated sources. This is known as Retrieval Augmented Generation
 
-# How Retrieval Augmented Generation works
+## How Retrieval Augmented Generation works
 Retrieval augmented generation (RAG) combines two main components: a retrieval model and a generation model. 
 
 The retrieval model searches external knowledge bases to extract facts relevant to a user's query. It represents words and documents as embeddings, calculating similarity between query and document embeddings to retrieve top results.
 
 The generation model—typically a large language model—accepts the retrieved information as input. It produces natural language responses guided by this context without direct access to the raw knowledge base. This anchoring to concrete facts mitigates generation of incorrect statements compared to relying solely on the LLM.
 
-<figure>
-    <img src="/images/2023-06-25-retrieval-qa.gif"
-         alt="decision flow for choosing llm"
-         width="80%">
-    <figcaption><i>source: <a href="https://www.newsletter.swirlai.com/p/sai-notes-08-llm-based-chatbots-to">llm based chatbots to query your private knowledge base</a>
-</i></figcaption>
-</figure>
+![RAG workflow](/images/2023-06-25-retrieval-qa.gif)
+*Source: [LLM based chatbots to query your private knowledge base](https://www.newsletter.swirlai.com/p/sai-notes-08-llm-based-chatbots-to)*
 
 
-## Advantages of RAG
+### Advantages of RAG
 RAG offers several advantages over both LLM-based question answering (QA) systems and traditional rule-based chatbots. 
 
 Compared to LLM QA, RAG can provide answers based on externally retrieved facts without the need for expensive fine-tuning. It also offers traceability to the cited information sources. 
@@ -64,13 +50,13 @@ The hybrid approach also has computational benefits as well. By employing lighte
 
 Overall, RAG leverages the strengths of both retrieval and language models. By anchoring flexible conversational abilities to verifiable facts, it offers a more robust framework for open-domain dialogue than previous paradigms alone.
 
-# Implementation
+## Implementation
 In this blog post, we will develop a retrieval augmented generation (RAG) based LLM application from scratch. We will be building a chatbot that answers questions based on a knowledge base. For the knowledge base, we will use [E-commerce FAQ dataset](https://www.kaggle.com/datasets/saadmakhdoom/ecommerce-faq-chatbot-dataset).
 
 
-## Setup
+### Setup
 
-### Load documents
+#### Load documents
 
 The chat dataset used for this project, is in a JSON format as an array of key-value pairs. We will split it into chunks of `n` characters but to retain the information within each chunk, we will ensure that each QnA pair is loaded as an individual chunk. 
 
@@ -87,7 +73,7 @@ metadatas = data['questions'] # retain QnA as dict in metadata
 ids = [str(uuid.uuid1()) for _ in documents] # unique identifier for the vectors
 ```
 
-###  Prepare embeddings
+####  Prepare embeddings
 Next we will use an embedding model to generate vector representations of the chunks. Here we are using `BAAI/bge-small-en-v1.5` model.  This is a tiny model, less than 150 MB in size and uses 384 dimensions to store semantic information, but it is sufficient for retrieval. Since embedding model needs to process a lot more tokens than answering model which only needs to process the prompt, it is better to keep it lightweight. If we have enough memory, we can use a larger model to generate embeddings.
 
 ```python
@@ -116,8 +102,8 @@ Since our FAQ dataset is very small, and we have a light embedding model, it is 
 
 For more expensive embedding operations involving larger dataset or embedding models, we can use a persistent store such as the one offered by ChromaDB itself or other options such as `pgVector`, `Pinecone`, or `Weaviate`
 
-## Retrieval
-### Query Index
+### Retrieval
+#### Query Index
 We can now retrieve a set of documents closest to the query:
 
 ```python
@@ -161,8 +147,8 @@ The top 3 responses are:
 Clearly just returning the answer for the closest matched question will be incomplete and unsatisfactory for the user. The ideal answer needs to incorporate all facts from the relevant document chunks. This is where a generation model can help.
 
 
-## Generation
-### Load a generative model
+### Generation
+#### Load a generative model
 
 LLMs are often trained and released as unaligned base models initially which simply take in text and predict the next token. Bloom, Llama2 and Mistral are examples of such base models. But for practical use, we often require models that are further fine-tuned for the task. For RAG and generally speaking for chat agents we need `Instruct models` that are further fine-tuned on instruction-response pairs. 
 
@@ -197,7 +183,7 @@ Alternatively, you can use any of the other instruct models. I have had good res
 
 
 
-### Build a prompt
+#### Build a prompt
 
 Every instruct model works best when we provide it with prompts as per a specific template on which it was trained. Since this template can vary between models, to reliably apply model-specific chat template, we can use the [Transformers chat template](https://huggingface.co/docs/transformers/main/chat_templating), which allows us to format a list of messages as per the model-specific chat template.
 
@@ -218,7 +204,7 @@ This is done by disabling the default system prompt and configuring the tokenize
 
 ```python
 chat = []
-system_message = "You are a helpful, respectful and honest support executive. Always be as helpfully as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information."
+system_message = "You are a helpful, respectful and honest support executive. Always be as helpful as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information."
 
 for d in docs['metadatas'][0]:
     # append context to system message
@@ -232,7 +218,7 @@ prompt = tokenizer.apply_chat_template(chat, tokenize=False)
 This will insert a set of relevant questions and answers as additional context within the prompt so that the model can use this information to give an answer. For our example the constructed prompt looks like this:
 
     <s>[INST] <<SYS>>
-    You are a helpful, respectful and honest support executive. Always be as helpfully as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information.
+    You are a helpful, respectful and honest support executive. Always be as helpful as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information.
     Question: How can I create an account?
     Answer: To create an account, click on the 'Sign Up' button on the top right corner of our website and follow the instructions to complete the registration process.
     Question: Can I order without creating an account?
@@ -243,7 +229,7 @@ This will insert a set of relevant questions and answers as additional context w
 
     How can I open an account? [/INST]
 
-### Generate response
+#### Generate response
 
 Now we have everything needed to generate a user-friendly response from LLM. 
 
@@ -257,7 +243,7 @@ generated_ids = model.generate(model_inputs, max_new_tokens=100, do_sample=True)
 answer = tokenizer.batch_decode(generated_ids[:, model_inputs.shape[1]:])[0]
 ```
     <s>[INST] <<SYS>>
-    You are a helpful, respectful and honest support executive. Always be as helpfully as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information.
+    You are a helpful, respectful and honest support executive. Always be as helpful as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information.
     Question: How can I create an account?
     Answer: To create an account, click on the 'Sign Up' button on the top right corner of our website and follow the instructions to complete the registration process.
     Question: Can I order without creating an account?
@@ -275,7 +261,7 @@ answer = tokenizer.batch_decode(generated_ids[:, model_inputs.shape[1]:])[0]
 ```
 
 
-### Build a Chat UI
+#### Build a Chat UI
 
 Now we have all the necessary ingredients to build a chatbot. Gradio library offers several ready-made components that simplify the process of building a Chat UI. We need to wrap our token generation process as below:
 
@@ -317,7 +303,7 @@ def respond(query):
     related_questions = []
     references = "## References\n"
 
-    system_message = "You are a helpful, respectful and honest support executive. Always be as helpfully as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information."
+    system_message = "You are a helpful, respectful and honest support executive. Always be as helpful as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information."
 
     for d in docs['metadatas'][0]:
         # prepare chat template
@@ -372,13 +358,13 @@ chatbot.queue()
 chatbot.launch()
 ```
 
-# Conclusion
+## Conclusion
 With the above setup, we can build a chatbot that can provide truthful responses based on an organization's knowledge base. Since the model possesses the language understanding typical of all LLMs, it is able to respond to questions phrased in different manners. And since the responses are tailored to follow a question-and-answer format, the user experience is not disruptive and they don't feel like talking to an impersonal bot.
 
 ![RAG Chatbot](/images/2023-06-25-rag.gif)
 
 
-# Reference
+## Reference
 * https://arxiv.org/abs/2005.11401
 * https://scriv.ai/guides/retrieval-augmented-generation-overview/
 * https://research.ibm.com/blog/retrieval-augmented-generation-RAG

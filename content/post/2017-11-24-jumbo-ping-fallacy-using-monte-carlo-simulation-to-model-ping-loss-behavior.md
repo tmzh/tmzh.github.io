@@ -1,7 +1,7 @@
 ---
 author: tmzh
 categories:
-- Modelling
+- modelling
 comments: true
 date: "2017-11-24T08:01:28Z"
 slug: 2017-11-24-using-monte-carlo-simulation-to-model-ping-test-results

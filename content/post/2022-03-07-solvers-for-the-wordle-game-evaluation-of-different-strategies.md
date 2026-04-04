@@ -2,9 +2,10 @@
 author: tmzh
 categories:
 - solver
+- games
 comments: true
 date: "2022-03-07T12:00:00Z"
-image: https://tmzh.github.io/images/2022-03-07-frequency_count.png
+image: /images/2022-03-07-frequency_count.png
 slug: 2022-03-07-solvers-for-the-wordle-game-evaluation-of-different-strategies
 tags:
 - games
@@ -18,12 +19,12 @@ Wordle is a web-based word game which has become incredibly popular during the p
 
 <!--more-->
 
-# The game
+## The game
 The game is about guessing a five-letter word which changes every day. You get six tries to get it right. After every guess, the game tells you whether any of your letters are in the secret word and whether they are in the correct place.
 
 My initial attempts involved getting 5-letter words from a well-known corpus like NLTK. But it turns out that wordle uses a two smaller dictionaries which can be extracted from Javascript. The challenges are from the first dictionary which is a smaller one consisting of more familiar words. The second word list is a larger one, which consists of words that are accepted as guesses. Using a dictionary may sound like cheating, but I just wanted explore the algorithm and math behind solver for the game.
 
-## Base solution
+### Base solution
 The game is very similar to Master Mind game (which in turn is similar to even older game Bulls and Cow). As a base solution we can use Donald Knuth's Master Mind algorithm. The algorithm works as follows:
 1. Create a set of candidates
 2. Play an initial guess from this list and get the response
@@ -86,7 +87,7 @@ class Solver(ABC):
 Now we need to choose an ideal scoring strategy that would allow us to make first guess as well as choose the best candidates among the remaining after every guess. This is where we can trial a few approaches and see which one gives the best result.
 
 
-### Character frequency
+#### Character frequency
 
 As a first pass, we can prioritize guessing the words containing most common characters. This should increase our odds of landing on the correct word. For example, here is the frequency of characters appearing in all 5 letter words in the dictionary:
 
@@ -112,11 +113,11 @@ True enough, it works well most of the time. Almost half the time, it only takes
 
 ![Most frequent characters strategy](/images/2022-03-07-frequency_count.png)
 
-But we can do better. If we look at the words that took ong to solve, there are multiple candidates which are too similar to them. For example, it takes 13 attempts to predict the word `wares`
+But we can do better. If we look at the words that took long to solve, there are multiple candidates which are too similar to them. For example, it takes 13 attempts to predict the word `wares`
 
 ```
 time_solve('wares', word_list)
-# Next guess, remaining word list
+## Next guess, remaining word list
 soare 12972
 aesir 61
 rales 32
@@ -135,7 +136,7 @@ wares 2
 
 The problem here is that once we reach the 3rd guess `rales`, there are 13 more possibilities for the first char. The only way to find the right answer is to try all 13 possibilities.
 
-## Random Explore
+### Random Explore
 One way to mitigate this scenario is if we can sacrifice first few attempts in trying to "explore" the solution space to learn more about valid and invalid characters. This way we are able to zero in on the right answer much quicker. In a way this is like exploration-exploitation strategies seen in reinforcement learning. After exploration, we can revert to frequency based scoring for exploitation.
 
 ```python
@@ -155,7 +156,7 @@ class RandomExploreExploit(Solver):
 
 Surprisingly this stochastic approach works better than the first method at a lower cost (we don't do any scoring for the first 3 attempts). We are able to win the game 93% of the time. More specifically, my run failed 154 out of 2135 challenges. Can we do better?
 
-## Maximum Entropy
+### Maximum Entropy
 In the previous strategy, we kind of adopted an exploration-exploitation strategy which is normally used for problems whose probability distribution is not known apriori. But in this case, we can do better. Since the word list is already known, we can calculate the probability distribution. So how can we use this probability information to make a good choice?
 
 One thing to note from Master Mind algorithm is that at every turn, we also learn more information about the target word. We can choose words that gives us more information about the target there by reducing our solution space at each turn.
@@ -195,13 +196,13 @@ By this criteria, `tares` is the best starting word which will give us most info
 
 ![Maximum Entropy Strategy](/images/2022-03-07-maximum_entropy.png)
 
-## Conclusion
+### Conclusion
 Here is how the three strategies stack up next to each other. Entropy based solution is the clear winner by a mile. On the flip side, it is quite expensive to compute. 
 
 ![Comparison](/images/2022-03-07-comparison.png)
 
 You can find the source code for the solver in the repo https://github.com/tmzh/wordle.git
 
-## Further references
+### Further references
 1. The best explanation I have seen for the Information entropy forumula is from Aurélien Géron (https://youtu.be/ErfnhcEV1O8). The concept of information entropy leads to cross entropy which is heavily used as loss function in classification methods. This video is quite short but incredible informative.
 2. Grant Sanderson (from 3Blue1Brown) has also released an excellent video (as usual) on solving Worlde using Information theory. He goes much more in detail into the intuition behind the entropy formula.  
