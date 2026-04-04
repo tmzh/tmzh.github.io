@@ -24,3 +24,6 @@ hugo.linux
 .direnv/
 .devenv.flake.nix
 
+# Preview directory (used for theme testing)
+/preview-tufte/
+

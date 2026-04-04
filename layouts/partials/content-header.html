@@ -1,0 +1,25 @@
+<section>
+{{- if .Params.subtitle -}}
+<p class="subtitle">{{ .Params.subtitle }}</p>
+{{- end -}}
+
+{{- if and (.IsPage) (.Params.meta) -}}
+<span class="content-meta">
+  {{- if .Params.author -}}
+  <span class="author">{{ .Params.author }}</span>&nbsp;
+  {{- end -}}
+  {{- if not .Params.hidedate -}}
+  <span class="date">{{ .Date.Format "2006-01-02" }}</span>&nbsp;
+  {{- end -}}
+  {{- if not .Params.hidereadtime -}}
+  <span>{{ .ReadingTime }} min read</span>&nbsp;
+  {{- end -}}
+</span>
+{{- end -}}
+
+{{- if .Params.image -}}
+<div class="featured-image">
+  <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}">
+</div>
+{{- end -}}
+</section>
