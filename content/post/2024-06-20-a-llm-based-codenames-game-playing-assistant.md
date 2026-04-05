@@ -13,8 +13,6 @@ title: "Building a Codenames AI Assistant with Multi-Modal LLMs"
 comments: true
 ---
 
-## Introduction
-
 Codenames is a word association game where two teams guess secret words based on one-word clues. The game involves a 25-word grid, with each team identifying their words while avoiding the opposing team's words and the "assassin" word. 
 
 I knew that word embeddings could be used to group words based on their semantic similarity. This seemed like a good way to cluster words on the board and generate clues. I was largely successful in getting this to work along with few surprises and learnings along the way. 

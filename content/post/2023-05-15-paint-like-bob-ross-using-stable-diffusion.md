@@ -12,7 +12,6 @@ tags:
 title: "Create Beautiful Paintings From Rough Sketches Using Stable Diffusion"
 ---
 
-## Introduction
 When it comes to creating artwork, there are many Generative AI tools, but my favorite one is the vanilla [Stable Diffusion](https://github.com/CompVis/stable-diffusion). Since it is open source, an ecosystem of tools and techniques have sprouted around it. With it, you can train your own model, fine-tune existing models, or use countless other models trained and hosted by others. 
 
 But one of my favorite use case is to render rough sketches into much prettier artwork. In this post we will see how to setup real-time rendering so that we have an interactive drawing experience. See below to see how quickly we can come up with a decent painting. 
