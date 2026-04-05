@@ -1,0 +1,257 @@
+/* ==========================================================================
+   CONFIGURABLE THEME VARIABLES
+
+   To customize, copy this file to your site's assets/scss/ directory
+   and modify the CSS variables below.
+   ========================================================================== */
+:root {
+  /* Content width - desktop (default: 55% for Tufte-style margin notes) */
+  --content-width-desktop: 55%;
+  /* Content width - mobile (default: 95% for full-width readability) */
+  --content-width-mobile: 95%;
+  /* Body padding - desktop (default: 12.5% left) */
+  --body-padding-left-desktop: 12.5%;
+  --body-padding-right-desktop: 0%;
+  /* Body padding - mobile */
+  --body-padding-left-mobile: 5%;
+  --body-padding-right-mobile: 5%;
+  /* Headings colors - Warm, sophisticated palette */
+  --heading-h1-color: #1a1a1a;
+  --heading-h2-color: #2d2d2d;
+  --heading-h3-color: #b45309;
+  --heading-h4-color: #78716c;
+  --heading-h5-color: #555;
+  --heading-h6-color: #666; }
+
+/* Dark mode heading colors */
+[data-theme="dark"] {
+  --heading-h1-color: #e7e5e4;
+  --heading-h2-color: #d6d3d1;
+  --heading-h3-color: #f59e0b;
+  --heading-h4-color: #a8a29e;
+  --heading-h5-color: #a8a29e;
+  --heading-h6-color: #78716c; }
+
+/* ==========================================================================
+   CODE BLOCK STYLES
+   ========================================================================== */
+/* Highlight container - let pre handle the background */
+.highlight {
+  overflow-x: visible;
+  background-color: transparent;
+  max-width: 100%;
+  width: 100%; }
+
+/* Chroma container - full width for code blocks */
+.highlight .chroma {
+  width: 100%;
+  max-width: 100%;
+  display: block; }
+
+/* Wide code blocks - extend beyond text content width */
+pre,
+.highlight pre,
+.chroma pre {
+  width: 95% !important;
+  max-width: 95% !important;
+  margin-left: 0 !important;
+  box-sizing: border-box;
+  /* Keep the background color from custom.css */ }
+
+/* Scrollbar styling for WebKit browsers */
+.highlight::-webkit-scrollbar {
+  height: 8px; }
+
+.highlight::-webkit-scrollbar-track {
+  background: transparent; }
+
+.highlight::-webkit-scrollbar-thumb {
+  background-color: var(--color-border, #ccc);
+  border-radius: 4px; }
+
+.highlight::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-text-secondary, #aaa); }
+
+/* Remove borders from nested pre elements inside highlight containers */
+.highlight pre,
+.highlight .chroma pre,
+.chroma pre {
+  border: none;
+  /* Keep background-color from custom.css for the colored background */
+  margin: 0;
+  padding: 1em; }
+
+/* Ensure code inside highlight has transparent background */
+.highlight pre code,
+.highlight code {
+  border: none;
+  background-color: transparent;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-word; }
+
+/* Chroma container - transparent background */
+.chroma {
+  background-color: transparent; }
+
+/* Plain pre/code blocks (non-highlighted) */
+pre {
+  overflow-x: auto;
+  background-color: transparent;
+  max-width: 100%; }
+
+pre code {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-word;
+  background-color: transparent; }
+
+/* ==========================================================================
+   HEADINGS - Bold hierarchy with improved styling
+   ========================================================================== */
+section h1 {
+  font-size: 2.4rem;
+  font-weight: 600;
+  color: var(--heading-h1-color);
+  line-height: 1.2;
+  max-width: var(--content-width-desktop);
+  margin-top: 2rem;
+  margin-bottom: 1rem; }
+
+section h2 {
+  font-size: 1.9rem;
+  font-weight: 600;
+  color: var(--heading-h2-color);
+  line-height: 1.25;
+  max-width: var(--content-width-desktop);
+  font-style: normal;
+  margin-top: 2.5rem;
+  margin-bottom: 1rem; }
+
+section h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--heading-h3-color);
+  line-height: 1.3;
+  max-width: var(--content-width-desktop);
+  font-style: normal;
+  margin-top: 2rem;
+  margin-bottom: 0.8rem; }
+
+section h4 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--heading-h4-color);
+  line-height: 1.35;
+  max-width: var(--content-width-desktop);
+  font-style: normal;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem; }
+
+section h5 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--heading-h5-color);
+  max-width: var(--content-width-desktop);
+  font-style: normal;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem; }
+
+section h6 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--heading-h6-color);
+  max-width: var(--content-width-desktop);
+  font-style: normal;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem; }
+
+/* Article-level heading overrides */
+article h1 {
+  color: var(--heading-h1-color); }
+
+article h2 {
+  color: var(--heading-h2-color); }
+
+article h3 {
+  color: var(--heading-h3-color); }
+
+/* ==========================================================================
+   MOBILE RESPONSIVE ADJUSTMENTS
+   ========================================================================== */
+@media screen and (max-width: 760px) {
+  /* All headings use mobile content width */
+  section h1 {
+    font-size: 1.9rem;
+    max-width: var(--content-width-mobile); }
+  section h2 {
+    font-size: 1.6rem;
+    max-width: var(--content-width-mobile); }
+  section h3 {
+    font-size: 1.35rem;
+    max-width: var(--content-width-mobile); }
+  section h4 {
+    font-size: 1.2rem;
+    max-width: var(--content-width-mobile); }
+  section h5 {
+    font-size: 1.1rem;
+    max-width: var(--content-width-mobile); }
+  section h6 {
+    font-size: 1rem;
+    max-width: var(--content-width-mobile); }
+  /* Ensure all content uses full width on mobile */
+  section,
+  article {
+    width: 100%;
+    max-width: 100%; }
+  /* Override tufte.css width constraints on mobile */
+  section p,
+  section footer,
+  section ul,
+  section ol,
+  section dl,
+  .page-list p,
+  .post-preview p {
+    width: var(--content-width-mobile);
+    max-width: var(--content-width-mobile); }
+  /* Post list items full width */
+  .page-list .post-preview {
+    width: 100%;
+    max-width: 100%; }
+  /* Post preview titles full width */
+  .post-preview .content-title {
+    width: var(--content-width-mobile);
+    max-width: var(--content-width-mobile); }
+  /* Featured images in post list - contain within content area */
+  .post-preview .featured-image,
+  .post-preview .featured-image img,
+  .featured-image img {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+    display: block; }
+  /* Mobile body padding */
+  body {
+    padding-left: var(--body-padding-left-mobile);
+    padding-right: var(--body-padding-right-mobile); } }
+
+/* ==========================================================================
+   WIDE CONTENT OPTION (Alternative to 55%)
+   Uncomment below to use wider content on desktop
+   ========================================================================== */
+/*
+// For 75% content width (good for code-heavy posts):
+:root {
+  --content-width-desktop: 75%;
+}
+
+// For full-width content (90%):
+:root {
+  --content-width-desktop: 90%;
+}
+
+// Hide margin notes when using full width (they won't fit):
+.sidenote, .marginnote {
+  display: none;
+}
+*/
