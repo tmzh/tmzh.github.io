@@ -54,3 +54,4 @@ Thumbs.db
 *.log
 npm-debug.log*
 
+inspect-codeblock.js

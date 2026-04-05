@@ -544,11 +544,19 @@ body {
 /* -------------------------------------------------------------------------
    Code Blocks - Enhanced styling
    ------------------------------------------------------------------------- */
-pre {
+pre, .highlight {
   background-color: var(--color-code-bg);
   border-radius: 6px;
   padding: 1rem;
   overflow-x: auto;
+  width: 55%;
+  box-sizing: border-box;
+}
+
+.highlight pre, .chroma pre {
+  width: 100%;
+  padding: 0;
+  margin: 0;
 }
 
 code {

@@ -50,6 +50,13 @@
   max-width: 100%;
 }
 
+/* Chroma container - constrain to parent width to prevent background overflow */
+.highlight .chroma {
+  width: 100% !important;
+  max-width: 100% !important;
+  display: block !important;
+}
+
 /* Scrollbar styling for WebKit browsers */
 .highlight::-webkit-scrollbar {
   height: 8px;
