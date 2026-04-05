@@ -1,0 +1,10 @@
+name = "Tufte Custom"
+license = "MIT"
+description = "A clean Tufte-inspired theme using official Tufte CSS"
+tags = ["blog", "tufte", "minimal", "responsive", "typography"]
+features = ["sidenotes", "marginnotes", "math", "d3-charts"]
+min_version = "0.112.0"
+
+[author]
+  name = "tmzh"
+  homepage = "https://tmzh.github.io"

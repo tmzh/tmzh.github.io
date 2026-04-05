@@ -1,8 +1,0 @@
-{{/* Math Shortcode for KaTeX rendering */}}
-{{- $display := .Get "display" | default false -}}
-{{- $formula := trim .Inner " \n\r\t" -}}
-{{- if $display -}}
-<div class="math-display">\[{{ $formula }}\]</div>
-{{- else -}}
-<span class="math-inline">\({{ $formula }}\)</span>
-{{- end -}}

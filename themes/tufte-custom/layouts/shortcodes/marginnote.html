@@ -1,0 +1,13 @@
+{{/* Marginnote Shortcode - unnumbered margin notes
+  Usage: {{< marginnote >}}Your note text here{{< /marginnote >}}
+  Or: {{< marginnote ind="⊕" >}}Note with custom indicator{{< /marginnote >}}
+*/}}
+{{- $ind := .Get "ind" | default .Site.Params.marginNoteInd | default "⊕" -}}
+{{- $id := printf "mn-%d" (add ($.Page.Scratch.Get "marginnote-counter" | default 0) 1) -}}
+{{- $.Page.Scratch.Set "marginnote-counter" (add ($.Page.Scratch.Get "marginnote-counter" | default 0) 1) -}}
+
+<label for="{{ $id }}" class="margin-toggle marginnote-ind">{{ $ind }}</label>
+<input type="checkbox" id="{{ $id }}" class="margin-toggle">
+<span class="marginnote">
+  {{ .Inner | markdownify }}
+</span>

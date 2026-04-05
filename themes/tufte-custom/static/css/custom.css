@@ -1,0 +1,826 @@
+/* ==========================================================================
+   CUSTOM STYLES - Transformer Circuits inspired + Personal blog tweaks
+   ========================================================================== */
+
+/* -------------------------------------------------------------------------
+   CSS Variables for theming
+   ------------------------------------------------------------------------- */
+:root {
+  /* Colors - Light mode: Warm paper-like background */
+  --color-bg: #faf9f5;
+  --color-text: #1a1a1a;
+  --color-text-secondary: #555;
+  --color-text-muted: #777;
+  --color-link: #1a1a1a;
+  --color-accent: #b45309;
+  --color-accent-light: #d97706;
+  --color-border: #e5e2d8;
+  --color-border-light: #f0ede3;
+  --color-code-bg: #f5f3ed;
+  --color-card-bg: #ffffff;
+  --color-hero-bg: transparent;
+  
+  /* Typography */
+  --font-body: et-book, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+  --font-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  --font-mono: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  
+  /* Spacing */
+  --content-width: 55%;
+  --margin-width: 45%;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -2px rgba(0,0,0,0.1);
+}
+
+/* Dark mode - Rich, complementary palette */
+[data-theme="dark"] {
+  --color-bg: #1c1917;
+  --color-text: #e7e5e4;
+  --color-text-secondary: #a8a29e;
+  --color-text-muted: #78716c;
+  --color-link: #e7e5e4;
+  --color-accent: #f59e0b;
+  --color-accent-light: #fbbf24;
+  --color-border: #44403c;
+  --color-border-light: #57534e;
+  --color-code-bg: #292524;
+  --color-card-bg: #231f1d;
+  --color-hero-bg: transparent;
+  
+  /* Shadows for dark mode */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.4), 0 2px 4px -2px rgba(0,0,0,0.3);
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0.2rem 0.4rem;
+  border-radius: 4px;
+  transition: background-color 0.2s, transform 0.1s;
+  line-height: 1;
+}
+
+.theme-toggle:hover {
+  background-color: var(--color-border);
+  transform: scale(1.05);
+}
+
+/* Apply variables */
+body {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+/* Update tufte.css body background override */
+body {
+  background-color: var(--color-bg) !important;
+}
+
+[data-theme="dark"] body {
+  background-color: var(--color-bg) !important;
+}
+
+/* -------------------------------------------------------------------------
+   Site Header - Minimal, clean navigation
+   ------------------------------------------------------------------------- */
+.site-header {
+  padding: 2rem 0 1.5rem 0;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.site-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-wrap: wrap;
+  width: 55%;
+}
+
+.site-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  letter-spacing: -0.01em;
+}
+
+.site-title:hover {
+  color: var(--color-accent);
+}
+
+.site-subtitle {
+  font-size: 0.95rem;
+  color: var(--color-text-secondary);
+  margin-top: 0.4rem;
+  font-style: italic;
+  width: 55%;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+
+.nav-links a {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  text-decoration: none;
+  color: var(--color-text-secondary);
+  transition: color 0.2s;
+  font-weight: 500;
+}
+
+.nav-links a:hover {
+  color: var(--color-accent);
+}
+
+/* -------------------------------------------------------------------------
+   Hero Section - Welcome area with site intro and integrated nav
+   ------------------------------------------------------------------------- */
+.hero-section {
+  margin: 0 0 4rem 0;
+  padding: 0;
+  width: 55%;
+}
+
+/* Hero Navigation */
+.hero-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+  padding: 1.5rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.hero-nav-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.hero-nav-links a {
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  text-decoration: none;
+  color: var(--color-text-secondary);
+  transition: color 0.2s;
+  font-weight: 500;
+}
+
+.hero-nav-links a:hover {
+  color: var(--color-accent);
+}
+
+.hero-title {
+  font-size: 2.8rem;
+  font-weight: 600;
+  line-height: 1.1;
+  margin: 0 0 0.5rem 0;
+  color: var(--color-text);
+  font-family: var(--font-body);
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: var(--color-text-secondary);
+  margin: 0 0 1.5rem 0;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.hero-description {
+  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--color-text);
+  margin: 0;
+  max-width: 100%;
+}
+
+.hero-description p {
+  margin: 0 0 1rem 0;
+}
+
+/* -------------------------------------------------------------------------
+   About Section - Author bio on homepage
+   ------------------------------------------------------------------------- */
+.about-section {
+  margin: 3rem 0 4rem 0;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  width: 55%;
+}
+
+.about-section h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0 0 1rem 0;
+  color: var(--color-text);
+  font-style: normal;
+  font-family: var(--font-sans);
+}
+
+.about-content {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+}
+
+.about-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 2px solid var(--color-border);
+}
+
+.about-text {
+  flex: 1;
+}
+
+.about-text p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.about-links {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.about-links a {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--color-accent);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.about-links a:hover {
+  text-decoration: underline;
+}
+
+/* -------------------------------------------------------------------------
+   Post Header - Clean metadata styling
+   ------------------------------------------------------------------------- */
+.post-header {
+  margin-bottom: 3rem;
+}
+
+.post-title {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+}
+
+.post-meta {
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  margin-top: 1rem;
+}
+
+.post-meta time {
+  color: var(--color-text-secondary);
+}
+
+.post-meta .tags {
+  margin-left: 0.5rem;
+}
+
+.post-meta .tag {
+  text-decoration: none;
+  color: var(--color-text-secondary);
+  margin-right: 0.5rem;
+}
+
+.post-meta .tag:hover {
+  color: var(--color-accent);
+}
+
+/* -------------------------------------------------------------------------
+   Post Content - Enhanced typography
+   ------------------------------------------------------------------------- */
+.post-content {
+  margin-top: 2rem;
+}
+
+.post-content h2 {
+  margin-top: 3rem;
+}
+
+.post-content h3 {
+  margin-top: 2.5rem;
+}
+
+/* Links with subtle underline */
+.post-content a {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  text-decoration-thickness: 0.08em;
+  text-decoration-color: var(--color-text-secondary);
+}
+
+.post-content a:hover {
+  text-decoration-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+/* -------------------------------------------------------------------------
+   Recent Posts Section - Transformer Circuits Style
+   ------------------------------------------------------------------------- */
+.recent-posts {
+  margin-top: 3rem;
+}
+
+/* -------------------------------------------------------------------------
+   Post Preview - Three column layout (Date | Content | Image)
+   ------------------------------------------------------------------------- */
+.post-preview {
+  display: grid;
+  grid-template-columns: 140px minmax(0, 500px) 200px;
+  gap: 2rem;
+  align-items: start;
+  margin-bottom: 4rem;
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+.post-preview:last-child {
+  margin-bottom: 2rem;
+}
+
+/* Date Column */
+.post-preview-date {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1.4;
+  padding-top: 0.5rem;
+}
+
+.post-preview-date time {
+  color: var(--color-text-muted);
+}
+
+/* Content Column */
+.post-preview-content {
+  min-width: 0;
+  padding-right: 1rem;
+}
+
+.post-preview h3 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2.2rem;
+  font-weight: 700;
+  font-style: normal;
+  line-height: 1.15;
+  font-family: var(--font-body);
+  letter-spacing: -0.01em;
+}
+
+.post-preview h3 a {
+  text-decoration: none;
+  color: var(--color-text);
+  transition: color 0.2s;
+}
+
+.post-preview h3 a:hover {
+  color: var(--color-accent);
+}
+
+.post-preview .post-meta {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  margin: 0 0 0.8rem 0;
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.post-preview .post-summary {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* Image Column */
+.post-preview-image {
+  width: 200px;
+  height: 140px;
+  flex-shrink: 0;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--color-code-bg);
+}
+
+.post-preview-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.post-preview:hover .post-preview-image img {
+  transform: scale(1.02);
+}
+
+/* Posts without images - span content wider */
+.post-preview:not(:has(.post-preview-image)) {
+  grid-template-columns: 140px minmax(0, 700px);
+}
+
+.post-preview:not(:has(.post-preview-image)) .post-preview-content {
+  padding-right: 0;
+}
+
+.more-posts {
+  margin-top: 2rem;
+  font-family: var(--font-sans);
+}
+
+.more-posts a {
+  text-decoration: none;
+  color: var(--color-accent);
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.more-posts a:hover {
+  text-decoration: underline;
+}
+
+/* -------------------------------------------------------------------------
+   Post Navigation - Previous/Next links
+   ------------------------------------------------------------------------- */
+.post-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-border);
+  width: 55%;
+}
+
+.post-nav a {
+  text-decoration: none;
+  color: var(--color-text);
+  max-width: 45%;
+}
+
+.post-nav a:hover {
+  color: var(--color-accent);
+}
+
+.post-nav .nav-label {
+  display: block;
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  margin-bottom: 0.3rem;
+}
+
+.post-nav .nav-title {
+  font-size: 1.1rem;
+  font-style: italic;
+}
+
+.post-nav .next {
+  text-align: right;
+  margin-left: auto;
+}
+
+/* -------------------------------------------------------------------------
+   Table of Contents - Floating or inline
+   ------------------------------------------------------------------------- */
+.toc {
+  margin: 2rem 0;
+  padding: 1rem 1.5rem;
+  background: var(--color-code-bg);
+  border-radius: 6px;
+  width: 55%;
+}
+
+.toc h2 {
+  margin-top: 0;
+  font-size: 1.2rem;
+  font-style: normal;
+  font-family: var(--font-sans);
+}
+
+.toc ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.toc li {
+  margin: 0.3rem 0;
+}
+
+.toc a {
+  text-decoration: none;
+  color: var(--color-text-secondary);
+}
+
+.toc a:hover {
+  color: var(--color-accent);
+}
+
+/* -------------------------------------------------------------------------
+   Code Blocks - Enhanced styling
+   ------------------------------------------------------------------------- */
+pre {
+  background-color: var(--color-code-bg);
+  border-radius: 6px;
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+}
+
+:not(pre) > code {
+  background-color: var(--color-code-bg);
+  padding: 0.2em 0.4em;
+  border-radius: 4px;
+  font-size: 0.85em;
+}
+
+/* Highlight.js overrides */
+.hljs {
+  background: transparent !important;
+}
+
+/* -------------------------------------------------------------------------
+   D3 Charts - Container styling
+   ------------------------------------------------------------------------- */
+.d3-chart {
+  margin: 2rem 0;
+}
+
+.d3-container {
+  background: var(--color-code-bg);
+  border-radius: 6px;
+}
+
+.d3-chart figcaption {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+}
+
+/* SVG text styling */
+.d3-container text {
+  font-family: var(--font-sans);
+  font-size: 12px;
+}
+
+.d3-container .axis text {
+  fill: var(--color-text-secondary);
+}
+
+.d3-container .axis path,
+.d3-container .axis line {
+  stroke: var(--color-border);
+}
+
+/* -------------------------------------------------------------------------
+   Tables - Clean styling
+   ------------------------------------------------------------------------- */
+table {
+  border-collapse: collapse;
+  width: 55%;
+  margin: 1.5rem 0;
+  font-size: 1.1rem;
+}
+
+th, td {
+  padding: 0.5rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--color-border);
+}
+
+th {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  border-bottom: 2px solid var(--color-border);
+}
+
+tr:hover {
+  background-color: var(--color-code-bg);
+}
+
+/* -------------------------------------------------------------------------
+   Site Footer
+   ------------------------------------------------------------------------- */
+.site-footer {
+  margin-top: 4rem;
+  padding: 2rem 0;
+  border-top: 1px solid var(--color-border);
+  font-family: var(--font-sans);
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  width: 55%;
+}
+
+.site-footer p {
+  margin: 0;
+}
+
+/* -------------------------------------------------------------------------
+   Pagination
+   ------------------------------------------------------------------------- */
+.pagination {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 3rem;
+  width: 55%;
+  font-family: var(--font-sans);
+}
+
+.pagination a {
+  text-decoration: none;
+  color: var(--color-accent);
+}
+
+/* -------------------------------------------------------------------------
+   Mobile Responsive
+   ------------------------------------------------------------------------- */
+@media (max-width: 760px) {
+  .site-nav {
+    width: 100%;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .site-subtitle {
+    width: 100%;
+  }
+  
+  .nav-links {
+    gap: 1rem;
+  }
+  
+  .hero-section {
+    width: 100%;
+    margin: 0 0 3rem 0;
+  }
+  
+  .hero-nav {
+    margin-bottom: 2rem;
+    padding: 1rem 0;
+  }
+  
+  .hero-nav-links {
+    gap: 1rem;
+  }
+  
+  .hero-nav-links a {
+    font-size: 0.9rem;
+  }
+  
+  .hero-title {
+    font-size: 2rem;
+  }
+  
+  .hero-subtitle {
+    font-size: 1.1rem;
+  }
+  
+  .about-section {
+    width: 100%;
+  }
+  
+  .about-content {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .about-avatar {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .post-preview {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    margin-bottom: 3rem;
+  }
+  
+  .post-preview:not(:has(.post-preview-image)) {
+    grid-template-columns: 1fr;
+  }
+  
+  .post-preview-date {
+    padding-top: 0;
+    font-size: 0.8rem;
+  }
+  
+  .post-preview-content {
+    padding-right: 0;
+  }
+  
+  .post-preview h3 {
+    font-size: 1.5rem;
+  }
+  
+  .post-preview .post-summary {
+    max-width: 100%;
+  }
+  
+  .post-preview-image {
+    width: 100%;
+    height: 200px;
+    order: -1;
+  }
+  
+  .post-nav {
+    width: 100%;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  
+  .post-nav a {
+    max-width: 100%;
+  }
+  
+  .post-nav .next {
+    text-align: left;
+  }
+  
+  .toc {
+    width: 100%;
+  }
+  
+  .site-footer {
+    width: 100%;
+  }
+  
+  .pagination {
+    width: 100%;
+  }
+  
+  table {
+    width: 100%;
+    font-size: 0.9rem;
+  }
+  
+  th, td {
+    padding: 0.4rem 0.6rem;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Print Styles
+   ------------------------------------------------------------------------- */
+@media print {
+  .site-header,
+  .site-footer,
+  .post-nav,
+  .pagination,
+  .theme-toggle {
+    display: none;
+  }
+  
+  body {
+    padding-left: 5%;
+    width: 90%;
+    background: white !important;
+    color: black !important;
+  }
+  
+  .sidenote,
+  .marginnote {
+    display: block;
+    float: right;
+    clear: right;
+    margin-right: -60%;
+    width: 50%;
+  }
+  
+  .post-preview {
+    grid-template-columns: 100px 1fr;
+    gap: 1.5rem;
+  }
+  
+  .post-preview-image {
+    display: none;
+  }
+}

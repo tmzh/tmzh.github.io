@@ -1,0 +1,72 @@
+{{ define "main" }}
+<article class="home">
+
+  {{/* Hero Section with integrated navigation */}}
+  <section class="hero-section">
+    <nav class="hero-nav">
+      <div class="hero-nav-links">
+        {{ range .Site.Menus.nav }}
+        <a href="{{ .URL | relURL }}">{{ .Name }}</a>
+        {{ end }}
+      </div>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
+    </nav>
+
+    <h1 class="hero-title">{{ .Site.Title }}</h1>
+    <p class="hero-subtitle">{{ .Site.Params.subtitle }}</p>
+    {{ with .Site.Params.heroDescription }}
+    <div class="hero-description">
+      <p>{{ . }}</p>
+    </div>
+    {{ end }}
+  </section>
+
+  {{/* Homepage Content from _index.md */}}
+  {{ with .Content }}
+  <section class="home-content">
+    {{ . }}
+  </section>
+  {{ end }}
+
+
+  {{/* Recent Posts Section - Transformer Circuits Style */}}
+  <section class="recent-posts">
+    {{ $posts := where .Site.RegularPages "Type" "post" }}
+    {{ range first 6 $posts }}
+    <article class="post-preview">
+      {{/* Date Column */}}
+      <div class="post-preview-date">
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2006" | upper }}</time>
+      </div>
+
+      {{/* Content Column */}}
+      <div class="post-preview-content">
+        <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+        <div class="post-meta">
+          {{ if .Params.author }}{{ .Params.author }}{{ else }}{{ $.Site.Params.author.name }}{{ end }}
+          {{ if not .Params.hidereadtime }}&middot; {{ .ReadingTime }} min read{{ end }}
+        </div>
+        {{ if .Description }}
+        <p class="post-summary">{{ .Description }}</p>
+        {{ else if .Summary }}
+        <p class="post-summary">{{ .Summary | truncate 180 }}</p>
+        {{ end }}
+      </div>
+
+      {{/* Image Column */}}
+      {{ if .Params.image }}
+      <div class="post-preview-image">
+        <a href="{{ .RelPermalink }}">
+          <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}" loading="lazy">
+        </a>
+      </div>
+      {{ end }}
+    </article>
+    {{ end }}
+
+    {{ if gt (len $posts) 6 }}
+    <p class="more-posts"><a href="{{ "/post/" | relURL }}">View all posts &rarr;</a></p>
+    {{ end }}
+  </section>
+</article>
+{{ end }}

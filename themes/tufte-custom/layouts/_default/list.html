@@ -1,0 +1,43 @@
+{{ define "main" }}
+<article>
+  <header>
+    <h1>{{ .Title }}</h1>
+    {{ with .Content }}
+    <section>{{ . }}</section>
+    {{ end }}
+  </header>
+
+  <section class="post-list">
+    {{ range (.Paginate .Pages).Pages }}
+    <article class="post-preview">
+      <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
+      {{ if .Params.subtitle }}
+      <p class="subtitle">{{ .Params.subtitle }}</p>
+      {{ end }}
+      <div class="post-meta">
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+        {{ if not .Params.hidereadtime }}
+        <span class="reading-time">&middot; {{ .ReadingTime }} min read</span>
+        {{ end }}
+      </div>
+      {{ if .Description }}
+      <p>{{ .Description }}</p>
+      {{ else if .Summary }}
+      <p>{{ .Summary | truncate 200 }}</p>
+      {{ end }}
+    </article>
+    {{ end }}
+  </section>
+
+  {{ if gt .Paginator.TotalPages 1 }}
+  <nav class="pagination">
+    {{ if .Paginator.HasPrev }}
+    <a href="{{ .Paginator.Prev.URL }}">&larr; Newer</a>
+    {{ end }}
+    {{ if .Paginator.HasNext }}
+    <a href="{{ .Paginator.Next.URL }}">Older &rarr;</a>
+    {{ end }}
+  </nav>
+  {{ end }}
+</article>
+{{ end }}
