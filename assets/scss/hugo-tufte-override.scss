@@ -1,6 +1,6 @@
 /* ==========================================================================
    CONFIGURABLE THEME VARIABLES
-   
+
    To customize, copy this file to your site's assets/scss/ directory
    and modify the CSS variables below.
    ========================================================================== */
@@ -8,18 +8,18 @@
 :root {
   /* Content width - desktop (default: 55% for Tufte-style margin notes) */
   --content-width-desktop: 55%;
-  
+
   /* Content width - mobile (default: 95% for full-width readability) */
   --content-width-mobile: 95%;
-  
+
   /* Body padding - desktop (default: 12.5% left) */
   --body-padding-left-desktop: 12.5%;
   --body-padding-right-desktop: 0%;
-  
+
   /* Body padding - mobile */
   --body-padding-left-mobile: 5%;
   --body-padding-right-mobile: 5%;
-  
+
   /* Headings colors - Warm, sophisticated palette */
   --heading-h1-color: #1a1a1a;
   --heading-h2-color: #2d2d2d;
@@ -43,18 +43,30 @@
    CODE BLOCK STYLES
    ========================================================================== */
 
-/* Highlight container - transparent background, horizontal scroll */
+/* Highlight container - let pre handle the background */
 .highlight {
-  overflow-x: auto !important;
-  background-color: transparent !important;
+  overflow-x: visible;
+  background-color: transparent;
   max-width: 100%;
+  width: 100%;
 }
 
-/* Chroma container - constrain to parent width to prevent background overflow */
+/* Chroma container - full width for code blocks */
 .highlight .chroma {
-  width: 100% !important;
-  max-width: 100% !important;
-  display: block !important;
+  width: 100%;
+  max-width: 100%;
+  display: block;
+}
+
+/* Wide code blocks - extend beyond text content width */
+pre,
+.highlight pre,
+.chroma pre {
+  width: 95% !important;
+  max-width: 95% !important;
+  margin-left: 0 !important;
+  box-sizing: border-box;
+  /* Keep the background color from custom.css */
 }
 
 /* Scrollbar styling for WebKit browsers */
@@ -79,8 +91,8 @@
 .highlight pre,
 .highlight .chroma pre,
 .chroma pre {
-  border: none !important;
-  background-color: transparent !important;
+  border: none;
+  /* Keep background-color from custom.css for the colored background */
   margin: 0;
   padding: 1em;
 }
@@ -88,38 +100,38 @@
 /* Ensure code inside highlight has transparent background */
 .highlight pre code,
 .highlight code {
-  border: none !important;
-  background-color: transparent !important;
-  white-space: pre !important;
-  word-wrap: normal !important;
-  word-break: normal !important;
+  border: none;
+  background-color: transparent;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
 /* Chroma container - transparent background */
 .chroma {
-  background-color: transparent !important;
+  background-color: transparent;
 }
 
 /* Plain pre/code blocks (non-highlighted) */
 pre {
-  overflow-x: auto !important;
-  background-color: transparent !important;
+  overflow-x: auto;
+  background-color: transparent;
   max-width: 100%;
 }
 
 pre code {
-  white-space: pre !important;
-  word-wrap: normal !important;
-  word-break: normal !important;
-  background-color: transparent !important;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  word-break: break-word;
+  background-color: transparent;
 }
 
 /* ==========================================================================
    HEADINGS - Bold hierarchy with improved styling
    ========================================================================== */
 
-section h1 { 
-  font-size: 2.4rem; 
+section h1 {
+  font-size: 2.4rem;
   font-weight: 600;
   color: var(--heading-h1-color);
   line-height: 1.2;
@@ -128,8 +140,8 @@ section h1 {
   margin-bottom: 1rem;
 }
 
-section h2 { 
-  font-size: 1.9rem; 
+section h2 {
+  font-size: 1.9rem;
   font-weight: 600;
   color: var(--heading-h2-color);
   line-height: 1.25;
@@ -139,8 +151,8 @@ section h2 {
   margin-bottom: 1rem;
 }
 
-section h3 { 
-  font-size: 1.5rem; 
+section h3 {
+  font-size: 1.5rem;
   font-weight: 600;
   color: var(--heading-h3-color);
   line-height: 1.3;
@@ -150,8 +162,8 @@ section h3 {
   margin-bottom: 0.8rem;
 }
 
-section h4 { 
-  font-size: 1.3rem; 
+section h4 {
+  font-size: 1.3rem;
   font-weight: 600;
   color: var(--heading-h4-color);
   line-height: 1.35;
@@ -161,8 +173,8 @@ section h4 {
   margin-bottom: 0.5rem;
 }
 
-section h5 { 
-  font-size: 1.15rem; 
+section h5 {
+  font-size: 1.15rem;
   font-weight: 600;
   color: var(--heading-h5-color);
   max-width: var(--content-width-desktop);
@@ -171,8 +183,8 @@ section h5 {
   margin-bottom: 0.5rem;
 }
 
-section h6 { 
-  font-size: 1.05rem; 
+section h6 {
+  font-size: 1.05rem;
   font-weight: 600;
   color: var(--heading-h6-color);
   max-width: var(--content-width-desktop);
@@ -206,14 +218,14 @@ article h3 {
   section h4 { font-size: 1.2rem; max-width: var(--content-width-mobile); }
   section h5 { font-size: 1.1rem; max-width: var(--content-width-mobile); }
   section h6 { font-size: 1rem; max-width: var(--content-width-mobile); }
-  
+
   /* Ensure all content uses full width on mobile */
   section,
   article {
-    width: 100% !important;
-    max-width: 100% !important;
+    width: 100%;
+    max-width: 100%;
   }
-  
+
   /* Override tufte.css width constraints on mobile */
   section p,
   section footer,
@@ -222,36 +234,36 @@ article h3 {
   section dl,
   .page-list p,
   .post-preview p {
-    width: var(--content-width-mobile) !important;
-    max-width: var(--content-width-mobile) !important;
+    width: var(--content-width-mobile);
+    max-width: var(--content-width-mobile);
   }
-  
+
   /* Post list items full width */
   .page-list .post-preview {
-    width: 100% !important;
-    max-width: 100% !important;
+    width: 100%;
+    max-width: 100%;
   }
-  
+
   /* Post preview titles full width */
   .post-preview .content-title {
-    width: var(--content-width-mobile) !important;
-    max-width: var(--content-width-mobile) !important;
+    width: var(--content-width-mobile);
+    max-width: var(--content-width-mobile);
   }
-  
+
   /* Featured images in post list - contain within content area */
   .post-preview .featured-image,
   .post-preview .featured-image img,
   .featured-image img {
-    max-width: 100% !important;
-    width: 100% !important;
+    max-width: 100%;
+    width: 100%;
     height: auto;
     display: block;
   }
-  
+
   /* Mobile body padding */
   body {
-    padding-left: var(--body-padding-left-mobile) !important;
-    padding-right: var(--body-padding-right-mobile) !important;
+    padding-left: var(--body-padding-left-mobile);
+    padding-right: var(--body-padding-right-mobile);
   }
 }
 
@@ -260,7 +272,7 @@ article h3 {
    Uncomment below to use wider content on desktop
    ========================================================================== */
 
-/* 
+/*
 // For 75% content width (good for code-heavy posts):
 :root {
   --content-width-desktop: 75%;
