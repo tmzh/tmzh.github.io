@@ -343,6 +343,9 @@ body {
    ------------------------------------------------------------------------- */
 .recent-posts {
   margin-top: 3rem;
+  width: 55%;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 /* -------------------------------------------------------------------------
@@ -350,12 +353,14 @@ body {
    ------------------------------------------------------------------------- */
 .post-preview {
   display: grid;
-  grid-template-columns: 140px minmax(0, 500px) 200px;
-  gap: 2rem;
+  grid-template-columns: 100px minmax(0, 1fr) 150px;
+  gap: 1.5rem;
   align-items: start;
   margin-bottom: 4rem;
   padding-bottom: 0;
   border-bottom: none;
+  width: 100%;
+  max-width: 100%;
 }
 
 .post-preview:last-child {
@@ -385,12 +390,11 @@ body {
 
 .post-preview h3 {
   margin: 0 0 0.5rem 0;
-  font-size: 2.2rem;
-  font-weight: 700;
+  font-size: 1.6rem;
+  font-weight: 600;
   font-style: normal;
-  line-height: 1.15;
+  line-height: 1.25;
   font-family: var(--font-body);
-  letter-spacing: -0.01em;
 }
 
 .post-preview h3 a {
@@ -416,7 +420,7 @@ body {
   font-size: 1.1rem;
   line-height: 1.6;
   color: var(--color-text-secondary);
-  margin: 0;
+  margin: 0.5rem 0 0 0;
 }
 
 /* Image Column */
@@ -442,7 +446,7 @@ body {
 
 /* Posts without images - span content wider */
 .post-preview:not(:has(.post-preview-image)) {
-  grid-template-columns: 140px minmax(0, 700px);
+  grid-template-columns: 100px minmax(0, 1fr);
 }
 
 .post-preview:not(:has(.post-preview-image)) .post-preview-content {

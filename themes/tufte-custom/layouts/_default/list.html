@@ -7,23 +7,32 @@
     {{ end }}
   </header>
 
-  <section class="post-list">
+  <section class="recent-posts">
     {{ range (.Paginate .Pages).Pages }}
     <article class="post-preview">
-      <h2><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
-      {{ if .Params.subtitle }}
-      <p class="subtitle">{{ .Params.subtitle }}</p>
-      {{ end }}
-      <div class="post-meta">
-        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
-        {{ if not .Params.hidereadtime }}
-        <span class="reading-time">&middot; {{ .ReadingTime }} min read</span>
+      {{/* Date Column */}}
+      <div class="post-preview-date">
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2006" | upper }}</time>
+      </div>
+
+      {{/* Content Column */}}
+      <div class="post-preview-content">
+        <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+        <div class="post-meta">
+          {{ if not .Params.hidereadtime }}{{ .ReadingTime }} min read{{ end }}
+        </div>
+        {{ if .Description }}
+        <p class="post-summary">{{ .Description }}</p>
         {{ end }}
       </div>
-      {{ if .Description }}
-      <p>{{ .Description }}</p>
-      {{ else if .Summary }}
-      <p>{{ .Summary | truncate 200 }}</p>
+
+      {{/* Image Column */}}
+      {{ if .Params.image }}
+      <div class="post-preview-image">
+        <a href="{{ .RelPermalink }}">
+          <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}" loading="lazy">
+        </a>
+      </div>
       {{ end }}
     </article>
     {{ end }}
