@@ -1,0 +1,19 @@
+{{/* Figure Shortcode - Tufte-style figures
+  Usage: 
+  {{< figure src="image.jpg" caption="Figure caption" >}}
+  {{< figure src="image.jpg" caption="Full-width figure" class="fullwidth" >}}
+*/}}
+{{- $src := .Get "src" -}}
+{{- $caption := .Get "caption" -}}
+{{- $alt := .Get "alt" | default $caption -}}
+{{- $class := .Get "class" -}}
+{{- $link := .Get "link" -}}
+
+<figure{{ if $class }} class="{{ $class }}"{{ end }}>
+  {{ if $link }}<a href="{{ $link }}">{{ end }}
+  <img src="{{ $src | relURL }}" alt="{{ $alt }}">
+  {{ if $link }}</a>{{ end }}
+  {{ if $caption }}
+  <figcaption>{{ $caption | markdownify }}</figcaption>
+  {{ end }}
+</figure>

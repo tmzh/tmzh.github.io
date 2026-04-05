@@ -1,0 +1,14 @@
+<header class="site-header">
+  <nav class="site-nav">
+    <a href="{{ "/" | relURL }}" class="site-title">{{ .Site.Title }}</a>
+    <div class="nav-links">
+      {{ range .Site.Menus.nav }}
+      <a href="{{ .URL | relURL }}">{{ .Name }}</a>
+      {{ end }}
+      <button id="theme-toggle" class="theme-toggle" aria-label="Toggle theme">🌙</button>
+    </div>
+  </nav>
+  {{ if .Site.Params.subtitle }}
+  <p class="site-subtitle">{{ .Site.Params.subtitle }}</p>
+  {{ end }}
+</header>

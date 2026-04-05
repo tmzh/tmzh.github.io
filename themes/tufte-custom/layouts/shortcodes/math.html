@@ -1,0 +1,12 @@
+{{/* Math Shortcode for KaTeX rendering
+  Usage:
+  Inline: {{< math >}}E = mc^2{{< /math >}}
+  Display: {{< math display=true >}}\sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6}{{< /math >}}
+*/}}
+{{- $display := .Get "display" | default false -}}
+{{- $formula := trim .Inner " \n\r\t" -}}
+{{- if $display -}}
+<div class="math-display">\[{{ $formula }}\]</div>
+{{- else -}}
+<span class="math-inline">\({{ $formula }}\)</span>
+{{- end -}}

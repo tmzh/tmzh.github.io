@@ -1,0 +1,60 @@
+<footer class="site-footer">
+  <p>{{ .Site.Params.footerText | default "" }}</p>
+</footer>
+
+{{/* Theme Toggle Script */}}
+<script>
+(function() {
+  // Check for saved theme preference or default to light
+  const savedTheme = localStorage.getItem('theme');
+  const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const currentTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+  
+  // Apply theme immediately
+  document.documentElement.setAttribute('data-theme', currentTheme);
+  
+  // Update toggle button state
+  function updateToggleButton() {
+    const toggle = document.getElementById('theme-toggle');
+    if (toggle) {
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      toggle.setAttribute('aria-label', isDark ? 'Switch to light theme' : 'Switch to dark theme');
+      toggle.innerHTML = isDark ? '☀️' : '🌙';
+    }
+  }
+  
+  // Toggle theme function
+  function toggleTheme() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateToggleButton();
+    
+    // Update highlight.js theme
+    const hljsLight = document.getElementById('hljs-light');
+    const hljsDark = document.getElementById('hljs-dark');
+    if (hljsLight && hljsDark) {
+      if (newTheme === 'dark') {
+        hljsLight.setAttribute('disabled', '');
+        hljsDark.removeAttribute('disabled');
+      } else {
+        hljsDark.setAttribute('disabled', '');
+        hljsLight.removeAttribute('disabled');
+      }
+    }
+  }
+  
+  // Initialize toggle button
+  document.addEventListener('DOMContentLoaded', function() {
+    updateToggleButton();
+    const toggle = document.getElementById('theme-toggle');
+    if (toggle) {
+      toggle.addEventListener('click', toggleTheme);
+    }
+  });
+  
+  // Expose toggle function globally
+  window.toggleTheme = toggleTheme;
+})();
+</script>

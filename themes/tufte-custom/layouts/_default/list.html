@@ -1,0 +1,52 @@
+{{ define "main" }}
+<article>
+  <header>
+    <h1>{{ .Title }}</h1>
+    {{ with .Content }}
+    <section>{{ . }}</section>
+    {{ end }}
+  </header>
+
+  <section class="recent-posts">
+    {{ range (.Paginate .Pages).Pages }}
+    <article class="post-preview">
+      {{/* Date Column */}}
+      <div class="post-preview-date">
+        <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2006" | upper }}</time>
+      </div>
+
+      {{/* Content Column */}}
+      <div class="post-preview-content">
+        <h3><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+        <div class="post-meta">
+          {{ if not .Params.hidereadtime }}{{ .ReadingTime }} min read{{ end }}
+        </div>
+        {{ if .Description }}
+        <p class="post-summary">{{ .Description }}</p>
+        {{ end }}
+      </div>
+
+      {{/* Image Column */}}
+      {{ if .Params.image }}
+      <div class="post-preview-image">
+        <a href="{{ .RelPermalink }}">
+          <img src="{{ .Params.image | relURL }}" alt="{{ .Title }}" loading="lazy">
+        </a>
+      </div>
+      {{ end }}
+    </article>
+    {{ end }}
+  </section>
+
+  {{ if gt .Paginator.TotalPages 1 }}
+  <nav class="pagination">
+    {{ if .Paginator.HasPrev }}
+    <a href="{{ .Paginator.Prev.URL }}">&larr; Newer</a>
+    {{ end }}
+    {{ if .Paginator.HasNext }}
+    <a href="{{ .Paginator.Next.URL }}">Older &rarr;</a>
+    {{ end }}
+  </nav>
+  {{ end }}
+</article>
+{{ end }}

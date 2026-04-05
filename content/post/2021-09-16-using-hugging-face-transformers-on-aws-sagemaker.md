@@ -19,7 +19,6 @@ In this post, we will go through a high level overview of Hugging Face Transform
 
 <!--more-->
 
-## Introduction to Hugging Face Transformers
 The Hugging Face Transformers is a library that makes it easy to use NLP models. It allows developers to leverage hundreds of pretrained models for Natural Language Understanding (NLU) tasks as well as making it simple to train new transformer models. The API of this library is based around 3 broad classes:
 
 1. **Model** - PyTorch or Keras models that we can use in training loop or for prediction

@@ -1,0 +1,17 @@
+{{/* Epigraph Shortcode - for quotes/attributions
+  Usage:
+  {{< epigraph >}}
+  The quote text here
+  {{< cite author="Author Name" title="Source Title" >}}
+  {{< /epigraph >}}
+*/}}
+<div class="epigraph">
+  <blockquote>
+    {{ .Inner | markdownify }}
+    {{ if .Get "author" }}
+    <footer>
+      {{ .Get "author" }}{{ if .Get "title" }}, <cite>{{ .Get "title" }}</cite>{{ end }}
+    </footer>
+    {{ end }}
+  </blockquote>
+</div>

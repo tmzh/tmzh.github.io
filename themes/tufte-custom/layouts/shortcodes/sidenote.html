@@ -1,0 +1,15 @@
+{{/* Sidenote Shortcode - numbered margin notes
+  Usage: {{< sidenote >}}Your note text here{{< /sidenote >}}
+  Or: {{< sidote label="custom" >}}Note with custom label{{< /sidenote >}}
+*/}}
+{{- $label := .Get "label" -}}
+{{- $id := printf "sn-%d" (add ($.Page.Scratch.Get "sidenote-counter" | default 0) 1) -}}
+{{- $.Page.Scratch.Set "sidenote-counter" (add ($.Page.Scratch.Get "sidenote-counter" | default 0) 1) -}}
+{{- $counter := $.Page.Scratch.Get "sidenote-counter" -}}
+
+<label for="{{ $id }}" class="margin-toggle sidenote-number">{{ $counter }}</label>
+<input type="checkbox" id="{{ $id }}" class="margin-toggle">
+<span class="sidenote">
+  <span class="sidenote-number">{{ $counter }}</span>
+  {{ .Inner | markdownify }}
+</span>

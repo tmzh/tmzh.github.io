@@ -9,10 +9,9 @@ tags:
 - llama
 - langchain
 title: "Exploring Retrieval-Augmented Generation with Open Source Large Language Models"
-mathjax: true
+math: true
 ---
 
-## Introduction
 While chatbots have grown common in applications like customer service, they have several shortcomings which disrupts user experience. Traditional chatbots rely on pattern matching and database lookups, which are ineffective when a user's question deviates from what was expected. Responses may feel impersonal and fail to address the true intent when questions deviate slightly from pattern matching rules. 
 
 This is where large language models (LLMs) can provide value. LLMs are better equipped to handle out-of-scope questions due to their ability to understand context and previous exchanges. They can generate more personalized responses compared to typical rule-based chatbots. As such, chatbots represent a prime use case for generative AI in enterprises.
@@ -96,9 +95,9 @@ Since our FAQ dataset is very small, and we have a light embedding model, it is 
 
 | Distance          | Parameter | Equation                                                                                                                |
 |-------------------|-----------|-------------------------------------------------------------------------------------------------------------------------|
-| Squared L2        | `l2`      | $$ d = \sum\left(A_i-B_i\right)^2 $$                                                                                    |
-| Inner product     | `ip`      | $$d = 1.0 - \sum\left(A_i \times B_i\right) $$                                                                          |
-| Cosine Similarity | `cosine`  | $$d = 1.0 - \frac{\sum\left(A_i \times B_i\right)}{\sqrt{\sum\left(A_i^2\right)} \cdot \sqrt{\sum\left(B_i^2\right)}}$$ |
+| Squared L2        | `l2`      | {{< math >}} d = \sum\left(A_i-B_i\right)^2 {{< /math >}} |
+| Inner product     | `ip`      | {{< math >}}d = 1.0 - \sum\left(A_i \times B_i\right){{< /math >}} |
+| Cosine Similarity | `cosine`  | {{< math display="true" >}}d = 1.0 - \frac{\sum\left(A_i \times B_i\right)}{\sqrt{\sum\left(A_i^2\right)} \cdot \sqrt{\sum\left(B_i^2\right)}}{{< /math >}} |
 
 For more expensive embedding operations involving larger dataset or embedding models, we can use a persistent store such as the one offered by ChromaDB itself or other options such as `pgVector`, `Pinecone`, or `Weaviate`
 
@@ -111,20 +110,22 @@ query = "How can I open an account?"
 docs = collection.query(query_texts=[query], 
                         n_results=3)
 ```
-	{'ids': [['d9b8bc80-7093-11ee-a189-00155d07b3f4',
-	   'd9b8bee2-7093-11ee-a189-00155d07b3f4',
-	   'd9b8bece-7093-11ee-a189-00155d07b3f4']],
-	 'embeddings': None,
-	 'documents': [['{"question": "How can I create an account?", "answer": "To create an account, click on the \'Sign Up\' button on the top right corner of our website and follow the instructions to complete the registration process."}',
-	   '{"question": "Can I order without creating an account?", "answer": "Yes, you can place an order as a guest without creating an account. However, creating an account offers benefits such as order tracking and easier future purchases."}',
-	   '{"question": "Do you have a loyalty program?", "answer": "Yes, we have a loyalty program where you can earn points for every purchase. These points can be redeemed for discounts on future orders. Please visit our website to learn more and join the program."}']],
-	 'metadatas': [[{'question': 'How can I create an account?',
-		'answer': "To create an account, click on the 'Sign Up' button on the top right corner of our website and follow the instructions to complete the registration process."},
-	   {'question': 'Can I order without creating an account?',
-		'answer': 'Yes, you can place an order as a guest without creating an account. However, creating an account offers benefits such as order tracking and easier future purchases.'},
-	   {'question': 'Do you have a loyalty program?',
-		'answer': 'Yes, we have a loyalty program where you can earn points for every purchase. These points can be redeemed for discounts on future orders. Please visit our website to learn more and join the program.'}]],
-	 'distances': [[0.19405025243759155, 0.3536655902862549, 0.3666747808456421]]}
+```json
+{'ids': [['d9b8bc80-7093-11ee-a189-00155d07b3f4',
+   'd9b8bee2-7093-11ee-a189-00155d07b3f4',
+   'd9b8bece-7093-11ee-a189-00155d07b3f4']],
+ 'embeddings': None,
+ 'documents': [['{"question": "How can I create an account?", "answer": "To create an account, click on the \'Sign Up\' button on the top right corner of our website and follow the instructions to complete the registration process."}',
+   '{"question": "Can I order without creating an account?", "answer": "Yes, you can place an order as a guest without creating an account. However, creating an account offers benefits such as order tracking and easier future purchases."}',
+   '{"question": "Do you have a loyalty program?", "answer": "Yes, we have a loyalty program where you can earn points for every purchase. These points can be redeemed for discounts on future orders. Please visit our website to learn more and join the program."}']],
+ 'metadatas': [[{'question': 'How can I create an account?',
+	'answer': "To create an account, click on the 'Sign Up' button on the top right corner of our website and follow the instructions to complete the registration process."},
+   {'question': 'Can I order without creating an account?',
+	'answer': 'Yes, you can place an order as a guest without creating an account. However, creating an account offers benefits such as order tracking and easier future purchases.'},
+   {'question': 'Do you have a loyalty program?',
+	'answer': 'Yes, we have a loyalty program where you can earn points for every purchase. These points can be redeemed for discounts on future orders. Please visit our website to learn more and join the program.'}]],
+ 'distances': [[0.19405025243759155, 0.3536655902862549, 0.3666747808456421]]}
+```
 
 For simple and straightforward user queries, it may be sufficient to return the top match. But consider a question like below:
 
@@ -136,13 +137,15 @@ docs = collection.query(query_texts=[query],
 ```
 The top 3 responses are:
 
-	[[{'question': "Can I return a product without a receipt?",
-	   'answer':  "A receipt or proof of purchase is usually required for returns. Please refer to our return policy or contact our customer support team for assistance."},
-	  {'question': "Can I return a product if I no longer have the original receipt?",
-	   'answer':  "While a receipt is preferred for returns, we may be able to assist you without it. Please contact our customer support team for further guidance."},
-	  {'question': "What is your return policy?",
-	   'answer':  "Our return policy allows you to return products within 30 days of purchase for a full refund, provided they are in their original condition and packaging. Please refer to our Returns page for detailed instructions."}
-	  ]]
+```json
+[[{'question': "Can I return a product without a receipt?",
+   'answer':  "A receipt or proof of purchase is usually required for returns. Please refer to our return policy or contact our customer support team for assistance."},
+  {'question': "Can I return a product if I no longer have the original receipt?",
+   'answer':  "While a receipt is preferred for returns, we may be able to assist you without it. Please contact our customer support team for further guidance."},
+  {'question': "What is your return policy?",
+   'answer':  "Our return policy allows you to return products within 30 days of purchase for a full refund, provided they are in their original condition and packaging. Please refer to our Returns page for detailed instructions."}
+  ]]
+```
 
 Clearly just returning the answer for the closest matched question will be incomplete and unsatisfactory for the user. The ideal answer needs to incorporate all facts from the relevant document chunks. This is where a generation model can help.
 
@@ -197,7 +200,13 @@ chat = [
 tokenizer.use_default_system_prompt = True
 tokenizer.apply_chat_template(chat, tokenize=False)
 ```
-`<s>[INST] <<SYS>>\nYou are a helpful, respectful and honest support executive. Always answer as helpfully as possible, while being safe. While answering, use the information provided in the earlier conversations only. If the information is not present in the prior conversation, or If you don't know the answer to a question, please don't share false information. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. \n<</SYS>>\n\nHello, how are you? [/INST] I'm doing great. How can I help you today? </s><s>[INST] I'd like to show off how chat templating works! [/INST]`
+```text
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest support executive. Always answer as helpfully as possible, while being safe. While answering, use the information provided in the earlier conversations only. If the information is not present in the prior conversation, or If you don't know the answer to a question, please don't share false information. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. 
+<</SYS>>
+
+Hello, how are you? [/INST] I'm doing great. How can I help you today? </s><s>[INST] I'd like to show off how chat templating works! [/INST]
+```
 
 In our case, we want to customize the system prompt to pass the retrieved document chunks as a context for QnA. 
 This is done by disabling the default system prompt and configuring the tokenizer to use `default_chat_template`. This allows us to override the message for the system role. 
@@ -217,17 +226,19 @@ prompt = tokenizer.apply_chat_template(chat, tokenize=False)
 ```
 This will insert a set of relevant questions and answers as additional context within the prompt so that the model can use this information to give an answer. For our example the constructed prompt looks like this:
 
-    <s>[INST] <<SYS>>
-    You are a helpful, respectful and honest support executive. Always be as helpful as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information.
-    Question: How can I create an account?
-    Answer: To create an account, click on the 'Sign Up' button on the top right corner of our website and follow the instructions to complete the registration process.
-    Question: Can I order without creating an account?
-    Answer: Yes, you can place an order as a guest without creating an account. However, creating an account offers benefits such as order tracking and easier future purchases.
-    Question: Do you have a loyalty program?
-    Answer: Yes, we have a loyalty program where you can earn points for every purchase. These points can be redeemed for discounts on future orders. Please visit our website to learn more and join the program.
-    <</SYS>>
+```text
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest support executive. Always be as helpful as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information.
+Question: How can I create an account?
+Answer: To create an account, click on the 'Sign Up' button on the top right corner of our website and follow the instructions to complete the registration process.
+Question: Can I order without creating an account?
+Answer: Yes, you can place an order as a guest without creating an account. However, creating an account offers benefits such as order tracking and easier future purchases.
+Question: Do you have a loyalty program?
+Answer: Yes, we have a loyalty program where you can earn points for every purchase. These points can be redeemed for discounts on future orders. Please visit our website to learn more and join the program.
+<</SYS>>
 
-    How can I open an account? [/INST]
+How can I open an account? [/INST]
+```
 
 #### Generate response
 
@@ -242,17 +253,19 @@ model.to(model.device)
 generated_ids = model.generate(model_inputs, max_new_tokens=100, do_sample=True)
 answer = tokenizer.batch_decode(generated_ids[:, model_inputs.shape[1]:])[0]
 ```
-    <s>[INST] <<SYS>>
-    You are a helpful, respectful and honest support executive. Always be as helpful as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information.
-    Question: How can I create an account?
-    Answer: To create an account, click on the 'Sign Up' button on the top right corner of our website and follow the instructions to complete the registration process.
-    Question: Can I order without creating an account?
-    Answer: Yes, you can place an order as a guest without creating an account. However, creating an account offers benefits such as order tracking and easier future purchases.
-    Question: Do you have a loyalty program?
-    Answer: Yes, we have a loyalty program where you can earn points for every purchase. These points can be redeemed for discounts on future orders. Please visit our website to learn more and join the program.
-    <</SYS>>
+```text
+<s>[INST] <<SYS>>
+You are a helpful, respectful and honest support executive. Always be as helpful as possible, while being correct. If a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. Use the following piece of context to answer the questions. If the information is not present in the provided context, answer that you don't know. Please don't share false information.
+Question: How can I create an account?
+Answer: To create an account, click on the 'Sign Up' button on the top right corner of our website and follow the instructions to complete the registration process.
+Question: Can I order without creating an account?
+Answer: Yes, you can place an order as a guest without creating an account. However, creating an account offers benefits such as order tracking and easier future purchases.
+Question: Do you have a loyalty program?
+Answer: Yes, we have a loyalty program where you can earn points for every purchase. These points can be redeemed for discounts on future orders. Please visit our website to learn more and join the program.
+<</SYS>>
 
-    How can I open an account? [/INST] To open an account, click on the 'Sign Up' button on the top right corner of our website and follow the instructions to complete the registration process.</s>
+How can I open an account? [/INST] To open an account, click on the 'Sign Up' button on the top right corner of our website and follow the instructions to complete the registration process.</s>
+```
 
 Everything after the last token `[/INST]` is the response we seek. Keep in mind that, from an LLM perspective generating responses is merely continuing the text prompt that we passed to it. To retrieve the generated response we need to index from the input prompt length.
 

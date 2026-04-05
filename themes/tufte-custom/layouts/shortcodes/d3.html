@@ -1,0 +1,59 @@
+{{/* D3.js Chart Shortcode
+  Usage:
+  {{< d3 id="chart1" width="700" height="400" src="/js/my-chart.js" >}}
+  
+  Or with inline script:
+  {{< d3 id="chart2" width="700" height="400" >}}
+  // Your D3 code here, using 'svg' and 'id' variables
+  svg.append("circle").attr("cx", 50).attr("cy", 50).attr("r", 40);
+  {{< /d3 >}}
+*/}}
+{{- $id := .Get "id" | default (printf "d3-chart-%d" now.UnixNano) -}}
+{{- $width := .Get "width" | default "100%" -}}
+{{- $height := .Get "height" | default "400" -}}
+{{- $class := .Get "class" | default "d3-chart" -}}
+{{- $margin := .Get "margin" | default "40" -}}
+{{- $src := .Get "src" -}}
+
+<figure class="{{ $class }}{{ if eq $width "fullwidth" }} fullwidth{{ end }}" id="figure-{{ $id }}">
+  <div id="{{ $id }}" class="d3-container" style="width: 100%;{{ if ne $width "fullwidth" }} max-width: {{ $width }}px;{{ end }}{{ if ne $height "100%" }} height: {{ $height }}px;{{ end }}"></div>
+  {{ if .Inner }}
+  <figcaption>{{ .Inner | markdownify }}</figcaption>
+  {{ end }}
+</figure>
+
+<script>
+(function() {
+  var container = document.getElementById('{{ $id }}');
+  var width = container.clientWidth;
+  var height = {{ if eq $height "100%" }}container.clientHeight{{ else }}{{ $height }}{{ end }};
+  var margin = {{ $margin }};
+  var innerWidth = width - margin * 2;
+  var innerHeight = height - margin * 2;
+  
+  var svg = d3.select('#{{ $id }}')
+    .append('svg')
+    .attr('width', width)
+    .attr('height', height)
+    .append('g')
+    .attr('transform', 'translate(' + margin + ',' + margin + ')');
+  
+  var id = '{{ $id }}';
+  var chartData = {{ .Get "data" | default "null" }};
+  
+  {{ if $src }}
+  // Load external script
+  {{ else if .Inner }}
+  // Inline script
+  {{ .Inner }}
+  {{ else }}
+  // Default: create a placeholder
+  svg.append('text')
+    .attr('x', innerWidth / 2)
+    .attr('y', innerHeight / 2)
+    .attr('text-anchor', 'middle')
+    .style('fill', '#999')
+    .text('D3 Chart: {{ $id }}');
+  {{ end }}
+})();
+</script>

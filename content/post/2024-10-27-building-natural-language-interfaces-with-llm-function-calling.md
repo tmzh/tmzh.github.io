@@ -13,7 +13,6 @@ image: /images/2024-12-04-movies-app.gif
 comments: true
 ---
 
-## Introduction
 Large Language Models (LLMs) are good at generating coherent text, but they have few inherent limitations:
 1. **Hallucinations**: They learn and generate information in terms of likelihood and  may produce information that is not grounded in facts
 2. **Knowledge Cutoff**: LLMs are trained on a fixed dataset and do not have access to real-time information or the ability to perform complex tasks like web browsing or executing code.

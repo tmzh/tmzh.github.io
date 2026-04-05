@@ -1,0 +1,55 @@
+{{ define "main" }}
+<article>
+  <header class="post-header">
+    <h1 class="post-title">{{ .Title }}</h1>
+    {{ if .Params.subtitle }}
+    <p class="subtitle">{{ .Params.subtitle }}</p>
+    {{ end }}
+    {{ if .Params.meta }}
+    <div class="post-meta">
+      {{ if not .Params.hidedate }}
+      <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 2, 2006" }}</time>
+      {{ end }}
+      {{ if not .Params.hidereadtime }}
+      <span class="reading-time">&middot; {{ .ReadingTime }} min read</span>
+      {{ end }}
+      {{ if .Params.tags }}
+      <span class="tags">
+        {{ range .Params.tags }}
+        <a href="{{ "/tags/" | relURL }}{{ . | urlize }}" class="tag">#{{ . }}</a>
+        {{ end }}
+      </span>
+      {{ end }}
+    </div>
+    {{ end }}
+  </header>
+
+  <section class="post-content">
+    {{ .Content }}
+  </section>
+
+  {{ if .Params.showtoc }}
+  <nav class="toc">
+    <h2>Contents</h2>
+    {{ .TableOfContents }}
+  </nav>
+  {{ end }}
+</article>
+
+{{ if or .PrevInSection .NextInSection }}
+<nav class="post-nav">
+  {{ if .PrevInSection }}
+  <a href="{{ .PrevInSection.RelPermalink }}" class="prev">
+    <span class="nav-label">&larr; Previous</span>
+    <span class="nav-title">{{ .PrevInSection.Title }}</span>
+  </a>
+  {{ end }}
+  {{ if .NextInSection }}
+  <a href="{{ .NextInSection.RelPermalink }}" class="next">
+    <span class="nav-label">Next &rarr;</span>
+    <span class="nav-title">{{ .NextInSection.Title }}</span>
+  </a>
+  {{ end }}
+</nav>
+{{ end }}
+{{ end }}

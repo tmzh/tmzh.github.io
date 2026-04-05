@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="{{ .Site.LanguageCode | default "en-us" }}">
+<head>
+  {{ partial "head.html" . }}
+</head>
+<body>
+  {{/* Hide header on homepage */}}
+  {{ if not .IsHome }}
+  {{ partial "header.html" . }}
+  {{ end }}
+  
+  <main>
+    {{ block "main" . }}{{ end }}
+  </main>
+  
+  {{ partial "footer.html" . }}
+  
+  {{/* Load D3 if page has D3 charts */}}
+  {{ if .HasShortcode "d3" }}
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  {{ end }}
+  
+  {{/* Load KaTeX if math is enabled */}}
+  {{ if or .Params.math .Site.Params.math }}
+  {{ partial "math.html" . }}
+  {{ end }}
+</body>
+</html>
