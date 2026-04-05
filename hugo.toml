@@ -1,4 +1,4 @@
-baseURL = 'https://tmzh.me'
+baseURL = 'https://tmzh.github.io/'
 languageCode = 'en-us'
 title = 'Ephemeral Dance Of Electrons'
 theme = 'tufte-custom'
@@ -19,10 +19,10 @@ pagerSize = 10
 # Theme parameters
 [params]
   subtitle = "Ars Longa, Vita Brevis"
-  
+
   # Hero Section description (optional, appears below subtitle)
-  heroDescription = "A personal journal exploring the frontiers of artificial intelligence, software engineering, and the curious intersection of technology and creativity."
-  
+  heroDescription = "Code and thought are a false dichotomy: both are an ephemeral dance of electrons."
+
   showPoweredBy = false
   hidedate = false
   showSummary = true
@@ -38,11 +38,11 @@ pagerSize = 10
   name = "tmzh"
   bio = "Engineer exploring the intersection of AI and human creativity. Building things, writing about discoveries, and occasionally breaking stuff along the way."
   avatar = "/images/avatar.svg"
-  
+
   [[params.author.links]]
     name = "GitHub"
     url = "https://github.com/tmzh"
-  
+
   [[params.author.links]]
     name = "Twitter"
     url = "https://twitter.com/tmzh_"
