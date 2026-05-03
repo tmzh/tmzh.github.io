@@ -75,4 +75,4 @@ We must stop ranking children like data points and start treating them as the co
 
 ---
 
-*Featured image generated with [Google Whisk / Nano](https://labs.google/fx/nano)*
+*Imagery assisted by Google's Nano Banana generative models.*
