@@ -43,9 +43,9 @@ Today, skills expire in months. Advanced calculus, niche biological Latin, and m
 
 ## The Economics of Perversion: Signaling and Information Asymmetry
 
-Why does this persist? Because it's a cheap proxy. As [George Akerlof](https://www.nobelprize.org/prizes/economic-sciences/2001/akerlof/facts/) demonstrated in his work on "Information Asymmetry," when a buyer (or university) cannot see the internal quality of a product (or student), they rely on surface-level statistics. The grade becomes a low-resolution signal to bridge this gap of radical ignorance.
+Why does this persist? Because it's a cheap proxy. As [George Akerlof](https://personal.utdallas.edu/~nina.baranchuk/Fin7310/papers/Akerlof1970.pdf) demonstrated in his work on "Information Asymmetry," when a buyer (or university) cannot see the internal quality of a product (or student), they rely on surface-level statistics. The grade becomes a low-resolution signal to bridge this gap of radical ignorance.
 
-The problem is that this signal is now "inflated." [Michael Spence's Signaling Theory](https://www.nobelprize.org/prizes/economic-sciences/2001/spence/facts/) suggests that for a credential to be effective, its "cost" must be negatively correlated with capability. This is where the "grit" argument turns predatory. Driven by a collective FOMO and delayed feedback, society has engaged in aggressive Signal Inflation. Where once a basic degree sufficed, the requirement has escalated to engineering followed by an MBA—a parade of increasingly costly credentials that serve as an exercise in standing out rather than learning anything useful.
+The problem is that this signal is now "inflated." [Michael Spence's Signaling Theory](https://www.sfu.ca/~allen/Spence.pdf) suggests that for a credential to be effective, its "cost" must be negatively correlated with capability. This is where the "grit" argument turns predatory. Driven by a collective FOMO and delayed feedback, society has engaged in aggressive Signal Inflation. Where once a basic degree sufficed, the requirement has escalated to engineering followed by an MBA—a parade of increasingly costly credentials that serve as an exercise in standing out rather than learning anything useful.
 
 The rise of "exam temperament" industries further shatters this correlation. When the "cost" of the signal can be bypassed through wealth and rote drilling, it no longer measures aptitude, but capital. The system stops identifying the "best" and begins identifying the most "well-resourced and compliant."
 
@@ -59,7 +59,7 @@ Consequently, employers have begun to discredit these hard-won degrees, complain
 
 ## The Paradigm Shift: Redefining Systemic Goals
 
-Most reforms fail because they target low-leverage points such as tweaking the syllabus or the grading scale. To fix this, we have to follow [Donella Meadows' "12 Leverage Points to Intervene in a System"](https://donellameadows.org/archives/leverage-points-places-to-intervene-in-a-system/) and target the goals of the system itself. We need to move from "sorting for industrial slots" to "nurturing high-agency citizens."
+Most reforms fail because they target low-leverage points such as tweaking the syllabus or the grading scale. To fix this, we have to follow [Donella Meadows' "12 Leverage Points to Intervene in a System"](https://donellameadows.org/wp-content/userfiles/Leverage_Points.pdf) and target the goals of the system itself. We need to move from "sorting for industrial slots" to "nurturing high-agency citizens."
 
 This transition requires three balanced pillars:
 
