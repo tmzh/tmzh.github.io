@@ -1,0 +1,159 @@
+/* ==========================================================================
+   Custom Styles for Hugo Apéro Theme
+   ========================================================================== */
+
+/* -------------------------------------------------------------------------
+   Epigraph - Styled blockquote for opening quotes
+   ------------------------------------------------------------------------- */
+.epigraph {
+  margin: 3rem 0;
+  padding: 1.5rem 2rem;
+  border-left: 3px solid var(--border-color, #e5e2d8);
+  font-style: italic;
+}
+
+.epigraph p {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  margin: 0 0 1rem 0;
+}
+
+.epigraph footer {
+  font-style: normal;
+  font-size: 0.875rem;
+  color: var(--text-secondary, #555);
+}
+
+.epigraph-author {
+  font-weight: 600;
+}
+
+.epigraph-title {
+  font-style: italic;
+}
+
+/* -------------------------------------------------------------------------
+   Marginalia - Side annotations for wide layouts
+   ------------------------------------------------------------------------- */
+.marginalia {
+  display: block;
+  float: right;
+  clear: right;
+  margin: 0 -15% 1rem 2rem;
+  width: 30%;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--text-secondary, #555);
+  border-left: 2px solid var(--accent-color, #b45309);
+  background: var(--bg-subtle, #f5f3ed);
+}
+
+.marginalia-indicator {
+  display: block;
+  font-size: 1rem;
+  color: var(--accent-color, #b45309);
+  margin-bottom: 0.25rem;
+}
+
+.marginalia-content p {
+  margin: 0;
+}
+
+@media screen and (max-width: 768px) {
+  .marginalia {
+    float: none;
+    width: 100%;
+    margin: 1rem 0;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   Newthought - Small caps styling
+   ------------------------------------------------------------------------- */
+.newthought {
+  font-variant: small-caps;
+  font-size: 1.1em;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+/* -------------------------------------------------------------------------
+   Fullwidth - Full-width content wrapper
+   ------------------------------------------------------------------------- */
+.fullwidth {
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  padding: 0 1rem;
+}
+
+@media screen and (max-width: 768px) {
+  .fullwidth {
+    width: 100%;
+    margin-left: 0;
+  }
+}
+
+/* -------------------------------------------------------------------------
+   D3 Charts
+   ------------------------------------------------------------------------- */
+.d3-chart {
+  margin: 2rem 0;
+}
+
+.d3-container {
+  background: var(--bg-subtle, #f5f3ed);
+  border-radius: 4px;
+  overflow-x: auto;
+}
+
+.d3-chart figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--text-secondary, #555);
+  text-align: center;
+}
+
+/* -------------------------------------------------------------------------
+   Math - KaTeX display blocks
+   ------------------------------------------------------------------------- */
+.math-display {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  padding: 1rem;
+}
+
+.math-inline {
+  display: inline;
+}
+
+/* -------------------------------------------------------------------------
+   Code blocks - Enhanced readability
+   ------------------------------------------------------------------------- */
+.post-body pre,
+.page-body pre {
+  border-radius: 6px;
+  padding: 1rem;
+}
+
+/* Smooth scrolling for anchor links */
+html {
+  scroll-behavior: smooth;
+}
+
+/* -------------------------------------------------------------------------
+   Post content link underlines
+   ------------------------------------------------------------------------- */
+.post-body a:not(.link),
+.page-body a:not(.link) {
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+  text-decoration-thickness: 0.08em;
+  text-decoration-color: rgba(0, 0, 0, 0.3);
+}
+
+.post-body a:not(.link):hover,
+.page-body a:not(.link):hover {
+  text-decoration-color: currentColor;
+}

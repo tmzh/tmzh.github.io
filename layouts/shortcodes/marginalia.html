@@ -1,0 +1,9 @@
+{{/* Marginalia Shortcode - Side annotation for wide layouts
+  Usage:
+  Some text{{< marginalia >}}This is a side note.{{< /marginalia >}} more text.
+*/}}
+{{- $id := .Get "id" | default (printf "mn-%d" .Ordinal) -}}
+<aside class="marginalia" id="{{ $id }}">
+  <span class="marginalia-indicator" aria-hidden="true">&#8251;</span>
+  <span class="marginalia-content">{{ .Inner | markdownify }}</span>
+</aside>

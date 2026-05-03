@@ -1,0 +1,19 @@
+{{/* Epigraph Shortcode
+  Usage:
+  {{< epigraph author="Richard Feynman" title="The Feynman Lectures" >}}
+  What I cannot create, I do not understand.
+  {{< /epigraph >}}
+*/}}
+{{- $author := .Get "author" | default "" -}}
+{{- $title := .Get "title" | default "" -}}
+{{- $source := .Get "source" | default "" -}}
+<blockquote class="epigraph">
+  <p>{{ .Inner | markdownify }}</p>
+  {{- if or $author $title $source -}}
+  <footer>
+    {{- if $author -}}<span class="epigraph-author">{{ $author }}</span>{{ end -}}
+    {{- if $title -}}, <cite class="epigraph-title">{{ $title }}</cite>{{ end -}}
+    {{- if $source -}} <span class="epigraph-source">{{ $source }}</span>{{ end -}}
+  </footer>
+  {{- end -}}
+</blockquote>
