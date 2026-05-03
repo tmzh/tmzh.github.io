@@ -1,6 +1,6 @@
 baseURL = 'https://tmzh.github.io/'
 theme = 'hugo-apero'
-languageCode = 'en-us'
+locale = 'en-us'
 title = 'Ephemeral Dance Of Electrons'
 author = 'tmzh'
 enableEmoji = true
