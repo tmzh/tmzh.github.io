@@ -35,18 +35,6 @@ Proponents of high-stakes testing usually offer two primary defenses for this te
 
 However, this dual defense ignores both historical reality and perverse incentives.
 
-{{< panelset class="arguments" >}}
-{{< panel name="The Utilitarian Defence" >}}
-The content itself is vital for the real world. Students must master advanced calculus, biological nomenclature, and historical chronology to become productive citizens. The exam is merely a filter to ensure this baseline competence.
-{{< /panel >}}
-{{< panel name="The Moral Defence" >}}
-The pressure instills "grit"—a character-building rite of passage. Surviving the grueling exam cycle proves resilience and dedication, virtues essential for adult life.
-{{< /panel >}}
-{{< panel name="The Reality" >}}
-Both defenses collapse under scrutiny. Advanced calculus and memorized dates provide zero help in ambiguous modern careers. And the "grit" required to survive rote exams has nothing to do with the resilience needed to solve real-world problems. The system selects for compliance, not capability.
-{{< /panel >}}
-{{< /panelset >}}
-
 ## The Ghost of Logistical Necessity
 
 In reality, our education system is a product of the industrial era. It was built for a world that moved slowly, where a workforce just needed to be punctual and repeatable. Back then, the world a child entered at graduation looked exactly like the one they lived in on their first day of primary school.
@@ -55,9 +43,9 @@ Today, skills expire in months. Advanced calculus, niche biological Latin, and m
 
 ## The Economics of Perversion: Signaling and Information Asymmetry
 
-Why does this persist? Because it's a cheap proxy. As George Akerlof demonstrated in his work on "Information Asymmetry," when a buyer (or university) cannot see the internal quality of a product (or student), they rely on surface-level statistics. The grade becomes a low-resolution signal to bridge this gap of radical ignorance.
+Why does this persist? Because it's a cheap proxy. As [George Akerlof](https://www.nobelprize.org/prizes/economic-sciences/2001/akerlof/facts/) demonstrated in his work on "Information Asymmetry," when a buyer (or university) cannot see the internal quality of a product (or student), they rely on surface-level statistics. The grade becomes a low-resolution signal to bridge this gap of radical ignorance.
 
-The problem is that this signal is now "inflated." Michael Spence's Signaling Theory suggests that for a credential to be effective, its "cost" must be negatively correlated with capability. This is where the "grit" argument turns predatory. Driven by a collective FOMO and delayed feedback, society has engaged in aggressive Signal Inflation. Where once a basic degree sufficed, the requirement has escalated to engineering followed by an MBA—a parade of increasingly costly credentials that serve as an exercise in standing out rather than learning anything useful.
+The problem is that this signal is now "inflated." [Michael Spence's Signaling Theory](https://www.nobelprize.org/prizes/economic-sciences/2001/spence/facts/) suggests that for a credential to be effective, its "cost" must be negatively correlated with capability. This is where the "grit" argument turns predatory. Driven by a collective FOMO and delayed feedback, society has engaged in aggressive Signal Inflation. Where once a basic degree sufficed, the requirement has escalated to engineering followed by an MBA—a parade of increasingly costly credentials that serve as an exercise in standing out rather than learning anything useful.
 
 The rise of "exam temperament" industries further shatters this correlation. When the "cost" of the signal can be bypassed through wealth and rote drilling, it no longer measures aptitude, but capital. The system stops identifying the "best" and begins identifying the most "well-resourced and compliant."
 
@@ -71,13 +59,13 @@ Consequently, employers have begun to discredit these hard-won degrees, complain
 
 ## The Paradigm Shift: Redefining Systemic Goals
 
-Most reforms fail because they target low-leverage points such as tweaking the syllabus or the grading scale. To fix this, we have to follow Donella Meadows' "12 Leverage Points to Intervene in a System" and target the goals of the system itself. We need to move from "sorting for industrial slots" to "nurturing high-agency citizens."
+Most reforms fail because they target low-leverage points such as tweaking the syllabus or the grading scale. To fix this, we have to follow [Donella Meadows' "12 Leverage Points to Intervene in a System"](https://donellameadows.org/archives/leverage-points-places-to-intervene-in-a-system/) and target the goals of the system itself. We need to move from "sorting for industrial slots" to "nurturing high-agency citizens."
 
 This transition requires three balanced pillars:
 
 1. **Assessment must be a "readiness" milestone, not a "calendar" execution.** By de-synchronizing testing, we remove the "Synchronicity Filter" and allow students to demonstrate mastery when they are developmentally prepared, rather than when the logistics of a Tuesday morning demand it.
 
-2. **We must adopt the "Screening" solutions pioneered by Joseph Stiglitz**—grounded in Akerlof's Information Asymmetry and Spence's Signaling. By replacing the low-resolution grade with a multidimensional portfolio, we create a Separating Equilibrium. Unlike a coached exam, a genuine portfolio cannot be faked; the cost of producing quality work reveals the student's true "type" to the world.
+2. **We must adopt the "Screening" solutions pioneered by [Joseph Stiglitz](https://www.nobelprize.org/prizes/economic-sciences/2001/stiglitz/facts/)**—grounded in Akerlof's Information Asymmetry and Spence's Signaling. By replacing the low-resolution grade with a multidimensional portfolio, we create a Separating Equilibrium. Unlike a coached exam, a genuine portfolio cannot be faked; the cost of producing quality work reveals the student's true "type" to the world.
 
 3. **We must recognize that human ability is a "flow," not a "stock."** By embedding redemption into the system, we acknowledge the "Neuroplasticity of Merit." This removes the terminal judgment of failure, treating it instead as a data point for growth—aligning the child's development with the iterative reality of the adult world.
 
