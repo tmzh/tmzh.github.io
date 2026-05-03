@@ -10,7 +10,6 @@ tags:
 - standardized-testing
 - systemic-reform
 slug: 2026-05-03-the-meritocratic-mirage
-image: /images/2026-05-03-meritocratic-mirage-feature.png
 excerpt: "We demand fourteen years of academic toil, then liquidate it in a thirty-second glance. The board examination is not a test of merit—it is a test of compliance."
 comments: true
 ---
