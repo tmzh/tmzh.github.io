@@ -1,0 +1,50 @@
+{{/* D3.js Chart Shortcode
+  Usage:
+  Inline: {{< d3 id="chart1" margin="40" >}}
+    // your d3 code here
+  {{< /d3 >}}
+  External: {{< d3 id="chart1" src="/js/chart.js" >}}
+*/}}
+{{- $id := .Get "id" | default "d3-chart" -}}
+{{- $margin := .Get "margin" | default 40 -}}
+{{- $src := .Get "src" -}}
+{{- $class := .Get "class" -}}
+{{- $width := .Get "width" | default 800 -}}
+{{- $height := .Get "height" | default 400 -}}
+
+{{/* Load D3 v7 once per page */}}
+{{- if not (.Page.Scratch.Get "d3-loaded") -}}
+{{- .Page.Scratch.Set "d3-loaded" true -}}
+<script src="https://d3js.org/d3.v7.min.js"></script>
+{{- end -}}
+
+<figure class="d3-chart {{ $class }}" id="figure-{{ $id }}">
+  <div class="d3-container" id="{{ $id }}"></div>
+  {{ with .Get "caption" }}<figcaption>{{ . }}</figcaption>{{ end }}
+</figure>
+
+<script>
+(function() {
+  var container = document.getElementById('{{ $id }}');
+  var width = container.clientWidth || {{ $width }};
+  var height = {{ $height }};
+  var margin = {top: {{ $margin }}, right: {{ $margin }}, bottom: {{ $margin }}, left: {{ $margin }}};
+  var innerWidth = width - margin.left - margin.right;
+  var innerHeight = height - margin.top - margin.bottom;
+  var svg = d3.select('#{{ $id }}')
+    .append('svg')
+    .attr('width', width)
+    .attr('height', height)
+    .append('g')
+    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+  var id = '{{ $id }}';
+  var chartData = {{ .Get "data" | default "null" }};
+
+  {{ if $src }}
+  {{ $script := readFile $src }}
+  {{ $script | safeJS }}
+  {{ else }}
+  {{ .Inner | safeJS }}
+  {{ end }}
+})();
+</script>

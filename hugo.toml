@@ -1,13 +1,13 @@
 baseURL = 'https://tmzh.github.io/'
+theme = 'hugo-apero'
 languageCode = 'en-us'
 title = 'Ephemeral Dance Of Electrons'
-theme = 'tufte-custom'
+author = 'tmzh'
+enableEmoji = true
 
-# Pagination
 [pagination]
-pagerSize = 10
+  pagerSize = 10
 
-# Markup settings
 [markup]
   [markup.goldmark]
     [markup.goldmark.renderer]
@@ -15,55 +15,80 @@ pagerSize = 10
   [markup.highlight]
     noClasses = false
     guessSyntax = true
+  [markup.tableOfContents]
+    startLevel = 2
+    endLevel = 3
+    ordered = false
 
-# Theme parameters
-[params]
-  subtitle = "Ars Longa, Vita Brevis"
-
-  # Hero Section description (optional, appears below subtitle)
-  heroDescription = "Code and thought are a false dichotomy: both are an ephemeral dance of electrons."
-
-  showPoweredBy = false
-  hidedate = false
-  showSummary = true
-  math = true
-  KaTeXCDN = "https://cdn.jsdelivr.net/npm"
-  KaTeXVersion = "0.16.9"
-  codeblocksdark = false
-  marginNoteInd = "⊕"
-  sansSubtitle = false
-
-# Author information
-[params.author]
-  name = "tmzh"
-  bio = "Engineer exploring the intersection of AI and human creativity. Building things, writing about discoveries, and occasionally breaking stuff along the way."
-  avatar = "/images/avatar.svg"
-
-  [[params.author.links]]
-    name = "GitHub"
-    url = "https://github.com/tmzh"
-
-  [[params.author.links]]
-    name = "Twitter"
-    url = "https://twitter.com/tmzh_"
-
-# Navigation menu
-[[menu.nav]]
-  name = "Home"
-  weight = 10
-  url = "/"
-
-[[menu.nav]]
-  name = "Posts"
-  weight = 20
-  url = "/post/"
-
-[[menu.nav]]
-  name = "Tags"
-  weight = 30
-  url = "/tags/"
-
-# Taxonomies
 [taxonomies]
-  category = "categories"
-  tag = "tags"
+  category = 'categories'
+  tag = 'tags'
+  series = 'series'
+
+[params]
+  orgName = 'tmzh'
+  orgLocal = ''
+  description = 'Ars Longa, Vita Brevis — Code and thought are a false dichotomy: both are an ephemeral dance of electrons.'
+  favicon = '/images/favicon.ico'
+  logo = ''
+  mainSections = ['post']
+  navallcaps = true
+  socialInHeader = false
+  socialInFooter = true
+  sharing_image = ''
+  twitter = 'tmzh_'
+
+  # Color theme: peach (warm, content-first — matches docs site)
+  theme = 'peach'
+  custom_theme = ''
+
+  # Fonts (match docs site: Commissioner body, Fraunces headings)
+  customtextFontFamily = 'Commissioner'
+  customheadingFontFamily = 'Fraunces'
+  textFontFamily = 'sans-serif'
+  headingFontFamily = 'sans-serif'
+
+  # Math rendering
+  [params.math]
+    renderer = 'katex'
+
+  # Social links
+  [[params.social]]
+    icon = 'github'
+    icon_pack = 'fab'
+    url = 'https://github.com/tmzh'
+
+  [[params.social]]
+    icon = 'x-twitter'
+    icon_pack = 'fab'
+    url = 'https://twitter.com/tmzh_'
+
+  [[params.social]]
+    icon = 'rss'
+    icon_pack = 'fas'
+    url = '/post/index.xml'
+
+[menu]
+  [[menu.header]]
+    name = 'Home'
+    title = 'Home'
+    url = '/'
+    weight = 10
+
+  [[menu.header]]
+    name = 'Posts'
+    title = 'Posts'
+    url = '/post/'
+    weight = 20
+
+  [[menu.header]]
+    name = 'Tags'
+    title = 'Tags'
+    url = '/tags/'
+    weight = 30
+
+  [[menu.footer]]
+    name = 'RSS'
+    title = 'RSS Feed'
+    url = '/post/index.xml'
+    weight = 10
