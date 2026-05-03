@@ -10,6 +10,7 @@ tags:
 - standardized-testing
 - systemic-reform
 slug: 2026-05-03-the-meritocratic-mirage
+image: /images/2026-05-03-meritocratic-mirage.jpeg
 excerpt: "We demand fourteen years of academic toil, then liquidate it in a thirty-second glance. The board examination is not a test of merit—it is a test of compliance."
 comments: true
 ---
@@ -71,3 +72,7 @@ This transition requires three balanced pillars:
 > "We must stop ranking children like data points and start treating them as the complex, productive beings the future actually requires."
 
 We must stop ranking children like data points and start treating them as the complex, productive beings the future actually requires. Shifting from a sorting-based civilization to a growth-based one is the only way to escape the Meritocratic Mirage.
+
+---
+
+*Featured image generated with [Google Whisk / Nano](https://labs.google/fx/nano)*
