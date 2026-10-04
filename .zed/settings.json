@@ -1,6 +1,0 @@
-{
-  // Disable traditional LSP code completion popups for this project
-  "show_completions_on_input": false,
-  "show_edit_predictions": false
-
-}
