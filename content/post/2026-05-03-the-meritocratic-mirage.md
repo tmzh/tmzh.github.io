@@ -1,6 +1,6 @@
 ---
 author: tmzh
-title: "The Meritocratic Mirage"
+title: "The Meritocratic Mirage: Why 'Merit' has become Costly, Useless and Unfair"
 date: "2026-05-03T12:00:00+08:00"
 categories:
 - education
@@ -11,67 +11,35 @@ tags:
 - systemic-reform
 slug: 2026-05-03-the-meritocratic-mirage
 image: /images/2026-05-03-meritocratic-mirage.jpeg
-excerpt: "We demand fourteen years of academic toil, then liquidate it in a thirty-second glance. The board examination is not a test of merit—it is a test of compliance."
 comments: true
 ---
+Imagine you are invited for an interview and you are expected to prove your worth, your experience spanning several years, your skills and your knowledge in an hour. You feel it is unfair, that it is insufficient time to fully prove yourself. You would feel the same even if you attended six rounds of interviews. 
 
-Imagine you have been invited for an interview. You feel too pressured because you are just given an hour to present yourself but need to cover your work experience spanning several years. Some companies even conduct six-hour, multi-level interviews to better understand a candidate, yet such a window still feels unfair to accurately represent your skills. Do you feel the whole process is unjust?
+Consider another scenario: you are a budding entrepreneur, trying to sell an idea to a potential investor, in a classic elevator pitch. You again argue that this is insufficient, with all the distractions and pressure, you haven't conveyed the nuances or the breadth of your idea effectively.
 
-Consider another scenario: you are a budding entrepreneur, trying to sell an idea to an investor. You get to give what is known as the classic elevator pitch. You get around 1 minute to 5 minutes, where you get to present your ideas, convey your ability to the decision maker. You argue that this is hardly sufficient time, with all the distractions and pressure to convey the nuances of your idea effectively. This is just not fair.
+These are tough, stressful situations for even grown-up adults to navigate. Yet these pale in front of what we put our kids through in the name of board exams. We are expecting a child, who is still figuring out who they are, to secure proof of their worth in the form of a numerical figure on a scoring sheet by a stranger.
 
-These are tough, highly stressful situations for grown up people. Yet all these pale in comparison with what we put our kids through in the name of board examinations. Yet we expect a child, whose brain is still mapping its own identity, to navigate a judgment seemingly more final and crushing than what it is - ironically traumatizing the very muscles of agency and risk-taking they will later need in real life.
+The fourteen years of academic toil, thousands of hours of sleep-deprived studies that the kid undergoes end up being liquidated in a 30-second glance of an assessor. And this is the dynamic the whole generation responds to. They stop thinking, give up on fresh ideas and start mimicking. Originality has become a liability. After all it is their future they are putting at risk.
 
-## The Human Xerox Machine
+Ironically this is the exact antithesis of what society needs in an AI-driven, volatile future. It is obvious that this feels unfair to the child. But for society, the rot runs deeper. An entire industry of institutions is built around this; its products are so entrenched in our processes that we struggle to look past it. 
 
-There is a profound irony in our quest for "standardized merit." We demand that a student spend fourteen years in a state of academic sweatshop toil, thousands of hours of sleep-deprived study, only to have that entire investment liquidated in a thirty-second glance. A typical assessor spends less time reading an answer script than it takes between two sips of tea. In that flicker of attention, a decade of effort collapses into a single data point.
+By the time we realize that the credentials no longer track the capabilities or skills that genuinely matter, we will have squandered the opportunity to nurture the next generation and handicapped our future.
 
-> "Originality is a liability here. They double down on becoming exact replicas of a government-approved template, competing to see who can be the most efficient human Xerox machine. We claim to want the 'best and brightest,' but we only reward those who can suppress their individuality to fit a rubric."
+The solution is not just better exams or tougher syllabi or tweaking of grading curves. In [Donella Meadow's Twelve Leverage Points](https://donellameadows.org/archives/leverage-points-places-to-intervene-in-a-system/), these are merely low-level parameter interventions. They do not alter system behavior and typically gets overcome by other system dynamics. The ever-burgeoning industry of degree factories and coaching centers bears witness to this.
 
-The feedback loop is predictable. If your future depends on a thirty-second impression, you stop thinking and start mimicking. Students optimize for the grader's convenience. Originality is a liability here. They double down on becoming exact replicas of a government-approved template, competing to see who can be the most efficient human Xerox machine. We claim to want the "best and brightest," but we only reward those who can suppress their individuality to fit a rubric.
+Here is the simplest fix we can do today: Get rid of coordinated, fixed-schedule exams and let students take tests whenever they feel personally ready, like say for instance in a driver license exam. A single fixed date punishes the child who was sick, grieving, or simply stuck in traffic, and none of it ever shows up in the score we use to judge her.
 
-## The Dual Defence of the Status Quo
+You ask, "If kids take exams on different days, surely the questions have to be different. If so, how can we compare whether a student is better or worse than the other". But this question exposes the core pathology of our current system. Humans are highly complex and their abilities and value to society multi-faceted, and cannot be scored or sorted. 
 
-Proponents of high-stakes testing usually offer two primary defenses for this terminal judgment. The first is utilitarian: that the content itself is vital for the real world. The second is moral: that the system instills "grit" through intense pressure. Together, these form a formidable shield for the status quo, framing the grueling exam cycle as both a practical necessity and a character-building rite of passage.
+The obsession with grading and sorting people is merely a modern artifact of the industrial revolution's need for uniform labor and the invention of IQ tests that falsely flatten diverse spectrum of intelligence into a single, sortable number.
 
-However, this dual defense ignores both historical reality and perverse incentives.
+Sure enough there are domains, where a better or worse comparison is required but common examinations or degree enrollments are not among them. Those sit closer to the actual jobs and let the market dynamics decide the selection mechanisms. For example in SWE, traditional university degrees gave way to LeetCode tests, which in turn is being phased out by more authentic, task-based selection mechanisms. 
 
-## The Ghost of Logistical Necessity
+The true, deeper (and harder) leverage lies in challenging the validity of "merit" as we currently understand and use. This is what Donella Meadows calls a **paradigm shift** - a total transformation of the core, unspoken assumptions we hold about human worth. 
 
-In reality, our education system is a product of the industrial era. It was built for a world that moved slowly, where a workforce just needed to be punctual and repeatable. Back then, the world a child entered at graduation looked exactly like the one they lived in on their first day of primary school.
+When we shift the underlying paradigm, other high leverage solutions will follow such as changing the goals of the system (valuing multi-dimensional portfolios over degrees) or fixing the information asymmetry (replacing low-resolution grades with authentic evidence of skill). 
 
-Today, skills expire in months. Advanced calculus, niche biological Latin, and memorized historical dates provide zero help when facing the ambiguity of a modern career. We are testing for "grit" by putting kids in a pressure cooker, but the "grit" required to survive a rote exam has nothing to do with the resilience required to solve real-world problems.
-
-## The Economics of Perversion: Signaling and Information Asymmetry
-
-Why does this persist? Because it's a cheap proxy. As [George Akerlof](https://personal.utdallas.edu/~nina.baranchuk/Fin7310/papers/Akerlof1970.pdf) demonstrated in his work on "Information Asymmetry," when a buyer (or university) cannot see the internal quality of a product (or student), they rely on surface-level statistics. The grade becomes a low-resolution signal to bridge this gap of radical ignorance.
-
-The problem is that this signal is now "inflated." [Michael Spence's Signaling Theory](https://www.sfu.ca/~allen/Spence.pdf) suggests that for a credential to be effective, its "cost" must be negatively correlated with capability. This is where the "grit" argument turns predatory. Driven by a collective FOMO and delayed feedback, society has engaged in aggressive Signal Inflation. Where once a basic degree sufficed, the requirement has escalated to engineering followed by an MBA, a parade of increasingly costly credentials that serve as an exercise in standing out rather than learning anything useful.
-
-The rise of "exam temperament" industries further shatters this correlation. When the "cost" of the signal can be bypassed through wealth and rote drilling, it no longer measures aptitude, but capital. The system stops identifying the "best" and begins identifying the most "well-resourced and compliant."
-
-## The Generalist's Tax: A Civilizational Maloptimization
-
-> "We burn the potential of 95% of the population to find a 5% sliver of specialists, subjecting an entire generation to 'dead-weight learning' that lacks transferable value."
-
-The ultimate result is a massive misallocation of cognitive resources, a Generalist's Tax. A generation of lost talent and undeveloped potential. We burn the potential of 95% of the population to find a 5% sliver of specialists, subjecting an entire generation to "dead-weight learning" that lacks transferable value. We over-optimize for hard skills that expire in five years while under-investing in the "meta-skills"—adaptability and agency—that define a modern career.
-
-Consequently, employers have begun to discredit these hard-won degrees, complaining that graduates are fundamentally unprepared for the messy demands of the modern workplace. We have engineered a system that is both a moral injustice to the child and a utilitarian failure for society. By the time the "logistical necessity" of the board exam has finished sorting the "batch," the rubric itself is often obsolete.
-
-## The Paradigm Shift: Redefining Systemic Goals
-
-Most reforms fail because they target low-leverage points such as tweaking the syllabus or the grading scale. To fix this, we have to follow [Donella Meadows' "12 Leverage Points to Intervene in a System"](https://donellameadows.org/wp-content/userfiles/Leverage_Points.pdf) and target the goals of the system itself. We need to move from "sorting for industrial slots" to "nurturing high-agency citizens."
-
-This transition requires three balanced pillars:
-
-1. Assessment must be a "readiness" milestone, not a "calendar" execution. By de-synchronizing testing, we remove the "Synchronicity Filter" and allow students to demonstrate mastery when they are developmentally prepared, rather than when the logistics of a Tuesday morning demand it.
-
-2. We must adopt the "Screening" solutions pioneered by [Joseph Stiglitz](https://www.nobelprize.org/prizes/economic-sciences/2001/stiglitz/facts/), grounded in Akerlof's Information Asymmetry and Spence's Signaling. By replacing the low-resolution grade with a multidimensional portfolio, we create a Separating Equilibrium. Unlike a coached exam, a genuine portfolio cannot be faked; the cost of producing quality work reveals the student's true "type" to the world.
-
-3. We must recognize that human ability is a "flow," not a "stock." By embedding redemption into the system, we acknowledge the neuroplasticity of merit. This removes the terminal judgment of failure, treating it instead as a data point for growth, aligning the child's development with the iterative reality of the adult world.
-
-> "We must stop ranking children like data points and start treating them as the complex, productive beings the future actually requires."
-
-We must stop ranking children like data points and start treating them as the complex, productive beings the future actually requires. Shifting from a sorting-based civilization to a growth-based one is the only way to escape the Meritocratic Mirage.
+None of this will be easy. The current education machinery has a massive, industrial momentum, powered by entrenched gatekeepers and institutions that profit deeply from the current status quo. Because these current ways of working are calcified into the way we think and operate, it is paramount that we aim for a  paradigm shift rather than hacking away at low leverage parameters. It may sound abstract and high theory, but all we need to do is open our eyes and see the obvious gaps and misfires.
 
 ---
 
