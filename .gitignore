@@ -50,6 +50,9 @@ PROOFREADING_EDITS.md
 .DS_Store
 Thumbs.db
 
+# Editor settings
+.zed/
+
 # Log files
 *.log
 npm-debug.log*
